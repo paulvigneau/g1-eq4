@@ -1,31 +1,25 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const ejs = require("ejs");
-var bodyParser = require("body-parser");
-const path = require("path");
+const ejs = require('ejs');
+const path = require('path');
+const dbUtils = require('./dbUtils');
+let projectModel = require('./models/project.js');
 
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017';
-const dbName = 'scrumProject';
-const collection = 'projects';
-let db;
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+app.use(express.static(path.join(__dirname , 'public/stylesheets')));
 
-MongoClient.connect(url,{ useNewUrlParser: true },  (err, client) => {
-    if (!err) {
-        console.log("Connected successfully to server");
-        db = client.db(dbName);
-        client.close();
-    }
+dbUtils.connectToServer(function(err, client){
+    if(err) console.log(err);
 });
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "/views"));
-app.use(express.static(path.join(__dirname , "public/stylesheets")));
+//test insert
+projectModel.addProject('bergrsgrrg','des','lala','lele');
 
-var routes = require('./routes/projects-routes');
+let routes = require('./routes/projects-routes');
 
-app.use("/",routes);
+app.use('/',routes);
 
 app.listen(3000, function () {
-    console.log("Scrum app listening on port 3000!");
+    console.log('Scrum app listening on port 3000!');
 });
