@@ -1,11 +1,11 @@
 let dbUtils = require('../dbUtils');
-let db = dbUtils.getDb();
 const MongoClient = require('mongodb').MongoClient;
 //TODO je vais changer le mongoclient
 
 function addProject(name, description, start, end) {
     MongoClient.connect(dbUtils.getURL(), function (err, db) {
         if (err) throw err;
+
         let dbo = db.db(dbUtils.getDbName());
 
         let projects = dbo.collection('projects');
@@ -13,7 +13,9 @@ function addProject(name, description, start, end) {
             name: name,
             description: description,
             start: start,
-            end: end
+            end: end,
+            members: [],
+
         };
 
         projects.insertOne(projectToAdd, function (err, res) {

@@ -14,7 +14,7 @@ dbUtils.connectToServer(function(err, client){
 });
 
 //test insert
-projectModel.addProject('bergrsgrrg','des','lala','lele');
+projectModel.addProject('grrgrgrgrgrrgrrgrg','des','lala','lele');
 
 let routes = require('./routes/projects-routes');
 
