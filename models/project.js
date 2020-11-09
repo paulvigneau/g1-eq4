@@ -1,6 +1,6 @@
 let dbUtils = require('../dbUtils');
 const MongoClient = require('mongodb').MongoClient;
-//TODO je vais changer le mongoclient
+// TODO je vais changer le mongoclient
 
 function addProject(name, description, start, end) {
     MongoClient.connect(dbUtils.getURL(), function (err, db) {
@@ -22,7 +22,7 @@ function addProject(name, description, start, end) {
             if (err) throw err;
             dbo.close;
         });
-    })
+    });
 }
 
-module.exports = {addProject};
+module.exports = { addProject };
