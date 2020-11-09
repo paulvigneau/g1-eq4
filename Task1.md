@@ -25,7 +25,7 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 |:-:|-|-|:-:|:-:|:-:|:-:|:-:|
 | #1 | Créer une application NodeJS avec les modules express et ejs. | 30min | Toutes | Aucune | DONE | GEN I-R-P | Paul |
 | #2 | Ajouter docker au projet et y intégrer une base de données MongoDB. | 1h | Toutes | #1 | WIP | GEN I-P | Paul |
-| #3 | Ajouter le module eslint au projet et créer un fichier .eslintrc contenant les règles de codage. | 30min | Toutes | #1 | TODO | GEN | / |
+| #3 | Ajouter le module eslint au projet et créer un fichier .eslintrc contenant les règles de codage. | 30min | Toutes | #1 | DONE | GEN I-R-P | Alexandre |
 | #4 | Configurer l’exécution automatique des tests sur GitHub grâce à GitHub Actions. | 30min | Toutes | #1 | TODO | GEN | / |
 | #5 | Créer un fichier style.css regroupant les spécifications générales du site.  | 1h | Toutes | #1 | TODO | GEN | / |
 | #6 | Créer un fichier not-found.ejs affichant le message “La page recherchée n’existe pas”. | 30min | Toutes | #1 | TODO | GEN | / |
