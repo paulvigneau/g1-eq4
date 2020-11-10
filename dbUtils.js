@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017';
 const dbName = 'scrumProject';
+let objectId = require('mongodb').ObjectID;
 let _db;
 
 function getDbName() {
@@ -9,6 +10,10 @@ function getDbName() {
 
 function getURL() {
     return url;
+}
+
+function getObjectId(){
+    return objectId;
 }
 
 module.exports = { 
@@ -25,5 +30,7 @@ module.exports = {
 
     getDbName, 
     
-    getURL
+    getURL,
+
+    getObjectId
 };
