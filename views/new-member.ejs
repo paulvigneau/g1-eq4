@@ -5,27 +5,33 @@
 </head>
 <body class="container">
 
-<form action="/project" method="post">
+<form action="/project/<% project._id %>/member" method="post">
 
     <div class="form-group">
-        <label for="name">Nom du projet</label>
+        <label for="name">Nom du membre</label>
         <input type="text" name="name" class="form-control" id="name"  placeholder="Nom du projet"  required>
     </div>
+
     <div class="form-group">
-        <label for="description">Description du projet</label>
-        <input type="text" name="description" class="form-control" id="description" placeholder="Donner une description à votre projet"  required>
-    </div>
-    <div class="form-group">
-        <label for="startDate">Date de début</label>
-        <input type="text" name="startDate" class="form-control" id="startDate" placeholder="Attribuer une date de début à votre projet"  required>
-    </div>
-    <div class="form-group">
-        <label for="endDate">Date de fin</label>
-        <input type="text" name="endDate" class="form-control" id="endDate" placeholder="Attribuer une date de fin à votre projet" required>
+        <label for="email">Email du membre</label>
+        <input type="text" name="email" class="form-control" id="email" placeholder="Donner une description à votre projet"  required>
     </div>
 
-    <button type="submit" class="btn btn-success btn-danger">Créer</button>
-    <a type="button" class="btn btn-success btn-danger" href="/">Cancel</a>
+    <div class="select-list" id="select-list">
+        <div class="form-group col-md-4" id="form-group">
+            <label for="inputState">
+                <h2>Rôle du membre</h2>
+            </label>
+            <select id="inputState" class="form-control">
+                <option>Développeur</option>
+                <option>Testeur</option>
+                <option>Product Owner</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-danger">Ajouter</button>
+    <a type="button" class="btn btn-success btn-danger" href="/project/<% project._id %>">Retour</a>
 </form>
 
 <footer>

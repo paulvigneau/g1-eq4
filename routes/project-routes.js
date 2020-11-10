@@ -7,12 +7,7 @@ router.get('/', function (req, res) {
         .then(project => {
             console.log(project);
             res.render('project', {
-                name: project.name,
-                description: project.description,
-                start: project.start,
-                end: project.end,
-                members: project.members,
-                management: project.management
+                project: project
             });
         });
 });
