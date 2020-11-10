@@ -10,13 +10,13 @@ router.get('/new-project', function (req, res) {
     res.render('new-project');
 });
 
-router.post('/projects'), function (req, res) {
+router.post('/projects', function (req, res) {
     const name = req.body.name;
     const description = req.body.description;
     const start = req.body.startDate;
     const end = req.body.endDate;
-    projectModel.addProject(name, description, start, end)
+    projectModel.addProject(name, description, start, end);
     res.redirect('/projects');
-}
+});
 
 module.exports = router;

@@ -21,7 +21,7 @@ dbUtils.connectToServer(function(err, client){
 let routes = require('./routes/projects-routes');
 
 app.use('/', routes);
-app.use('/projects',routes);
+app.use('/projects', routes);
 
 app.listen(3000, function () {
     console.log('Scrum app listening on port 3000!');

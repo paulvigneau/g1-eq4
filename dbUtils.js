@@ -20,7 +20,6 @@ function connectToServer(callback) {
             }
         });
 
-        client.close();
         return callback(null, _db);
     });
 }
