@@ -20,7 +20,7 @@
             <h5 class="card-title">Projet: <%= project.name %> </h5>
             <p class="card-text">Date de début : <%= project.start %> -
                 Date de fin : <%= project.end %></p>
-            <a href="#" class="btn btn-primary stretched-link"><%= project.name %></a>
+            <a href="/projects/<%= project._id %>" class="btn btn-primary stretched-link"><%= project.name %></a>
         </div>
     </div>
     <% }); %>
