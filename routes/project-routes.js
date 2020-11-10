@@ -9,7 +9,10 @@ router.get('/', function (req, res) {
             res.render('project', {
                 project: project
             });
-        });
+        })
+        .catch(() => {
+            res.redirect('/404');
+    });
 });
 
 module.exports = router;

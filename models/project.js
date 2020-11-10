@@ -44,7 +44,7 @@ function getAllProjects(){
 function getProjectByID(id){
     return new Promise((resolve, reject) => {
         let dbo = dbUtils.getDb();
-        dbo.collection('projects').findOne({'_id': new objectId(id)}, function (err, result) {
+        dbo.collection('projects').findOne({ '_id': new objectId(id) }, function (err, result) {
             if (err){
                 reject(err);
             }else {
