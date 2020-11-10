@@ -3,7 +3,12 @@ let router = express.Router();
 const projectModel = require('../models/project.js');
 
 router.get('/', function (req, res) {
-    res.render('projects');
+    projectModel.getAllProjects()
+        .then(projects => {
+            res.render('projects', {
+                projects: projects
+            });
+        });
 });
 
 router.get('/new-project', function (req, res) {

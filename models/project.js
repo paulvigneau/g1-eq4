@@ -1,8 +1,4 @@
 let dbUtils = require('../dbUtils');
-const MongoClient = require('mongodb').MongoClient;
-// TODO Remplacer la duplication de code mongoclient.connect par
-// TODO Soit la DB si on arrive à la get sans undefined
-// TODO Soit une méthode connect pour get la db
 
 function addProject(name, description, start, end) {
     let dbo = dbUtils.getDb();
@@ -23,16 +19,15 @@ function addProject(name, description, start, end) {
 }
 
 function getAllProjects(){
-    let dbo = dbUtils.getDb();
-
-    dbo.collection('projects').find({}).toArray(function(err, result) {
-        if (err){
-            throw err;
-        }else {
-            console.log(result);
-            db.close();
-            return result;
-        }
+    return new Promise((resolve, reject) => {
+        let dbo = dbUtils.getDb();
+        dbo.collection('projects').find({}).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else {
+                resolve(result);
+            }
+        });
     });
 }
 

@@ -15,11 +15,10 @@ dbUtils.connectToServer(function(err, client){
     if(err) console.log(err);
 });
 
-// test insert
-// projectModel.addProject('grrgrgrgrgrrgrrgrg', 'des', 'lala', 'lele');
-
 const projectsRoutes = require('./routes/projects-routes');
 app.use('/', projectsRoutes);
+app.use('/project', projectsRoutes);
+
 
 app.get('/404', (req, res) => {
     res.status(404);
