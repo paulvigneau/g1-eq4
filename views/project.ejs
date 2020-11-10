@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('head.ejs') %>
+</head>
+<body class="container">
+
+<div class="jumbotron">
+    <h1>Nom du projet : <%= project.name %></h1>
+    <p>Description : <%= project.description %></p>
+</div>
+
+
+<ul class="list-unstyled">
+    <% project.members.forEach(function(member) { %>
+
+    <% }); %>
+</ul>
+
+<footer>
+    <%- include('footer.ejs') %>
+</footer>
+
+</body>
+</html>

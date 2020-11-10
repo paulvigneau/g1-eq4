@@ -15,7 +15,6 @@ router.get('/', function (req, res) {
                 management: project.management
             });
         });
-    res.send('Page de gestion');
 });
 
 module.exports = router;
