@@ -4,7 +4,7 @@ const ejs = require('ejs');
 const path = require('path');
 const dbUtils = require('./dbUtils');
 const bodyParser = require('body-parser');
-//let projectModel = require('./models/project.js');
+// let projectModel = require('./models/project.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
@@ -16,10 +16,10 @@ dbUtils.connectToServer(function(err, client){
 });
 
 // test insert
-//projectModel.addProject('grrgrgrgrgrrgrrgrg', 'des', 'lala', 'lele');
+// projectModel.addProject('grrgrgrgrgrrgrrgrg', 'des', 'lala', 'lele');
 
-let routes = require('./routes/projects-routes');
-
+const projectsRoutes = require('./routes/projects-routes');
+app.use('/', projectsRoutes);
 
 app.get('/404', (req, res) => {
     res.status(404);
