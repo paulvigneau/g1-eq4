@@ -24,7 +24,7 @@ router.post('/project', function (req, res) {
     res.redirect('/');
 });
 
-const backlog = require('./backlog-routes');
-router.use('/projects/:id', backlog);
+const project = require('./project-routes');
+router.use('/projects/:id', project);
 
 module.exports = router;

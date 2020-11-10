@@ -11,7 +11,16 @@ function addProject(name, description, start, end) {
         start: start,
         end: end,
         members: [],
+        management: {
+            backlog: {
+                name: 'backlog',
+                USList: []
+            },
+            sprints: [
 
+
+            ]
+        }
     };
 
     projects.insertOne(projectToAdd, function (err, result) {
@@ -35,7 +44,7 @@ function getAllProjects(){
 function getProjectByID(id){
     return new Promise((resolve, reject) => {
         let dbo = dbUtils.getDb();
-        dbo.collection('projects').findOne({"_id": new objectId(id)}, function (err, result) {
+        dbo.collection('projects').findOne({'_id': new objectId(id)}, function (err, result) {
             if (err){
                 reject(err);
             }else {
@@ -45,4 +54,4 @@ function getProjectByID(id){
     });
 }
 
-module.exports = { addProject, getAllProjects };
+module.exports = { addProject, getAllProjects, getProjectByID };
