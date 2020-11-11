@@ -3,33 +3,34 @@
 <head>
     <%- include('head.ejs') %>
 </head>
-<body class="container">
+<body>
 
-<div class="jumbotron">
-    <h1>Nom du projet : <%= project.name %></h1>
-    <p>Description : <%= project.description %></p>
-</div>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Nom du projet : <%= project.name %></h1>
+        <p>Description : <%= project.description %></p>
+    </div>
 
-
-<ul class="list-unstyled">
-    <p>Membres <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">New member</a></p>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-            <% project.members.forEach(function(member) { %>
+    <div>
+        <p>Membres <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">New member</a></p>
+        <div class="container-fluid">
+            <div class="row">
                 <div class="col">
-                    <p>Nom : <%= member.name %></p>
-                    <p>Rôle : <%= member.role %></p>
-                    <p>Email : <%= member.email %></p>
-                    <p>Couleur : <i class="fa fa-square" style="color: #<%= member.color%>"></i></p>
+                    <% project.members.forEach(function(member) { %>
+                        <div class="col">
+                            <p>Nom : <%= member.name %></p>
+                            <p>Rôle : <%= member.role %></p>
+                            <p>Email : <%= member.email %></p>
+                            <p>Couleur : <i class="fa fa-square" style="color: #<%= member.color%>"></i></p>
+                        </div>
+                    <% }); %>
                 </div>
-            <% }); %>
             </div>
         </div>
+        <p>Date de début : <%= project.start %></p>
+        <p>Date de fin : <%= project.end %></p>
     </div>
-    <p>Date de début : <%= project.start %></p>
-    <p>Date de fin : <%= project.end %></p>
-</ul>
+</div>
 
 <footer>
     <%- include('footer.ejs') %>
