@@ -5,6 +5,17 @@
 </head>
 <body>
 
+<%
+function getCurrentSprint(sprints) {
+    let today = new Date();
+    for (let sprint of sprints) {
+        if (new Date(sprint.start) <= today && today <= new Date(sprint.end))
+            return sprint.start + " - " + sprint.end;
+    }
+    return "Aucun"
+}
+%>
+
 <div class="container">
     <div class="jumbotron">
         <h1>Nom du projet : <%= project.name %></h1>
@@ -29,6 +40,8 @@
         </div>
         <p>Date de début : <%= project.start %></p>
         <p>Date de fin : <%= project.end %></p>
+
+        <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
     </div>
 </div>
 
