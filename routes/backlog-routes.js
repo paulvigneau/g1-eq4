@@ -1,6 +1,6 @@
 const express = require('express');
 let router = express.Router({ mergeParams: true });
-const backlogModel = require('../models/backlog.js');
+const backlogModel = require('../services/backlog.js');
 
 router.get('/', function (req, res) {
     backlogModel.getAllSprints(req.params.id)

@@ -1,7 +1,7 @@
 const express = require('express');
 let router = express.Router({ mergeParams: true });
-const projectModel = require('../models/project.js');
-const memberModel = require('../models/member');
+const projectModel = require('../services/project.js');
+const memberModel = require('../services/member');
 
 router.get('/', function (req, res) {
     projectModel.getProjectByID(req.params.id)

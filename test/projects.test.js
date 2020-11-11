@@ -2,7 +2,7 @@ const app = require('../app');
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-let Project = require('../models/project');
+let Project = require('../services/project');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
