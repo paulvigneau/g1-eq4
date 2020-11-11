@@ -8,24 +8,25 @@
 <div class="jumbotron">
     <h1>Nom du projet : <%= project.name %></h1>
     <p>Description : <%= project.description %></p>
+    <i class="fas fa-circle" style="color:#212548"></i>
 </div>
 
 
 <ul class="list-unstyled">
-    <p>Membres</p>
+    <p>Membres <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">New member</a></p>
     <div class="container-fluid">
         <div class="row">
             <div class="col">
             <% project.members.forEach(function(member) { %>
                 <div class="col">
-                    <p>Name : member.name</p>
-                    <p>Role : member.role</p>
-                    <p>email : member.email</p>
-                    <p>color : <span class="dot" style="color:<%= member.color%>"></span></p>    
+                    <p>Name : <%= member.name %></p>
+                    <p>Role : <%= member.role %></p>
+                    <p>email : <%= member.email %></p>
+                    <p>color : <i class="fas fa-circle" style="color:#<%= member.color%>"></i></p>    
+                    
                 </div>
             <% }); %>
         </div>
-        <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">New member</a>
     </div>
     <p>Date de début : <%= project.start %></p>
     <p>Date de fin : <%= project.end %></p>
