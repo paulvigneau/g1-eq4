@@ -6,9 +6,10 @@ const memberModel = require('../models/member');
 router.get('/', function (req, res) {
     projectModel.getProjectByID(req.params.id)
         .then(project => {
-            //console.log(project);
+            console.log(project);
             res.render('project', {
-                project: project
+                project: project,
+                projectId:req.params.id
             });
         })
         .catch(() => {
@@ -39,5 +40,8 @@ router.post('/member', function (req, res) {
 router.post('/members/:id', function(req, res){
     console.log(req.params.id);
 });
+
+const backlog = require('./backlog-routes');
+router.use('/backlog', backlog);
 
 module.exports = router;
