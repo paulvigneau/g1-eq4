@@ -5,7 +5,7 @@
 </head>
 <body class="container">
 
-<form action="/project/<% project._id %>/member" method="post">
+<form action="/project/<%= project._id %>/member" method="post">
 
     <div class="form-group">
         <label for="name">Nom du membre</label>
@@ -22,7 +22,7 @@
             <label for="inputState">
                 <h2>Rôle du membre</h2>
             </label>
-            <select id="inputState" class="form-control">
+            <select id="role" name="role" class="form-control">
                 <option>Développeur</option>
                 <option>Testeur</option>
                 <option>Product Owner</option>
