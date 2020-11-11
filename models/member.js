@@ -35,11 +35,11 @@ function getMemberById(memberId){
         });
 }
 
-function deleteMember(memberId){
+function deleteMember(projectId, memberId){
     let dbo = dbUtils.getDb();
     getMemberById(memberId).then(memberToDelete => {
         console.log(memberToDelete);
-        dbo.collection('projects').updateOne({'_id': new objectId(memberId)}, {$pull: { 'members': memberToDelete }});
+        dbo.collection('projects').update({'_id': new objectId(projectId)}, {$pull: { members: memberToDelete }});
     });
 }
 

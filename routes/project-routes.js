@@ -36,9 +36,8 @@ router.post('/member', function (req, res) {
     res.redirect('/');
 });
 
-router.post('/members/:id', function(req, res){
-    console.log(req.params.id);
-    memberModel.deleteMember(req.params.id);
+router.post('/members/:memberId', function(req, res){
+    memberModel.deleteMember(req.params.id, req.params.memberId);
     res.redirect('/');
 });
 
