@@ -44,8 +44,8 @@
                 </div>
             </div>
         </div>
-        <p>Date de début : <%= project.start %></p>
-        <p>Date de fin : <%= project.end %></p>
+        <p>Date de début : <%= new Date(project.start).toLocaleDateString() %></p>
+        <p>Date de fin : <%= new Date(project.end).toLocaleDateString() %></p>
 
         <!--<p>Sprint en cours : <%= //getCurrentSprint(project.management.backlog.sprints) %></p>-->
     </div>

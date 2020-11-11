@@ -1,14 +1,18 @@
 const express = require('express');
-let router = express.Router();
-const projectModel = require('../services/project.js');
+const router = express.Router();
+const projectService = require('../services/project');
 
 router.get('/', function (req, res) {
-    projectModel.getAllProjects()
-        .then(projects => {
+    projectService.getAllProjects()
+        .then((projects) => {
             res.render('projects', {
                 projects: projects
             });
-        });
+        })
+        .catch((err) => {
+            res.status(404).send(err);
+        }
+    );
 });
 
 router.get('/new-project', function (req, res) {
@@ -16,16 +20,13 @@ router.get('/new-project', function (req, res) {
 });
 
 router.post('/project', function (req, res) {
-    const name = req.body.name;
-    const description = req.body.description;
-    const start = req.body.startDate;
-    const end = req.body.endDate;
-    if (name && description && start && end) {
-        projectModel.addProject(name, description, start, end);
-        res.redirect('/');
-    }
-    else
-        res.status(400).send();
+    projectService.addProject(req.body)
+        .then(() =>
+            res.redirect('/')
+        )
+        .catch((err) =>
+            res.status(404).send(err)
+        );
 });
 
 const project = require('./project-routes');

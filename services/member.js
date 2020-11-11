@@ -1,45 +1,54 @@
-let dbUtils = require('../dbUtils');
-let objectId = dbUtils.getObjectId();
-const projectModel = require('./project.js');
+const projectService = require('./project');
+const Member = require('../model/member');
 
 function addMember(projectId, name, email, role) {
-    let dbo = dbUtils.getDb();
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    reject();
 
-    const randomColor = Math.floor(Math.random()*16777215).toString(16);
-    let memberToAdd = {
-        _id: new objectId(),
-        name: name,
-        email: email,
-        role: role,
-        color: randomColor
-    };
+                const randomColor = Math.floor(Math.random()*16777215).toString(16);
+                const member = new Member({
+                    name: name,
+                    email: email,
+                    role: role,
+                    color: randomColor
+                });
 
-    dbo.collection('projects').update({'_id': new objectId(projectId)}, {$push: { members: memberToAdd }});
+                project.members.push(member);
+                project.save(resolve());
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
 }
 
-function getMemberById(memberId){
+function getMemberById(memberId) {
         return new Promise((resolve, reject) => {
-            let dbo = dbUtils.getDb();
-            dbo.collection('projects').findOne({'members._id' : new objectId(memberId)},
-                {'members': { $elemMatch: {'_id' :  new objectId(memberId)}}}, function (err, result) {
-                if (err){
+            Member.findById(memberId, (err, project) => {
+                if (err)
                     reject(err);
-                }else {
-                    for(let i = 0; i < result.members.length; i++){
-                        if(result.members[i]._id == memberId){
-                            resolve(result.members[i]);
-                        }
-                    }
-                }
+                else
+                    resolve(project);
             });
         });
 }
 
-function deleteMember(projectId, memberId){
-    let dbo = dbUtils.getDb();
-    getMemberById(memberId).then(memberToDelete => {
-        console.log(memberToDelete);
-        dbo.collection('projects').update({'_id': new objectId(projectId)}, {$pull: { members: memberToDelete }});
+function deleteMember(projectId, memberId) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    reject();
+
+                project.members.pull({ _id: memberId });
+                project.save(resolve());
+            })
+            .catch((err) => {
+                reject(err);
+            });
     });
 }
 

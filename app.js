@@ -1,23 +1,23 @@
 const express = require('express');
 const app = express();
-const ejs = require('ejs');
+const mongoose = require('mongoose');
 const path = require('path');
-const dbUtils = require('./dbUtils');
 const bodyParser = require('body-parser');
-// let projectModel = require('./models/project.js');
+
+const url = 'mongodb://localhost:27017/scrumProject';
+mongoose.connect(url);
+let db = mongoose.connection;
+db.once('open', () => {
+    console.log('Connexion à la base OK');
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(path.join(__dirname, '/public/stylesheets')));
 
-dbUtils.connectToServer(function(err, client){
-    if(err) console.log(err);
-});
-
 const projectsRoutes = require('./routes/projects-routes');
 app.use('/', projectsRoutes);
-
 
 app.get('/404', (req, res) => {
     res.status(404);

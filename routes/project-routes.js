@@ -1,44 +1,47 @@
 const express = require('express');
-let router = express.Router({ mergeParams: true });
-const projectModel = require('../services/project.js');
-const memberModel = require('../services/member');
+const router = express.Router({ mergeParams: true });
+const projetService = require('../services/project');
+const memberService = require('../services/member');
 
 router.get('/', function (req, res) {
-    projectModel.getProjectByID(req.params.id)
-        .then(project => {
+    projetService.getProjectByID(req.params.id)
+        .then((project) => {
             res.render('project', {
                 project: project,
-                projectId:req.params.id
+                projectId: req.params.id
             });
         })
         .catch(() => {
             res.redirect('/404');
-    });
+        }
+    );
 });
 
 router.get('/new-member', function(req, res){
-    projectModel.getProjectByID(req.params.id)
-        .then(project => {
-        res.render('new-member', {
-            project: project
+    projetService.getProjectByID(req.params.id)
+        .then(() => {
+            res.render('new-member', {
+                projectId: req.params.id
             });
         })
         .catch(() => {
             res.redirect('/404');
-    });
+        }
+    );
 });
 
 router.post('/member', function (req, res) {
-    const name = req.body.name;
-    const email = req.body.email;
-    const role = req.body.role;
-    memberModel.addMember(req.params.id, name, email, role);
-    res.redirect('/projects/' + req.params.id);
+    memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)
+        .then(() => {
+            res.redirect('/projects/' + req.params.id);
+        });
 });
 
 router.post('/members/:memberId', function(req, res){
-    memberModel.deleteMember(req.params.id, req.params.memberId);
-    res.redirect('/projects/' + req.params.id);
+    memberService.deleteMember(req.params.id, req.params.memberId)
+        .then(() => {
+            res.redirect('/projects/' + req.params.id);
+        });
 });
 
 const backlog = require('./backlog-routes');

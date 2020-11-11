@@ -5,7 +5,7 @@ let MemberSchema = new Schema({
         name: { type: String, required: true },
         role: { type: String, required: true, enum: [ 'Développeur', 'Testeur', 'Product Owner' ] },
         email: { type: String, required: true },
-        color: { type: String, required: true, default: '#aaaaaa' },
+        color: { type: String, required: true, default: 'aaaaaa' },
     }
 );
 

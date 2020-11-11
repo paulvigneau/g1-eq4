@@ -1,18 +1,15 @@
-let dbUtils = require('../dbUtils');
-let objectId = dbUtils.getObjectId();
+const projectService = require('../services/project');
 
-function getAllSprints(id){
+function getAllSprints(id) {
     return new Promise((resolve, reject) => {
-        let dbo = dbUtils.getDb();
-        dbo.collection('projects').findOne({ '_id': new objectId(id) }, function (err, result) {
-            if (err){
+        projectService.getProjectByID(id)
+            .then((project) => {
+                resolve(project.management.backlog);
+            })
+            .catch((err) => {
                 reject(err);
-            }
-            else{
-                resolve(result.management.backlog);
-            }
-        })
-    })
+            });
+    });
 }
 
 module.exports = { getAllSprints };

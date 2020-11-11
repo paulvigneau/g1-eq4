@@ -1,56 +1,36 @@
-let dbUtils = require('../dbUtils');
-let objectId = dbUtils.getObjectId();
+const Project = require('../model/project');
 
-function addProject(name, description, start, end) {
-    let dbo = dbUtils.getDb();
-
-    let projects = dbo.collection('projects');
-    let projectToAdd = {
-        name: name,
-        description: description,
-        start: start,
-        end: end,
-        members: [],
-        management: {
-            backlog: {
-                backlog: {
-                    name: 'backlog',
-                    USList: []
-                },
-                sprints: [
-
-                ]
-            }
-        }
-    };
-
-    projects.insertOne(projectToAdd, function (err, result) {
-        if (err) throw err;
-    });
-}
-
-function getAllProjects(){
+function addProject(p) {
     return new Promise((resolve, reject) => {
-        let dbo = dbUtils.getDb();
-        dbo.collection('projects').find({}).toArray(function(err, result) {
-            if (err){
+        const project = new Project(p);
+
+        project.save((err, project) => {
+            if (err)
                 reject(err);
-            }else {
-                resolve(result);
-            }
+            else
+                resolve(project);
         });
     });
 }
 
-function getProjectByID(id){
+function getAllProjects() {
     return new Promise((resolve, reject) => {
-        let dbo = dbUtils.getDb();
-        dbo.collection('projects').findOne({ '_id': new objectId(id) }, function (err, result) {
-            if (err){
+        Project.find({}).exec((err, projects) => {
+            if (err)
                 reject(err);
-            }else {
-                resolve(result);
-            }
+            else
+                resolve(projects);
+        });
+    });
+}
+
+function getProjectByID(id) {
+    return new Promise((resolve, reject) => {
+        Project.findById(id, (err, project) => {
+            if (err)
+                reject(err);
+            else
+                resolve(project);
         });
     });
 }
