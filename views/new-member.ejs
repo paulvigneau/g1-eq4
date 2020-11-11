@@ -5,7 +5,7 @@
 </head>
 <body class="container">
 
-<form action="/project/<%= project._id %>/member" method="post">
+<form action="/projects/<%= project._id %>/member" method="post">
 
     <div class="form-group">
         <label for="name">Nom du membre</label>
@@ -31,7 +31,7 @@
     </div>
 
     <button type="submit" class="btn btn-success btn-danger">Ajouter</button>
-    <a type="button" class="btn btn-success btn-danger" href="/project/<% project._id %>">Retour</a>
+    <a type="button" class="btn btn-success btn-danger" href="/projects/<% project._id %>">Retour</a>
 </form>
 
 <footer>
