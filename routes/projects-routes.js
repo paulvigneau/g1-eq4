@@ -20,8 +20,12 @@ router.post('/project', function (req, res) {
     const description = req.body.description;
     const start = req.body.startDate;
     const end = req.body.endDate;
-    projectModel.addProject(name, description, start, end);
-    res.redirect('/');
+    if (name && description && start && end) {
+        projectModel.addProject(name, description, start, end);
+        res.redirect('/');
+    }
+    else
+        res.status(400).send();
 });
 
 const project = require('./project-routes');
