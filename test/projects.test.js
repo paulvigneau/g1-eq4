@@ -28,7 +28,6 @@ describe('Projects tests', () => {
 
         await projectService.getAllProjects().then(
             (projects) => {
-                console.log(projects);
                 assert(projects.find(
                     (p) => p.name === 'Projet Test'
                         && p.description === 'Description de projet de test'
