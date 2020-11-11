@@ -16,16 +16,24 @@ router.get('/', function (req, res) {
     });
 });
 
-router.get('project/:id/new-member', function(req, res){
-    res.render('new-member');
+router.get('/new-member', function(req, res){
+    projectModel.getProjectByID(req.params.id)
+        .then(project => {
+        res.render('new-member', {
+            project: project
+            });
+        })
+        .catch(() => {
+            res.redirect('/404');
+    });
 });
 
-router.post('/project/:id/member', function (req, res) {
+router.post('/member', function (req, res) {
     const name = req.body.name;
     const email = req.body.email;
     const role = req.body.role;
     memberModel.addMember(req.params.id, name, email, role);
-    res.redirect('/project/:id');
+    res.redirect('/');
 });
 
 module.exports = router;
