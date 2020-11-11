@@ -33,12 +33,12 @@ router.post('/member', function (req, res) {
     const email = req.body.email;
     const role = req.body.role;
     memberModel.addMember(req.params.id, name, email, role);
-    res.redirect('/');
+    res.redirect('/projects/' + req.params.id);
 });
 
 router.post('/members/:memberId', function(req, res){
     memberModel.deleteMember(req.params.id, req.params.memberId);
-    res.redirect('/');
+    res.redirect('/projects/' + req.params.id);
 });
 
 const backlog = require('./backlog-routes');
