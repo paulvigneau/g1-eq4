@@ -37,7 +37,7 @@
                             <p>Email : <%= member.email %></p>
                             <p>Couleur : <i class="fa fa-square" style="color: #<%= member.color%>"></i></p>
                             <form action="/projects/<%= project._id %>/members/<%= member._id %>" method="post">
-                                <a type="button"  class="btn btn-success btn-danger">Supprimer le membre</a>
+                                <button type="submit" class="btn btn-success btn-danger">Supprimer le membre</button>
                             </form>
                         </div>
                     <% }); %>
