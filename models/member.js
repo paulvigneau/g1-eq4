@@ -1,6 +1,6 @@
 let dbUtils = require('../dbUtils');
 let objectId = dbUtils.getObjectId();
-const projectModel = require('project.js');
+const projectModel = require('./project.js');
 
 function addMember(projectId, name, email, role) {
     let dbo = dbUtils.getDb();
