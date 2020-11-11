@@ -11,7 +11,7 @@ router.get('/', function (req, res) {
         });
 });
 
-router.get('/project/new-project', function (req, res) {
+router.get('/new-project', function (req, res) {
     res.render('new-project');
 });
 
