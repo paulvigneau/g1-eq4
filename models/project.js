@@ -13,13 +13,14 @@ function addProject(name, description, start, end) {
         members: [],
         management: {
             backlog: {
-                name: 'backlog',
-                USList: []
-            },
-            sprints: [
+                backlog: {
+                    name: 'backlog',
+                    USList: []
+                },
+                sprints: [
 
-
-            ]
+                ]
+            }
         }
     };
 
