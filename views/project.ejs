@@ -12,9 +12,24 @@
 
 
 <ul class="list-unstyled">
-    <% project.members.forEach(function(member) { %>
-
-    <% }); %>
+    <p>Membres</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+            <% project.members.forEach(function(member) { %>
+                <div class="col">
+                    <p>Name : member.name</p>
+                    <p>Role : member.role</p>
+                    <p>email : member.email</p>
+                    <p>color : <span class="dot" style="color:<%= member.color%>"></span></p>    
+                </div>
+            <% }); %>
+        </div>
+        <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary stretched-link">New member</a>
+    </div>
+    <p>Date de début : <%= project.start %></p>
+    <p>Date de fin : <%= project.end %></p>
+    <!-- <p>Sprint actuel : <%= actual_sprint %></p> -->
 </ul>
 
 <footer>
