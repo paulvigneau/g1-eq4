@@ -6,14 +6,14 @@
 <body>
 
 <%
-function getCurrentSprint(sprints) {
+/*function getCurrentSprint(sprints) {
     let today = new Date();
     for (let sprint of sprints) {
         if (new Date(sprint.start) <= today && today <= new Date(sprint.end))
             return sprint.start + " - " + sprint.end;
     }
     return "Aucun"
-}
+}*/
 %>
 
 <div class="container">
@@ -36,6 +36,9 @@ function getCurrentSprint(sprints) {
                             <p>Rôle : <%= member.role %></p>
                             <p>Email : <%= member.email %></p>
                             <p>Couleur : <i class="fa fa-square" style="color: #<%= member.color%>"></i></p>
+                            <form action="/projects/<%= project._id %>/members/<%= member._id %>" method="post">
+                                <a type="button"  class="btn btn-success btn-danger">Supprimer le membre</a>
+                            </form>
                         </div>
                     <% }); %>
                 </div>
@@ -44,7 +47,7 @@ function getCurrentSprint(sprints) {
         <p>Date de début : <%= project.start %></p>
         <p>Date de fin : <%= project.end %></p>
 
-        <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
+        <!--<p>Sprint en cours : <%= //getCurrentSprint(project.management.backlog.sprints) %></p>-->
     </div>
 </div>
 

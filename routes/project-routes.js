@@ -6,7 +6,7 @@ const memberModel = require('../models/member');
 router.get('/', function (req, res) {
     projectModel.getProjectByID(req.params.id)
         .then(project => {
-            console.log(project);
+            //console.log(project);
             res.render('project', {
                 project: project
             });
@@ -34,6 +34,10 @@ router.post('/member', function (req, res) {
     const role = req.body.role;
     memberModel.addMember(req.params.id, name, email, role);
     res.redirect('/');
+});
+
+router.post('/members/:id', function(req, res){
+    console.log(req.params.id);
 });
 
 module.exports = router;
