@@ -1,8 +1,10 @@
+process.env.NODE_ENV = 'test';
+
 const app = require('../app');
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-let Project = require('../services/project');
+let projectService = require('../services/project');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -17,15 +19,16 @@ describe('Projects tests', () => {
             .send({
                 name: 'Projet Test',
                 description: 'Description de projet de test',
-                startDate: '2020-11-10',
-                endDate: '2020-11-20'
+                start: '2020-11-10',
+                end: '2020-11-20'
             });
 
         expect(res.status).to
             .equal(200);
 
-        await Project.getAllProjects().then(
+        await projectService.getAllProjects().then(
             (projects) => {
+                console.log(projects);
                 assert(projects.find(
                     (p) => p.name === 'Projet Test'
                         && p.description === 'Description de projet de test'

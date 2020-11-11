@@ -3,9 +3,9 @@ const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
+const config = require('config');
 
-const url = 'mongodb://localhost:27017/scrumProject';
-mongoose.connect(url);
+mongoose.connect(config.DBHost);
 let db = mongoose.connection;
 db.once('open', () => {
     console.log('Connexion à la base OK');
