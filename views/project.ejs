@@ -17,6 +17,9 @@ function getCurrentSprint(sprints) {
 %>
 
 <div class="container">
+    
+    <%- include('navigation.ejs') %>
+
     <div class="jumbotron">
         <h1>Nom du projet : <%= project.name %></h1>
         <p>Description : <%= project.description %></p>
