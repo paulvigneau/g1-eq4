@@ -111,6 +111,10 @@ describe('createproject & displayProjects', () => {
                 expect(projects.length).to.be.equal(2);
             });
 
+        await driver.findElement(By.className('card-title')).getText()
+            .then(async text => {
+                expect(text).to.be.equal('Projet: Projet Test');
+        });
     });
 });
 
@@ -119,3 +123,5 @@ after(function(done) {
         mongoose.connection.close(done);
     });
 });
+
+module.exports = { saveProject };
