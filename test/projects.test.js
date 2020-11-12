@@ -4,10 +4,12 @@ const app = require('../app');
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const dirtyChai = require('dirty-chai');
 let projectService = require('../services/project');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
+chai.use(dirtyChai);
 
 describe('Projects tests', () => {
 
