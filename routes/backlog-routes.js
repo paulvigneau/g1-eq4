@@ -21,7 +21,7 @@ router.get('/', function (req, res) {
 router.post('/sprint', function (req, res) {
     sprintService.addSprint(req.params.id, req.body.start, req.body.end)
     .then(() => {
-        res.redirect('/projects/' + req.params.id + '/project/backlog');
+        res.redirect('/projects/' + req.params.id + '/backlog');
     })
     .catch(() => {
         res.redirect('/404');

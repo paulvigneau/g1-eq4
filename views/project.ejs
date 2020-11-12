@@ -6,14 +6,14 @@
 <body>
 
 <%
-/*function getCurrentSprint(sprints) {
+function getCurrentSprint(sprints) {
     let today = new Date();
     for (let sprint of sprints) {
         if (new Date(sprint.start) <= today && today <= new Date(sprint.end))
             return sprint.start + " - " + sprint.end;
     }
     return "Aucun"
-}*/
+}
 %>
 
 <div class="container">
@@ -47,7 +47,7 @@
         <p>Date de début : <%= new Date(project.start).toLocaleDateString() %></p>
         <p>Date de fin : <%= new Date(project.end).toLocaleDateString() %></p>
 
-        <!--<p>Sprint en cours : <%= //getCurrentSprint(project.management.backlog.sprints) %></p>-->
+        <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
     </div>
 </div>
 
