@@ -16,4 +16,14 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/sprint', function (req, res) {
+    backlogModel.addSprint(req.params.id, req.body.start, req.body.end)
+    .then(() => {
+        res.redirect('/projects/' + req.params.id + '/project/backlog');
+    })
+    .catch(() => {
+        res.redirect('/404');
+    });
+});
+
 module.exports = router;
