@@ -19,3 +19,9 @@ Feature : Fonctionnalité de la page d'accueil
         Then il y a une redirection vers la page d'acceuil
         And le nouveau projet est visible sur la page d'acueil 
         And ses informations correspondent a celle entré par l'utilisateur plus tôt
+
+    #displayNonexistentProject
+    Scenario : Une requête GET /projects/:id avec un id invalide est envoyée
+        When une requête GET est envoyé à l'url /projects/:id
+        And l'id du projet n'existe pas
+        Then il y a une redirection vers la page /404
