@@ -31,6 +31,9 @@ jobs:
       uses: supercharge/mongodb-github-action@1.3.0
       with:
         mongodb-version: ${{ matrix.mongodb-version }}
+        
+    - name: Start Chrome
+      uses: nanasess/setup-chromedriver@master
 
     - run: npm install
     - run: npm test

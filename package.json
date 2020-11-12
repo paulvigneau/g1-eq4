@@ -28,7 +28,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "chromedriver": "^86.0.0",
+    "chromedriver": "^81.0.0",
     "dirty-chai": "^2.0.1",
     "eslint": "^7.13.0",
     "eslint-plugin-node": "^11.1.0",

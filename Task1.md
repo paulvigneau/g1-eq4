@@ -32,7 +32,7 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 | #7 | Créer une route GET /404 qui affiche le contenu de la page not-found.ejs. | 20min | Toutes | #1 | DONE | GEN I-R-P | Paul |
 | #8 | Créer un fichier projects.ejs qui va pour chaque projet récupéré afficher un bloc avec le nom du projet. | 30min | US1 | #1 | WIP | DEV I-P | Alexandre |
 | #9 | Créer le Gherkin displayProjects du scénario suivant : lors du chargement de la page /projects, on a bien des blocs qui s'affichent correspondant au nombre de projets récupérés. | 30min | US1 | #1 | WIP | GEN I-P | Jean-David |
-| #10 | Implémenter le test Selenium du Gherkin displayProjects dans le fichier projects.test.js. | 30min | US1 | #8, #9, #12 | WIP | TEST S-I-T | Alexandre |
+| #10 | Implémenter le test Selenium du Gherkin displayProjects dans le fichier projects.test.js. | 30min | US1 | #8, #9, #12 | WIP | TEST S-I | Alexandre |
 | #11 | Créer la fonction getAllProjects dans le fichier models/project.js qui récupère en base de données tous les projets (sauf la partie management) et retourne l’ensemble sous forme de tableau. | 20min | US1 | #2 | WIP | DEV I-P | Alexandre |
 | #12 | Créer une route GET /projects dans le fichier routes/projectsRoutes.js qui va appeler la fonction getAllProjects de models/project.js et qui affiche la page projects.ejs en lui passant les données.  | 20min | US1 | #11 | WIP | DEV I-P | Alexandre |
 | #13 | Implémenter un test qui envoie une requête GET sur /projects et qui vérifie que tous les projets stockés en base de données sont bien récupérés. | 30min | US1 | #12 | TODO | TEST | / |
