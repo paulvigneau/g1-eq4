@@ -17,10 +17,8 @@ function addSprint(projectId, start, end) {
                 if (!project)
                     reject();
 
-                console.log(project.management.backlog.sprints.length)
                 for(let i = 0; i < project.management.backlog.sprints.length; i++){
                     let curSprint = project.management.backlog.sprints[i];
-                    console.log(curSprint);
                     if(checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.start)) ||
                         checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.end))){
                         reject();
@@ -42,4 +40,15 @@ function addSprint(projectId, start, end) {
     });
 }
 
-module.exports = { addSprint };
+function getSprintByID(id) {
+    return new Promise((resolve, reject) => {
+        Backlog.sprints.findById(id, (err, project) => {
+            if (err)
+                reject(err);
+            else
+                resolve(project);
+        });
+    });
+}
+
+module.exports = { addSprint, getSprintByID };
