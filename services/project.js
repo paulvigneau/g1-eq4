@@ -3,6 +3,7 @@ const Project = require('../model/project');
 function addProject(p) {
     return new Promise((resolve, reject) => {
         const project = new Project(p);
+        project.incrUS = 0;
 
         project.save((err, project) => {
             if (err)

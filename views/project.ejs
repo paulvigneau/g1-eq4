@@ -6,6 +6,7 @@
 <body>
 
 <%
+    /*
 function getCurrentSprint(sprints) {
     let today = new Date();
     for (let sprint of sprints) {
@@ -14,6 +15,7 @@ function getCurrentSprint(sprints) {
     }
     return "Aucun"
 }
+*/
 %>
 
 <div class="container">
@@ -47,7 +49,7 @@ function getCurrentSprint(sprints) {
         <p>Date de début : <%= new Date(project.start).toLocaleDateString() %></p>
         <p>Date de fin : <%= new Date(project.end).toLocaleDateString() %></p>
 
-        <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
+        <!--<p>Sprint en cours : <%= //getCurrentSprint(project.management.backlog.sprints) %></p>-->
     </div>
 </div>
 
