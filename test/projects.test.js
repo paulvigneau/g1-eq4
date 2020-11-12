@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../app');
+const mongoose = require('mongoose');
 const assert = require('assert');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -38,4 +39,8 @@ describe('Projects tests', () => {
                 ));
             });
     });
+});
+
+after(function(done) {
+    mongoose.connection.close(done);
 });
