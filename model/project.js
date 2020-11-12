@@ -8,10 +8,10 @@ let ProjectSchema = new Schema({
         description: { type: String, required: true },
         start: { type: Date, required: true },
         end: { type: Date, required: true },
-        incrUS: {type: Number, required: true, min: 0},
+        incrUS: { type: Number, required: true, min: 0, default: 0 },
         members: { type: [ Member.schema ] },
         management: {
-            backlog: { type: Backlog.schema }
+            backlog: { type: Backlog.schema, default: new Backlog() }
         }
     }
 );
