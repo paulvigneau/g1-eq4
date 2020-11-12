@@ -20,6 +20,19 @@ let driver = new Builder()
 
 describe('Projects tests', () => {
 
+    it('should get all the project stored', async () => {
+        const projects = await projectService.getAllProjects();
+
+        mongoose.model('project').find({}).exec((err, expectedProjects) => {
+            if (err)
+                assert.fail();
+            else {
+                assert(expectedProjects.length === projects.length);
+            }
+        });
+    });
+
+
     it('should add a new project in database', async () => {
         let res = await chai
             .request(app)
@@ -32,18 +45,15 @@ describe('Projects tests', () => {
                 end: '2020-11-20'
             });
 
-        expect(res.status).to
-            .equal(200);
+        expect(res.status).to.equal(200);
 
-        await projectService.getAllProjects().then(
-            (projects) => {
-                assert(projects.find(
-                    (p) => p.name === 'Projet Test'
-                        && p.description === 'Description de projet de test'
-                        && new Date(p.start).valueOf() === new Date('2020-11-10').valueOf()
-                        && new Date(p.end).valueOf() === new Date('2020-11-20').valueOf()
-                ));
-            });
+        const projects = await projectService.getAllProjects();
+        assert(projects.find(
+            (p) => p.name === 'Projet Test'
+                && p.description === 'Description de projet de test'
+                && new Date(p.start).valueOf() === new Date('2020-11-10').valueOf()
+                && new Date(p.end).valueOf() === new Date('2020-11-20').valueOf()
+        ));
     });
 });
 
@@ -105,5 +115,7 @@ describe('createproject & displayProjects', () => {
 });
 
 after(function(done) {
-    mongoose.connection.close(done);
+    mongoose.model('project').deleteMany({}, () => {
+        mongoose.connection.close(done);
+    });
 });

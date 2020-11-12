@@ -1,5 +1,4 @@
 const Project = require('../model/project');
-const Backlog = require('../model/backlog');
 
 function addProject(p) {
     return new Promise((resolve, reject) => {
