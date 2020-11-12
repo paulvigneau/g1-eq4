@@ -9,7 +9,7 @@ function addUS(projectId, sprintId, description, difficulty) {
                 if (!project)
                     reject();
 
-                let newIncr = project.incrUS++;
+                let newIncr = project.incrUS+1;
                 project.incrUS = newIncr;
 
                 const userStory = new UserStory({
