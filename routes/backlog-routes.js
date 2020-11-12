@@ -20,6 +20,7 @@ router.get('/', function (req, res) {
 router.post('/sprint', function (req, res) {
     sprintService.addSprint(req.params.id, req.body.start, req.body.end)
     .then(() => {
+    console.log(req.params.id);
         res.redirect('/projects/' + req.params.id + '/backlog');
     })
     .catch(() => {

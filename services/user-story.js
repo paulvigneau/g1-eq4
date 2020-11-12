@@ -28,6 +28,9 @@ function addUS(projectId, sprintId, description, difficulty) {
                                 reject();
                             userStory.priority = sprint.USList.length;
                             sprint.USList.push(userStory);
+                        })
+                        .catch((err) => {
+                            reject(err);
                         });
                 }else{
                     //Backlog section add
@@ -53,7 +56,10 @@ function getAllUS(projectId, sprintId) {
                             let sprintObject = sprint.toObject();
                             sprintObject.USList.sort((s1, s2) => {
                                 return s1.priority - s2.priority;
-                            });
+                            })
+                        .catch((err) => {
+                            reject(err);
+                        });
                             resolve(sprintObject);
                     });
                 }else{
