@@ -7,7 +7,6 @@ const projetService = require('../services/project');
 router.get('/', function (req, res) {
     backlogService.getAllSprints(req.params.id)
         .then((backlog) => {
-            console.log(backlog);
             res.render('backlog', {
                 backlog: backlog,
                 projectId: req.params.id
