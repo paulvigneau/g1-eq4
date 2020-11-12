@@ -33,8 +33,8 @@ describe('Projects tests', () => {
                 assert(projects.find(
                     (p) => p.name === 'Projet Test'
                         && p.description === 'Description de projet de test'
-                        && p.start === '2020-11-10'
-                        && p.end === '2020-11-20'
+                        && new Date(p.start).valueOf() === new Date('2020-11-10').valueOf()
+                        && new Date(p.end).valueOf() === new Date('2020-11-20').valueOf()
                 ));
             });
     });
