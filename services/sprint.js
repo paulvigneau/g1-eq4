@@ -1,13 +1,12 @@
 const projectService = require('./project');
 const Backlog = require('../model/backlog');
 const Sprint = require('../model/sprint');
-const Member = require('../model/member');
 
 function checkDatePeriod(start, end, date){
     if(date >= start && date < end){
-        return false;
-    }else{
         return true;
+    }else{
+        return false;
     }
 }
 
@@ -40,3 +39,5 @@ function addSprint(projectId, start, end) {
             });
     });
 }
+
+module.exports = { addSprint };

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const backlogModel = require('../services/backlog.js');
+const backlogService = require('../services/backlog.js');
+const sprintService = require('../services/sprint.js');
 
 router.get('/', function (req, res) {
-    backlogModel.getAllSprints(req.params.id)
+    backlogService.getAllSprints(req.params.id)
         .then((backlog) => {
             console.log(backlog);
             res.render('backlog', {
@@ -17,7 +18,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/sprint', function (req, res) {
-    backlogModel.addSprint(req.params.id, req.body.start, req.body.end)
+    sprintService.addSprint(req.params.id, req.body.start, req.body.end)
     .then(() => {
         res.redirect('/projects/' + req.params.id + '/project/backlog');
     })
