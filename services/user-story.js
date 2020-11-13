@@ -21,7 +21,7 @@ function addUS(projectId, sprintId, description, difficulty) {
                     parent: null
                 });
 
-                if(sprintId != null) {
+                if(sprintId) {
                     sprintService.getSprintByID(sprintId)
                         .then((sprint) => {
                             if (!sprint)
@@ -33,7 +33,7 @@ function addUS(projectId, sprintId, description, difficulty) {
                             reject(err);
                         });
                 }else{
-                    //Backlog section add
+                    // Backlog section add
                     let backlog = project.management.backlog.backlog;
                     userStory.priority = backlog.USList.length;
                     backlog.USList.push(userStory);
@@ -50,7 +50,7 @@ function getAllUS(projectId, sprintId) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
-                if(sprintId != null) {
+                if(sprintId) {
                     sprintService.getSprintByID(sprintId)
                         .then((sprint) => {
                             let sprintObject = sprint.toObject();
