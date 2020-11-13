@@ -20,16 +20,6 @@ let driver = new Builder()
 async function saveMember(projectId, name, email, role) {
     await driver.get('http://localhost:3000/projects/' + projectId + '/new-member');
 
-    await driver.findElements(By.className('btn-primary'))
-        .then(async element => {
-            await element[0].click();
-        });
-
-    await driver.findElement(By.className('btn-primary'))
-        .then(async element => {
-            await element.click();
-        });
-
     await driver.findElement(By.id('name'))
         .then(async element => {
             await element.sendKeys(name);
@@ -90,10 +80,16 @@ describe('addMember', () => {
                 for(let i = 0; i < projects.length; i++) {
                     let project = projects[i];
                     if (project.name === 'Projet 3') {
-                        await driver.get('http://localhost:3000/projects/' + project._id);
-                        await saveMember(project._id, 'Bob', 'John@Doe.com', 'Product Owner');
+                        await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
                     }
+                    await driver.get('http://localhost:3000/projects/' + project._id);
+                    // await driver.findElements(By.css('body > form > button'))
+                    //     .then(async elements => {
+                    //         await element.click();
+                    //     });
                 }
+
+
             });
     }).timeout(6000);
 });
