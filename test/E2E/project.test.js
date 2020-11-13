@@ -34,13 +34,13 @@ async function saveMember(projectId, name, email, role) {
         });
 
     if(role === 'Développeur'){
-        await driver.findElement(By.xpath('.//*[@id="role"]/option[0]')).click();
-    }
-    if(role === 'Testeur'){
         await driver.findElement(By.xpath('.//*[@id="role"]/option[1]')).click();
     }
-    if(role === 'Product Owner'){
+    if(role === 'Testeur'){
         await driver.findElement(By.xpath('.//*[@id="role"]/option[2]')).click();
+    }
+    if(role === 'Product Owner'){
+        await driver.findElement(By.xpath('.//*[@id="role"]/option[3]')).click();
     }
 
     await driver.findElements(By.className('btn-success'))
@@ -74,7 +74,6 @@ describe('Project redirection to homepage', () => {
     }).timeout(10000);
 });
 
-
 describe('addMember', () => {
     it('This should add a member', async () => {
         await testProjects.saveProject('Projet 3', 'Encore un magnifique projet', '12-11-2020', '20-11-2020');
@@ -85,16 +84,48 @@ describe('addMember', () => {
                     if (project.name === 'Projet 3') {
                         await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
                         await driver.get('http://localhost:3000/projects/' + project._id);
-                        await driver.findElements(By.name('name'))
-                            .then(async elements => {
-                                expect(elements[0]).to.be.equal('Nom : Bob');
-                                expect(elements[1]).to.be.equal('Rôle : Testeur');
-                                expect(elements[2]).to.be.equal('Email : John@Doe.com');
+                        await driver.findElement(By.name('name')).getText()
+                            .then(async text => {
+                                expect(text).to.be.equal('Nom : Bob');
+                            });
+                        await driver.findElement(By.name('role')).getText()
+                            .then(async text => {
+                                expect(text).to.be.equal('Rôle : Testeur');
+
+                            });
+                        await driver.findElement(By.name('email')).getText()
+                            .then(async text => {
+                                expect(text).to.be.equal('Email : John@Doe.com');
                             });
                     }
-                    break;
                 }
             });
+    }).timeout(10000);
+});
+
+describe('displayProject', () => {
+    it('This should add a project, and verify that it\'s information are in the homepage', async () => {
+        await testProjects.saveProject('Projet 4', 'Projet magnifique', '12-11-2020', '20-11-2020');
+
+        await projectService.getAllProjects()
+            .then(async projects => {
+                for(let i = 0; i < projects.length; i++){
+                    let curProject = projects[i];
+                    if(curProject.name === 'Projet 4'){
+                        await driver.get('http://localhost:3000/projects/' + curProject._id);
+                        await driver.findElement(By.className('projName')).getText()
+                            .then(async text => {
+                                expect(text).to.be.equal('Nom du projet : ' + 'Projet 4');
+                            });
+                        await driver.findElement(By.className('projDescription')).getText()
+                            .then(async text => {
+                                expect(text).to.be.equal('Description : ' + 'Projet magnifique');
+                            });
+                    }
+
+                }
+            });
+
     }).timeout(10000);
 });
 
