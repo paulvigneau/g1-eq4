@@ -11,7 +11,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
 
-describe('Projects unit tests', () => {
+describe('Project unit tests', () => {
 
     it('should get return status 404 and redirect to /404', async () => {
         let res = await chai
@@ -19,7 +19,8 @@ describe('Projects unit tests', () => {
             .get('/projects/notExistingId')
             .send();
 
-        expect(res.status).to.equal(404).and.redirectTo('/404');
+        expect(res).to.have.status(404);
+        expect(res.redirects[0]).contain('/404');
 
     });
 });
