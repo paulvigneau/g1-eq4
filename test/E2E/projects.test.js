@@ -16,12 +16,7 @@ let driver = new Builder()
     .build();
 
 async function saveProject(name, description, start, end) {
-    await driver.get('http://localhost:3000');
-
-    await driver.findElement(By.className('btn-success'))
-        .then(async element => {
-            await element.click();
-        });
+    await driver.get('http://localhost:3000/new-project');
 
     await driver.findElement(By.id('name'))
         .then(async element => {
@@ -67,6 +62,7 @@ describe('New project page', () => {
 describe('createProject & displayProjects', () => {
     it('should add a project and display it in homepage', async () => {
         await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2020', '20-11-2020');
+
         await driver.findElements(By.className('card'))
             .then(async projects => {
                 expect(projects.length).to.be.equal(1);
