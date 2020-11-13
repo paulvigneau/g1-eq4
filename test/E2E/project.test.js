@@ -66,9 +66,9 @@ describe('Project redirection to homepage', () => {
                  for(let i = 0; i < projects.length; i++){
                     let project = projects[i];
                     if(project.name === 'Projet 2'){
-                        await driver.findElement(By.className('btn btn-primary stretched-link'))
+                        await driver.findElements(By.className('btn btn-primary stretched-link'))
                             .then(async elements => {
-                                await elements.click();
+                                await elements[i].click();
 
                                 driver.getCurrentUrl().then( url => {
                                     expect(url.includes('/projects/' + project._id)).true;
