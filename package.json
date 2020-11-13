@@ -6,7 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=dev && node app.js",
     "lint": "eslint .",
-    "test": "mocha --timeout 10000 --exit"
+    "test": "mocha ./test/* --timeout 10000 --exit",
+    "unit": "mocha ./test/Unit --timemout 10000 --exit"
   },
   "repository": {
     "type": "git",
