@@ -71,7 +71,7 @@ describe('Project redirection to homepage', () => {
                 }
             });
 
-    }).timeout(15000);
+    }).timeout(10000);
 });
 
 
@@ -84,19 +84,21 @@ describe('addMember', () => {
                     let project = projects[i];
                     if (project.name === 'Projet 3') {
                         await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
+                        await driver.get('http://localhost:3000/projects/' + project._id);
+                        await driver.findElements(By.name('name'))
+                            .then(async elements => {
+                                expect(elements[0]).to.be.equal('Nom : Bob');
+                                expect(elements[1]).to.be.equal('Rôle : Testeur');
+                                expect(elements[2]).to.be.equal('Email : John@Doe.com');
+                            });
                     }
-                    await driver.get('http://localhost:3000/projects/' + project._id);
-                    // await driver.findElements(By.css('body > form > button'))
-                    //     .then(async elements => {
-                    //         await element.click();
-                    //     });
+                    break;
                 }
-
-
             });
-    }).timeout(6000);
+    }).timeout(10000);
 });
 
 after(function(done) {
+    driver.quit();
     mongoose.model('project').deleteMany({}, done);
 });

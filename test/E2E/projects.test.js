@@ -59,7 +59,7 @@ describe('New project page', () => {
                     expect(url.includes('/new-project')).true;
                 });
             });
-    }).timeout(6000);
+    }).timeout(10000);
 });
 
 describe('createProject & displayProjects', () => {
@@ -75,10 +75,16 @@ describe('createProject & displayProjects', () => {
             .then(async text => {
                 expect(text).to.be.equal('Projet: Projet 1');
             });
-    }).timeout(6000);
+
+        /* driver.wait(selenium.until.elementLocated(selenium.By.className('card-title'), timeOut)).then(function () {
+            return driver.findElement(selenium.By.name('project_cdp'));
+        }); */
+
+    }).timeout(10000);
 });
 
-after(function (done) {
+after(function(done) {
+    driver.quit();
     mongoose.model('project').deleteMany({}, done);
 });
 
