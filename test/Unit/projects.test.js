@@ -61,7 +61,5 @@ describe('Projects unit tests', () => {
 });
 
 after(function(done) {
-    mongoose.model('project').deleteMany({}, () => {
-        mongoose.connection.close(done);
-    });
+    mongoose.model('project').deleteMany({}, done);
 });

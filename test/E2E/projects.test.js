@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
+const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -81,6 +82,10 @@ describe('createProject & displayProjects', () => {
         }); */
 
     }).timeout(6000);
+});
+
+after(function(done) {
+    mongoose.model('project').deleteMany({}, done);
 });
 
 module.exports = { saveProject };

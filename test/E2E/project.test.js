@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 const testProjects = require('./projects.test');
 const chai = require('chai');
+const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -84,4 +85,8 @@ describe('addMember', () => {
         });*/
 
     }).timeout(6000);
+});
+
+after(function(done) {
+    mongoose.model('project').deleteMany({}, done);
 });
