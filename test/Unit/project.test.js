@@ -61,40 +61,18 @@ describe('Project unit tests', () => {
     });
 
     it('should get an existing project from its Id', async () => {
-        
-        const newProject = new Project({
-            name: 'Test Project',
-            description: 'Un simple projet de test',
-            start: '2017-11-10',
-            end: '2018-11-20'
-        });
-
-        newProject.save(err => {
-            if(err)
-                throw err;
-        });
-
-        projectService.addProject({
-            name: 'Test Project',
-            description: 'Un simple projet de test',
-            start: '2017-11-10',
-            end: '2018-11-20'
-        });
-
-        assert(newProject);
-
         let res = await chai
             .request(app)
-            .get('/projects/' + newProject._id)
+            .get('/projects/' + project._id)
             .send(); 
             
         expect(res).to.have.status(200);
             
-        const p = await projectService.getProjectByID(newProject._id);
-        assert(p.name === 'Test Project'
-            && p.description === 'Un simple projet de test'
-            && new Date(p.start).valueOf() === new Date('2017-11-10').valueOf()
-            && new Date(p.end).valueOf() === new Date('2018-11-20').valueOf()
+        const p = await projectService.getProjectByID(project._id);
+        assert(p.name === 'Super Projet'
+            && p.description === 'Une description intéressante'
+            && new Date(p.start).valueOf() === new Date('2020-10-10').valueOf()
+            && new Date(p.end).valueOf() === new Date('2020-10-20').valueOf()
         );
 
     });

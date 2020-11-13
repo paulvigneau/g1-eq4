@@ -19,21 +19,14 @@ Feature : Fonctionnalité de la page project
                 son email
                 sa couleur
     
-    #addMember
-    Scenario : L'utilisateur ajoute un nouveau membre
+    #createProject
+    Scenario : L'utilisateur crée un nouveau projet
         Given L'utilisateur est sur la page d'accueil de l'application
-        When Il clique sur un projet
-        Then La page de gestion du projet s'affiche
-        When L'utilisateur clique sur le bouton "Nouveau membre"
+        When L'utilisateur clique sur le bouton "Créer un nouveau projet"
         And Un formulaire apparaît
-        And L'utilisateur remplit tous les champs soit :
-            le nom du membre
-            l'email du membre
-        And L'utilisateur choisit un rôle dans la liste déroulante parmi :
-            Développeur
-            Testeur
-            Product Owner
-        And Il clique sur le bouton "Ajouter"
-        Then Il y a une redirection vers la page d'accueil
-        And Le nouveau membre est visible sur la page d'accueil
+        And L'utilisateur remplit tous les champs
+        And Il clique sur le bouton "Créer"
+        Then Il y a une redirection vers la page d'acceuil
+        And Le nouveau projet est visible sur la page d'accueil
         And Ses informations correspondent a celles entrées par l'utilisateur plus tôt
+    
