@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('head.ejs') %>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <%- include('navigation.ejs') %>
+
+        <% let i = 0;
+    backlog.sprints.forEach(function(sprint) { %>
+        <h2>Sprint <%- i++ %></h2>
+        <div class="row">
+            <%- include('sprint.ejs', {sprint : sprint}) %>
+        </div>
+        <% }); %>
+
+        <h2>Backlog</h2>
+        <ul class="list-unstyled">
+            <% backlog.backlog.USList.forEach(function(US) { %>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">ID: #<%= US.id %> </h5>
+                    <p class="card-text">Description : <%= US.description %> -
+                        Difficulté : <%= US.difficulty %></p>
+                    <a href="#" class="btn btn-primary stretched-link">Détails</a>
+                </div>
+            </div>
+            <% }); %>
+        </ul>
+        <a type="button" href="/projects/<%= projectId %>/backlog/new-user-story" class="btn btn-success btn-lg">Créer une nouvelle US</a>
+
+        <a type="button" href="/projects/<%= projectId %>/backlog/new-sprint" class="btn btn-success btn-danger">Créer un
+            nouveau sprint</a>
+
+    </div>
+
+    <footer>
+        <%- include('footer.ejs') %>
+    </footer>
+
+</body>
+
+</html>

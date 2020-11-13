@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('head.ejs') %>
+</head>
+<body class="container">
+
+<form action="/projects/<%= projectId %>/backlog/new-user-story" method="post">
+
+    <div class="form-group">
+        <label for="name">Description de l'US</label>
+        <input type="text" name="description" class="form-control" id="description"  placeholder="La description de l'US" required>
+    </div>
+
+    <div class="select-list" id="select-list">
+        <div class="form-group col-md-4" id="form-group">
+            <label for="inputState">
+                <h2>Difficulté</h2>
+            </label>
+            <select id="difficulty" name="difficulty" class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>5</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success btn-danger">Ajouter</button>
+    <a type="button" class="btn btn-success btn-danger" href="/projects/<%= projectId %>">Retour</a>
+</form>
+
+<footer>
+    <%- include('footer.ejs') %>
+</footer>
+
+</body>
+</html>

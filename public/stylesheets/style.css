@@ -1,0 +1,29 @@
+body > h1
+{
+    text-align: center;
+}
+
+.button-self-made {
+    text-align: center;
+    align-items: center;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+
+    width: 200px;
+    height: 50px;
+    border: none;
+    color: whitesmoke;
+    background-color: black;
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 0 #e74c3c;
+    transition: ease-out 0.2s;
+    font-size: 2rem;
+    outline: none;
+}
+
+.button-self-made:hover {
+    box-shadow: inset 200px 0 0 0 #e74c3c;
+    cursor: pointer;
+    color: #ffffff
+}
