@@ -8,7 +8,7 @@ const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
 let projectService = require('../services/project');
-const {Builder, By, until, Key} = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -18,7 +18,7 @@ let driver = new Builder()
     .forBrowser('chrome')
     .build();
 
-describe('Projects tests', () => {
+describe('Projects unit tests', () => {
 
     it('should get all the project stored', async () => {
         const projects = await projectService.getAllProjects();
@@ -30,6 +30,15 @@ describe('Projects tests', () => {
                 assert(expectedProjects.length === projects.length);
             }
         });
+    });
+
+    it('should get return status 200', async () => {
+        let res = await chai
+            .request(app)
+            .get('/')
+            .send();
+
+        expect(res.status).to.equal(200);
     });
 
 
@@ -87,7 +96,7 @@ async function saveProject(name, description, start, end) {
 }
 
 describe('New project page', () => {
-    it('We should be redirected to the creation page of projects', async () => {
+    it('should be redirected to the creation page of projects', async () => {
         await driver.get('http://localhost:3000');
 
         await driver.findElements(By.className('btn-success'))
@@ -101,8 +110,8 @@ describe('New project page', () => {
     });
 });
 
-describe('createproject & displayProjects', () => {
-    it('This should add a project and display it in homepage', async () => {
+describe('createProject & displayProjects', () => {
+    it('should add a project and display it in homepage', async () => {
         await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2020', '20-11-2020');
         await driver.get('http://localhost:3000/');
 
@@ -119,7 +128,8 @@ describe('createproject & displayProjects', () => {
 });
 
 after(function(done) {
-    mongoose.model('project').deleteMany({}, () => {
+    mongoose.model('project').deleteMany({}, (err) => {
+        console.log(err);
         mongoose.connection.close(done);
     });
 });
