@@ -27,7 +27,7 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 | #2 | Ajouter docker au projet et y intégrer une base de données MongoDB. | 1h | Toutes | #1 | DONE | GEN I-R-P | Paul |
 | #3 | Ajouter le module eslint au projet et créer un fichier .eslintrc contenant les règles de codage. | 30min | Toutes | #1 | DONE | GEN I-R-P | Alexandre |
 | #4 | Configurer l’exécution automatique des tests sur GitHub grâce à GitHub Actions. | 30min | Toutes | #1 | DONE | GEN I-R-P | Paul |
-| #5 | Créer un fichier style.css regroupant les spécifications générales du site.  | 1h | Toutes | #1 | TODO | GEN | / |
+| #5 | Créer un fichier style.css regroupant les spécifications générales du site.  | 1h | Toutes | #1 | DONE | GEN I-R-P | Jean-David |
 | #6 | Créer un fichier not-found.ejs affichant le message “La page recherchée n’existe pas”. | 30min | Toutes | #1 | DONE | GEN I-R-P | Jean-David |
 | #7 | Créer une route GET /404 qui affiche le contenu de la page not-found.ejs. | 20min | Toutes | #1 | DONE | GEN I-R-P | Paul |
 | #8 | Créer un fichier projects.ejs qui va pour chaque projet récupéré afficher un bloc avec le nom du projet. | 30min | US1 | #1 | DONE | DEV I-P-R-T | Alexandre |
