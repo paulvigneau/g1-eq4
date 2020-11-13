@@ -122,7 +122,6 @@ describe('displayProject', () => {
                                 expect(text).to.be.equal('Description : ' + 'Projet magnifique');
                             });
                     }
-
                 }
             });
 
