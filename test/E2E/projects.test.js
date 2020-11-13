@@ -17,6 +17,45 @@ let driver = new Builder()
     .forBrowser('chrome')
     .build();
 
+describe('Projects tests', () => {
+
+    it('should get all the project stored', async () => {
+        const projects = await projectService.getAllProjects();
+
+        mongoose.model('project').find({}).exec((err, expectedProjects) => {
+            if (err)
+                assert.fail();
+            else {
+                assert(expectedProjects.length === projects.length);
+            }
+        });
+    });
+
+
+    it('should add a new project in database', async () => {
+        let res = await chai
+            .request(app)
+            .post('/project')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({
+                name: 'Projet Test',
+                description: 'Description de projet de test',
+                start: '2020-11-10',
+                end: '2020-11-20'
+            });
+
+        expect(res.status).to.equal(200);
+
+        const projects = await projectService.getAllProjects();
+        assert(projects.find(
+            (p) => p.name === 'Projet Test'
+                && p.description === 'Description de projet de test'
+                && new Date(p.start).valueOf() === new Date('2020-11-10').valueOf()
+                && new Date(p.end).valueOf() === new Date('2020-11-20').valueOf()
+        ));
+    });
+});
+
 async function saveProject(name, description, start, end) {
     await driver.get('http://localhost:3000');
 
@@ -93,3 +132,5 @@ after(function(done) {
         mongoose.connection.close(done);
     });
 });
+
+module.exports = { saveProject };
