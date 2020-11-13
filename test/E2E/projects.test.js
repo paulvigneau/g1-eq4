@@ -76,10 +76,6 @@ describe('createProject & displayProjects', () => {
                 expect(text).to.be.equal('Projet: Projet 1');
             });
 
-        /* driver.wait(selenium.until.elementLocated(selenium.By.className('card-title'), timeOut)).then(function () {
-            return driver.findElement(selenium.By.name('project_cdp'));
-        }); */
-
     }).timeout(10000);
 });
 
