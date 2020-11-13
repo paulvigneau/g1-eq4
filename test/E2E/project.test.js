@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-const testProjects = require('projects.test');
+const testProjects = require('./projects.test');
 const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
