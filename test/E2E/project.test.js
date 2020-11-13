@@ -12,10 +12,13 @@ const { Builder, By } = require('selenium-webdriver');
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
+let driver;
 
-let driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+before(function () {
+    driver = new Builder()
+        .forBrowser('chrome')
+        .build();
+});
 
 async function saveMember(projectId, name, email, role) {
     await driver.get('http://localhost:3000/projects/' + projectId + '/new-member');

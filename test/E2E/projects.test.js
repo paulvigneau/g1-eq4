@@ -10,10 +10,13 @@ const { Builder, By } = require('selenium-webdriver');
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
+let driver;
 
-let driver = new Builder()
-    .forBrowser('chrome')
-    .build();
+before(function () {
+    driver = new Builder()
+        .forBrowser('chrome')
+        .build();
+});
 
 async function saveProject(name, description, start, end) {
     await driver.get('http://localhost:3000/new-project');
@@ -52,7 +55,7 @@ describe('New project page', () => {
             .then(async elements => {
                 await elements[0].click();
 
-                driver.getCurrentUrl().then( url => {
+                driver.getCurrentUrl().then(url => {
                     expect(url.includes('/new-project')).true;
                 });
             });
@@ -68,19 +71,14 @@ describe('createProject & displayProjects', () => {
                 expect(projects.length).to.be.equal(1);
             });
 
-         await driver.findElement(By.className('card-title')).getText()
+        await driver.findElement(By.className('card-title')).getText()
             .then(async text => {
                 expect(text).to.be.equal('Projet: Projet 1');
             });
-
-        /* driver.wait(selenium.until.elementLocated(selenium.By.className('card-title'), timeOut)).then(function () {
-            return driver.findElement(selenium.By.name('project_cdp'));
-        }); */
-
     }).timeout(6000);
 });
 
-after(function(done) {
+after(function (done) {
     mongoose.model('project').deleteMany({}, done);
 });
 
