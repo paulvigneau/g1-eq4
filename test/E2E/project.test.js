@@ -110,9 +110,9 @@ describe('displayProject', () => {
         await projectService.getAllProjects()
             .then(async projects => {
                 for(let i = 0; i < projects.length; i++){
-                    let curProject = projects[i];
-                    if(curProject.name === 'Projet 4'){
-                        await driver.get('http://localhost:3000/projects/' + curProject._id);
+                    let project = projects[i];
+                    if(project.name === 'Projet 4'){
+                        await driver.get('http://localhost:3000/projects/' + project._id);
                         await driver.findElement(By.className('projName')).getText()
                             .then(async text => {
                                 expect(text).to.be.equal('Nom du projet : ' + 'Projet 4');
@@ -120,6 +120,31 @@ describe('displayProject', () => {
                         await driver.findElement(By.className('projDescription')).getText()
                             .then(async text => {
                                 expect(text).to.be.equal('Description : ' + 'Projet magnifique');
+                            });
+                    }
+                }
+            });
+
+    }).timeout(10000);
+});
+
+describe('Redirection to new-member page', () => {
+    it('Add a project, redirect to it\'s homepage, and clic on button to redirect to new-member page', async () => {
+        await testProjects.saveProject('Projet 5', 'Projet magnifique', '12-11-2020', '20-11-2020');
+
+        await projectService.getAllProjects()
+            .then(async projects => {
+                for(let i = 0; i < projects.length; i++){
+                    let project = projects[i];
+                    if(project.name === 'Projet 5'){
+                        await driver.get('http://localhost:3000/projects/' + project._id);
+                        await driver.findElement(By.className('btn btn-primary'))
+                            .then(async element => {
+                                await element.click();
+
+                                driver.getCurrentUrl().then( url => {
+                                    expect(url.includes('/projects/' + project._id + '/new-member')).true;
+                                });
                             });
                     }
                 }
