@@ -1,15 +1,11 @@
 process.env.NODE_ENV = 'test';
 
 const testProjects = require('projects.test');
-
-const mongoose = require('mongoose');
-const assert = require('assert');
 const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-let projectService = require('../../services/project');
-const {Builder, By, until, Key} = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);

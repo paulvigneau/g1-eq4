@@ -1,11 +1,10 @@
-const mongoose = require('mongoose');
-const assert = require('assert');
+process.env.NODE_ENV = 'test';
+
 const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-let projectService = require('../../services/project');
-const {Builder, By, until, Key} = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -50,7 +49,7 @@ async function saveProject(name, description, start, end) {
 }
 
 describe('New project page', () => {
-    it('We should be redirected to the creation page of projects', async () => {
+    it('should be redirected to the creation page of projects', async () => {
         await driver.get('http://localhost:3000');
 
         await driver.findElements(By.className('btn-success'))
@@ -64,23 +63,22 @@ describe('New project page', () => {
     }).timeout(6000);
 });
 
-describe('createproject & displayProjects', () => {
-    it('This should add a project and display it in homepage', async () => {
+describe('createProject & displayProjects', () => {
+    it('should add a project and display it in homepage', async () => {
         await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2020', '20-11-2020');
-
         await driver.findElements(By.className('card'))
             .then(async projects => {
                 expect(projects.length).to.be.equal(1);
             });
 
-        await driver.findElement(By.className('card-title')).getText()
+         await driver.findElement(By.className('card-title')).getText()
             .then(async text => {
                 expect(text).to.be.equal('Projet: Projet 1');
             });
 
-        /*driver.wait(selenium.until.elementLocated(selenium.By.className('card-title'), timeOut)).then(function () {
+        /* driver.wait(selenium.until.elementLocated(selenium.By.className('card-title'), timeOut)).then(function () {
             return driver.findElement(selenium.By.name('project_cdp'));
-        });*/
+        }); */
 
     }).timeout(6000);
 });
