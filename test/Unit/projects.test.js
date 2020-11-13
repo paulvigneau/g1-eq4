@@ -27,7 +27,7 @@ describe('Projects unit tests', () => {
         });
     });
 
-    it('should get return status 200', async () => {
+    it('should get return status 200 when requesting for projects', async () => {
         let res = await chai
             .request(app)
             .get('/')
