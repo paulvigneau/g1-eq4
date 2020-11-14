@@ -35,4 +35,15 @@ function getProjectByID(id) {
     });
 }
 
-module.exports = { addProject, getAllProjects, getProjectByID };
+function getProjectByName(name){
+    return new Promise((resolve, reject) => {
+        Project.findOne({'name': name}, (err, project) => {
+            if (err)
+                reject(err);
+            else
+                resolve(project);
+        });
+    });
+}
+
+module.exports = { addProject, getAllProjects, getProjectByID, getProjectByName };

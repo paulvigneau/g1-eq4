@@ -47,4 +47,16 @@ router.post('/members/:memberId', function(req, res){
 const backlog = require('./backlog-routes');
 router.use('/backlog', backlog);
 
+const tasks = require('./tasks-routes');
+router.use('/tasks', tasks);
+
+const tests = require('./tests-routes');
+router.use('/tests', tests);
+
+const documentations = require('./documentations-routes');
+router.use('/documentations', documentations);
+
+const releases = require('./releases-routes');
+router.use('/releases', releases);
+
 module.exports = router;
