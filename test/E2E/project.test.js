@@ -174,10 +174,8 @@ describe('navigationBar', () => {
                         driver.getCurrentUrl().then( url => {
                             expect(url.includes('http://localhost:3000')).true;
                         });
-
                     });
             });
-
     }).timeout(10000);
 });
 

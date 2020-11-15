@@ -1,6 +1,7 @@
 const projectService = require('./project');
 const Backlog = require('../model/backlog');
 const Sprint = require('../model/sprint');
+const userStoryService = require('./user-story');
 
 function checkDatePeriod(start, end, date){
     if(date >= start && date < end){
@@ -51,4 +52,35 @@ function getSprintByID(id) {
     });
 }
 
-module.exports = { addSprint, getSprintByID };
+function deleteSprint(projectId, sprintId){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    reject();
+
+                getSprintByID(sprintId)
+                    .then((sprint) => {
+                        if(!sprint)
+                            reject();
+
+                        const listLength = sprint.USList.length;
+                        for(let i = 0; i < listLength; i++){
+                            userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id);
+                        }
+
+                     })
+                     .catch((err) => {
+                        reject(err);
+                    });
+
+                project.management.backlog.sprints.pull({_id: sprintId});
+                project.save(resolve());
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+module.exports = { addSprint, getSprintByID, deleteSprint };
