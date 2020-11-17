@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const router = express.Router();
 const projectService = require('../services/project');
 
@@ -6,7 +7,8 @@ router.get('/', function (req, res) {
     projectService.getAllProjects()
         .then((projects) => {
             res.render('projects', {
-                projects: projects
+                projects: projects,
+                moment: moment
             });
         })
         .catch((err) => {
