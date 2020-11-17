@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include('head.ejs') %>
-    <link rel="stylesheet" href="/projects.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/projects.css">
 </head>
 <body>
 
@@ -12,9 +12,15 @@
         <p>Liste des projets créés</p>
     </div>
 
-    <a type="button" href="/new-project" class="btn btn-success">Créer un nouveau projet</a>
+    <button class="btn btn-success" onclick="togglePopup()">Nouveau projet</button>
 
-    <div class="row justify-content-around">
+    <div class="pop-up-wrapper">
+        <div class="pop-up">
+            <%- include('new-project.ejs'); %>
+        </div>
+    </div>
+
+    <div class="row justify-content-start">
         <% projects.forEach(function(project) { %>
         <div class="col-12 col-sm-6 col-md-4 p-3">
             <div class="card col-12 h-100">
