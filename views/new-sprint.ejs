@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <%- include('head.ejs') %>
-</head>
-<body class="container">
-
 <form action="/projects/<%= projectId %>/backlog/sprint" method="post">
-
     <div class="form-group">
         <label for="start">Date de début</label>
         <input type="date" name="start" class="form-control" id="start" required>
@@ -16,13 +8,7 @@
         <input type="date" name="end" class="form-control" id="end" required>
     </div>
 
-        <button type="submit" class="btn btn-success btn-danger">Créer</button>
-        <a type="button" class="btn btn-success btn-danger" href="/">Retour</a>
-    </form>
+    <button type="submit" class="btn btn-success">Créer</button>
+    <button  class="btn btn-danger" onclick="togglePopup()">Retour</button>
+</form>
 
-<footer>
-    <%- include('footer.ejs') %>
-</footer>
-
-</body>
-</html>

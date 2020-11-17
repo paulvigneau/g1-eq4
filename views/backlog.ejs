@@ -7,21 +7,30 @@
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <%- include('navigation.ejs') %>
+    <%- include('navigation.ejs') %>
 
-        <% let i = 0;
+    <div class="pop-up-wrapper">
+        <div class="pop-up" id="add-sprint">
+            <%- include('new-sprint.ejs', { projectId: projectId }); %>
+        </div>
+        <div class="pop-up" id="add-user-story">
+            <%- include('new-user-story.ejs', { projectId: projectId }); %>
+        </div>
+    </div>
+
+    <% let i = 0;
     backlog.sprints.forEach(function(sprint) { %>
         <h2>Sprint <%- i++ %></h2>
         <div class="row">
             <%- include('sprint.ejs', {sprint : sprint}) %>
         </div>
-        <% }); %>
+    <% }); %>
 
-        <h2>Backlog</h2>
-        <ul class="list-unstyled">
-            <% backlog.backlog.USList.forEach(function(US) { %>
+    <h2>Backlog</h2>
+    <ul class="list-unstyled">
+        <% backlog.backlog.USList.forEach(function(US) { %>
             <div class="card" style="width: 18rem;">
                 <div class="card-body">
                     <h5 class="card-title">ID: #<%= US.id %> </h5>
@@ -30,18 +39,22 @@
                     <a href="#" class="btn btn-primary stretched-link">Détails</a>
                 </div>
             </div>
-            <% }); %>
-        </ul>
-        <a type="button" href="/projects/<%= projectId %>/backlog/new-user-story" class="btn btn-success btn-lg">Créer une nouvelle US</a>
+        <% }); %>
+    </ul>
+    <a type="button" href="/projects/<%= projectId %>/backlog/new-user-story" class="btn btn-success btn-lg">Créer une
+        nouvelle US</a>
 
-        <a type="button" href="/projects/<%= projectId %>/backlog/new-sprint" class="btn btn-success btn-danger">Créer un
-            nouveau sprint</a>
+    <a type="button" href="/projects/<%= projectId %>/backlog/new-sprint" class="btn btn-success btn-danger">Créer un
+        nouveau sprint</a>
 
-    </div>
+    <button class="btn btn-success" onclick="togglePopup('#add-user-story')">Nouvelle US</button>
+    <button class="btn btn-primary" onclick="togglePopup('#add-sprint')">Nouveau sprint</button>
 
-    <footer>
-        <%- include('footer.ejs') %>
-    </footer>
+</div>
+
+<footer>
+    <%- include('footer.ejs') %>
+</footer>
 
 </body>
 
