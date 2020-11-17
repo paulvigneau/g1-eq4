@@ -22,7 +22,7 @@
 
     <% let i = 0;
     backlog.sprints.forEach(function(sprint) { %>
-        <h2>Sprint <%- i++ %></h2>
+        <h2>Sprint <%- ++i %></h2>
         <div class="row">
             <%- include('sprint.ejs', {sprint : sprint}) %>
         </div>
