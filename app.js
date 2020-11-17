@@ -14,7 +14,7 @@ db.once('open', () => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
-app.use(express.static(path.join(__dirname, '/public/stylesheets')));
+app.use(express.static(path.join(__dirname, '/public')));
 
 const projectsRoutes = require('./routes/projects-routes');
 app.use('/', projectsRoutes);
