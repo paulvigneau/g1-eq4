@@ -1,42 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <%- include('head.ejs') %>
-</head>
-<body class="container">
-
 <form action="/projects/<%= projectId %>/member" method="post">
+    <div class="form-group">
+        <label for="name">Nom</label>
+        <input type="text" name="name" class="form-control" id="name"  placeholder="Nom du membre" required>
+    </div>
 
     <div class="form-group">
-        <label for="name">Nom du membre</label>
-        <input type="text" name="name" class="form-control" id="name"  placeholder="Nom du membre"  required>
+        <label for="email">Email</label>
+        <input type="text" name="email" class="form-control" id="email" placeholder="Email du membre" required>
     </div>
 
     <div class="form-group">
-        <label for="email">Email du membre</label>
-        <input type="text" name="email" class="form-control" id="email" placeholder="Email du membre"  required>
+        <label for="role">Rôle</label>
+        <select id="role" name="role" class="form-control">
+            <option>Développeur</option>
+            <option>Testeur</option>
+            <option>Product Owner</option>
+        </select>
     </div>
 
-    <div class="select-list" id="select-list">
-        <div class="form-group col-md-4" id="form-group">
-            <label for="inputState">
-                <h2>Rôle du membre</h2>
-            </label>
-            <select id="role" name="role" class="form-control">
-                <option>Développeur</option>
-                <option>Testeur</option>
-                <option>Product Owner</option>
-            </select>
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-success btn-danger">Ajouter</button>
-    <a type="button" class="btn btn-success btn-danger" href="/projects/<%= projectId %>">Retour</a>
+    <button type="submit" class="btn btn-success">Ajouter</button>
+    <button class="btn btn-danger" onclick="togglePopup()">Retour</button>
 </form>
-
-<footer>
-    <%- include('footer.ejs') %>
-</footer>
-
-</body>
-</html>

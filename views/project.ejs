@@ -30,7 +30,15 @@ function getCurrentSprint(sprints) {
 
     <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
 
-    <p>Membres <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">Nouveau membre</a></p>
+    <h2>Membres</h2>
+    <button class="btn btn-primary" onclick="togglePopup()">Nouveau membre</button>
+
+    <div class="pop-up-wrapper">
+        <div class="pop-up">
+            <%- include('new-member.ejs', { projectId: project._id }); %>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col">
