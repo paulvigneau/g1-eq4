@@ -3,7 +3,7 @@ let Schema = mongoose.Schema;
 
 let MemberSchema = new Schema({
         name: { type: String, required: true },
-        role: { type: String, required: true, enum: [ 'Développeur', 'Testeur', 'Product Owner' ] },
+        role: { type: String, required: true, enum: [ 'Développeur', 'Testeur', 'Product Owner', 'Scrum Master' ] },
         email: { type: String, required: true },
         color: { type: String, required: true, default: 'aaaaaa' },
     }
