@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const router = express.Router({ mergeParams: true });
 const projetService = require('../services/project');
 const memberService = require('../services/member');
@@ -8,7 +9,8 @@ router.get('/', function (req, res) {
         .then((project) => {
             res.render('project', {
                 project: project,
-                projectId: req.params.id
+                projectId: req.params.id,
+                moment: moment
             });
         })
         .catch(() => {
