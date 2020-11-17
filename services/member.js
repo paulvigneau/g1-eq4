@@ -16,10 +16,10 @@ function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
             if(project) {
                 let today = new Date();
                 const dd = String(today.getDate()).padStart(2, '0');
-                const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
                 const yyyy = today.getFullYear();
 
-                today = mm + '/' + dd + '/' + yyyy;
+                today = dd + '/' + mm + '/' + yyyy;
 
                 const mailOptions = {
                     from: 'cdpproject33@gmail.com',
