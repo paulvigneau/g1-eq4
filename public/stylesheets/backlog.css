@@ -1,0 +1,14 @@
+.user-story {
+    font-size: 1.2em;
+    margin-bottom: 3px !important;
+}
+
+.user-story .description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-story .us-more {
+    cursor: pointer;
+}
