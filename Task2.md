@@ -22,10 +22,12 @@ Il y a 3 Definition Of Done :
 
 Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évolution d'une tâche, on écrit dans la colonne DOD le nom de la DOD ainsi que les lettres de la checklist qui ont été réalisées.
 
+##User stories
+
 | ID | Description | Coût (durée/homme) | US liées | Dépendances | Phase d’avancement | DOD | Développeur |
 |:-:|-|-|:-:|:-:|:-:|:-:|:-:|
-| #38 | Ajouter dans la définition de la route POST  /projects/:id/member dans le fichier routes/projectsRoutes.js l’appel à la fonction sendEmailToNewMember du fichier /models/member.js au moment de l’ajout du membre en base de données. | 5min | US6 | #36 | TODO | DEV | / |
-| #39 | Créer une fonction sendEmailToNewMember(project, member) dans le fichier /models/member.js qui envoie un email à l’adresse email (member.email) correspondant au membre passé. Il contient le nom du projet (project.name), la date d’ajout (date d’aujourd’hui), le nom que l’on m’a donné (member.name) ainsi que l’URL du projet. | 30min | US6 | #1 | TODO | DEV | / |
+| #38 | Ajouter dans la définition de la route POST  /projects/:id/member dans le fichier routes/projectsRoutes.js l’appel à la fonction sendEmailToNewMember du fichier /models/member.js au moment de l’ajout du membre en base de données. | 5min | US6 | #36 | TODO | DEV I-P | Alexandre |
+| #39 | Créer une fonction sendEmailToNewMember(project, member) dans le fichier /services/member.js qui envoie un email à l’adresse email (member.email) correspondant au membre passé. Il contient le nom du projet (project.name), la date d’ajout (date d’aujourd’hui), le nom que l’on m’a donné (member.name) ainsi que l’URL du projet. | 30min | US6 | #1 | TODO | DEV | / |
 | #40 | Implémenter le test en Selenium de sendMailNewMember dans le fichier member.test.js. Appeler la fonction sendEmailToNewMember qui prend en paramètre un membre, l’id d’un projet et vérifier que l’adresse email du membre reçoit bien un mail contenant le nom du projet, la date d’ajout, le nom du membre ainsi que l’URL du projet. | 45min | US6 | #39 | TODO | TEST | / |
 | #41 | Ajouter à la page project.ejs à côté de chaque membre un bouton “Supprimer” envoyant une requête de type DELETE /projects/:id/members/:memberId. Si le code status de la réponse est 404, afficher une pop-up avec pour message le contenu du body de la réponse. Dans le cas où le code status est 200, récupérer le contenu du body et l'afficher comme message dans une pop-up. La pop-up doit contenir un bouton “confirmer” et un bouton “annuler”. En cliquant sur “confirmer”, renvoyer une requête DELETE vers /projects/:id/members/:memberId avec le paramètre “force=true” dans le body. En cliquant sur “annuler”, fermer la pop-up. | 30min | US7 | #30 | WIP | DEV I-P | Alexandre |
 | #42 | Créer le Gherkin deleteMember dans le fichier member.feature du scénario suivant : Cliquer sur le bouton “Supprimer” à côté d’un membre depuis la page /projects/:id et vérifier que la page ne contient plus les informations du membre supprimé : son nom, son rôle, son email, sa couleur hexadécimale. | 20min | US7 | #1 | WIP | GEN I-P | Jean-David |
@@ -38,7 +40,7 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 | #49 | Implémenter le test Sélénium du Gherkin navigationBar dans le fichier project.test.js. | 30min | US8 | #47, #48 | WIP | TEST S-SR-I-T-P | Alexandre |
 | #50 | Intégrer le template de la barre de navigation à toutes les pages HTML affichées ayant une route commençant par /projects/:id. | 10min | US8 | #47 | WIP | DEV I-P | Jean-David |
 | #51 | Créer le Gherkin allNavigationBar dans le fichier projects.feature du scénario suivant : Cliquer sur chaque bloc de projet affiché depuis l’URL /projects, et réaliser le même scénario Gherkin navigationBar pour chacun de ces projets. | 30min | US8 | #1 | TODO | GEN | / |
-| #52 | Implémenter le test Sélénium du Gherkin allNavigationBar dans le fichier projects.test.js. | 30min | US8 | #50, #51 | WIP | TEST S-SR-I-T-P | Alexandre |
+| #52 | Implémenter le test Sélénium du Gherkin allNavigationBar dans le fichier projects.test.js. | 30min | US8 | #50, #51 | TODO | TEST | / |
 | #53 | Créer le fichier backlog.ejs qui affiche une section backlog ainsi qu’une section par sprint. Les sprints sont classés du dernier au premier par rapport aux dates de début et le backlog est en dessous des sprints. Les sections sont définies dans le template sprint.ejs à qui on passe la liste des US du sprint. | 45min | US9 | #1 | WIP | DEV I-P | Jean-David |
 | #54 | Créer le Gherkin sprintOrder dans le fichier sprint.feature du scénario suivant : Vérifier l’affichage dans la page /projects/:id/backlog de tous les sprints classés par date (du dernier au premier par rapport aux dates de début) ainsi que le backlog. | 30min | US9 | #1 | TODO | GEN | / |
 | #55 | Implémenter le test Sélénium du Gherkin sprintOrder dans le fichier sprint.test.js. | 30min | US9 | #53, #54, #60 | TODO | TEST | / |
@@ -93,3 +95,13 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 | #104 | Implémenter le test sélénium du scénario labelAfterSprintDeletion dans le fichier backlog.test.js. | 30min | US16 | #56, #92, #97, #98, #99, #103 | TODO | TEST | / |
 | #105 | Créer le scénario gherkin deleteLabelWhenMovingUS qui vérifie que si on ajoute une US à un sprint alors que l’US avait un label, alors son champ label redevient vide. | 30min | US16 | #1 | TODO | GEN | / |
 | #106 | Implémenter le test sélénium du scénario deleteLabelWhenMovingUS dans le fichier backlog.test.js. | 30min | US16 | #87, #105 | TODO | TEST | / |
+
+##Tasks
+
+| ID | Description | Coût (durée/homme) | US liées | Dépendances | Phase d’avancement | DOD | Développeur |
+|:-:|-|-|:-:|:-:|:-:|:-:|:-:|
+| #107 | Modifier le fichier models/projects.js afin d'inclure les trois types de DOD (GEN, DEV, et TEST) dans le schéma d'un project. | 30min | US17 | #1 | WIP | DEV I-P | Alexandre |
+| #108 | Créer un fichier models/dod.js permettant d'avoir les trois types de DOD (GEN, DEV et TEST) et une liste d'objets String dans un objet "Checklist", représentant chaque ligne de la checklist. Ces lignes seront préremplies par des squelettes de bonnes pratiques par défaut. | 30min | US17 | #1 | WIP | DEV I-P | Alexandre |
+| #109 | Créer un fichier services/dod.js et implémenter la fonction addLine qui permet d'ajouter une ligne String dans une DOD. | 30min | #1, #108 | TODO | DEV | / |
+
+| #111 | Créer le fichier models/tasks.js afin d'avoir le schéma Mongoose pour les tasks d'un projet. Le schéma contiendra les éléments suivants : 

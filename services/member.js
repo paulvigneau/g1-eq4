@@ -1,5 +1,45 @@
 const projectService = require('./project');
 const Member = require('../model/member');
+const nodeMailer = require('nodemailer');
+
+function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
+    const transporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'cdpproject33@gmail.com',
+            pass: 'cdpscrum'
+        }
+    });
+
+    projectService.getProjectByID(projectId)
+        .then((project) => {
+            if(project) {
+                let today = new Date();
+                const dd = String(today.getDate()).padStart(2, '0');
+                const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                const yyyy = today.getFullYear();
+
+                today = mm + '/' + dd + '/' + yyyy;
+
+                const mailOptions = {
+                    from: 'cdpproject33@gmail.com',
+                    to: memberEmail,
+                    subject: 'Hey ' + memberName + ', vous avez été ajouté à un projet !',
+                    text: 'Nous avons le plaisir de vous annoncer, très cher ' + memberName + ', que vous avez été ajouté au projet : ' + project.name + ', sous le rôle ' +
+                        memberRole + ', et le ' + today + '.'
+                };
+
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            }
+        })
+        .catch((err) => console.log(err));
+}
 
 function addMember(projectId, name, email, role) {
     return new Promise((resolve, reject) => {
@@ -27,11 +67,11 @@ function addMember(projectId, name, email, role) {
 
 function getMemberById(memberId) {
         return new Promise((resolve, reject) => {
-            Member.findById(memberId, (err, project) => {
+            Member.findById(memberId, (err, member) => {
                 if (err)
                     reject(err);
                 else
-                    resolve(project);
+                    resolve(member);
             });
         });
 }
@@ -52,6 +92,4 @@ function deleteMember(projectId, memberId) {
     });
 }
 
-
-
-module.exports = { addMember, getMemberById, deleteMember };
+module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember };
