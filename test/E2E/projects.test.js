@@ -51,7 +51,7 @@ describe('New project page', () => {
     it('should be redirected to the creation page of projects', async () => {
         await driver.get('http://localhost:3000');
 
-        await driver.findElements(By.className('btn-success'))
+        await driver.findElements(By.className('btn btn-success'))
             .then(async elements => {
                 await elements[0].click();
 
@@ -66,14 +66,14 @@ describe('createProject & displayProjects', () => {
     it('should add a project and display it in homepage', async () => {
         await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2020', '20-11-2020');
 
-        await driver.findElements(By.className('card'))
+        await driver.findElements(By.className('col-12 col-sm-6 col-md-4 p-3'))
             .then(async projects => {
                 expect(projects.length).to.be.equal(1);
             });
 
         await driver.findElement(By.className('card-title')).getText()
             .then(async text => {
-                expect(text).to.be.equal('Projet: Projet 1');
+                expect(text).to.be.equal('Projet 1');
             });
 
     }).timeout(10000);

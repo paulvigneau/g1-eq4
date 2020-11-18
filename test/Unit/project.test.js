@@ -8,6 +8,7 @@ const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
+const memberService = require('../../services/member');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -48,7 +49,6 @@ describe('Project unit tests', () => {
                 email: 'bob@mail.com',
             });
 
-
         expect(res.status).to.equal(200);
 
         let p = await projectService.getProjectByID(project._id);
@@ -59,6 +59,26 @@ describe('Project unit tests', () => {
         ));
     });
 
+    // it('should delete a member from a project', async () => {
+    //     let p = await projectService.getProjectByID(project._id);
+    //     await p.members.find(async ( member) => {
+    //
+    //             let res = chai
+    //                 .request(app)
+    //                 .del('/projects/' + p._id + '/members/' + member._id)
+    //                 .set('content-type', 'application/x-www-form-urlencoded');
+    //
+    //             console.log(res);
+    //             expect(res.status).to.equal(200);
+    //
+    //         }
+    //     );
+    //     await console.log(p.members.length);
+    //     await console.log(p.members);
+    //     assert(p.members.length == 1);
+    //
+    // });
+
     it('should get an existing project from its Id', async () => {
         let res = await chai
             .request(app)
@@ -66,7 +86,7 @@ describe('Project unit tests', () => {
             .send(); 
             
         expect(res).to.have.status(200);
-            
+
         const p = await projectService.getProjectByID(project._id);
         assert(p.name === 'Super Projet'
             && p.description === 'Une description intéressante'

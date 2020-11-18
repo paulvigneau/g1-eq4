@@ -42,8 +42,11 @@ async function saveMember(projectId, name, email, role) {
     if(role === 'Product Owner'){
         await driver.findElement(By.xpath('.//*[@id="role"]/option[3]')).click();
     }
+    if(role === 'Scrum Master'){
+        await driver.findElement(By.xpath('.//*[@id="role"]/option[4]')).click();
+    }
 
-    await driver.findElements(By.className('btn-success'))
+    await driver.findElements(By.className('btn btn-success'))
         .then(async elements => {
             await elements[0].click();
         });
@@ -56,10 +59,10 @@ describe('Project redirection to homepage', () => {
 
         await projectService.getAllProjects()
             .then(async projects => {
-                 for(let i = 0; i < projects.length; i++){
+                for(let i = 0; i < projects.length; i++){
                     let project = projects[i];
                     if(project.name === 'Projet 2'){
-                        await driver.findElements(By.className('btn btn-primary stretched-link'))
+                        await driver.findElements(By.className('stretched-link'))
                             .then(async elements => {
                                 await elements[i].click();
 
@@ -74,6 +77,7 @@ describe('Project redirection to homepage', () => {
     }).timeout(10000);
 });
 
+
 describe('addMember', () => {
     it('This should add a member', async () => {
         await testProjects.saveProject('Projet 3', 'Encore un magnifique projet', '12-11-2020', '20-11-2020');
@@ -81,16 +85,16 @@ describe('addMember', () => {
             .then(async project => {
                 await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
                 await driver.get('http://localhost:3000/projects/' + project._id);
-                await driver.findElement(By.name('name')).getText()
+                await driver.findElement(By.id('name')).getText()
                     .then(async text => {
                         expect(text).to.be.equal('Nom : Bob');
                     });
-                await driver.findElement(By.name('role')).getText()
+                await driver.findElement(By.id('role')).getText()
                     .then(async text => {
                         expect(text).to.be.equal('Rôle : Testeur');
 
                     });
-                await driver.findElement(By.name('email')).getText()
+                await driver.findElement(By.id('email')).getText()
                     .then(async text => {
                         expect(text).to.be.equal('Email : John@Doe.com');
                     });
@@ -107,11 +111,11 @@ describe('displayProject', () => {
                 await driver.get('http://localhost:3000/projects/' + project._id);
                 await driver.findElement(By.className('projName')).getText()
                     .then(async text => {
-                        expect(text).to.be.equal('Nom du projet : ' + 'Projet 4');
+                        expect(text).to.be.equal('Projet 4');
                     });
                 await driver.findElement(By.className('projDescription')).getText()
                     .then(async text => {
-                        expect(text).to.be.equal('Description : ' + 'Projet magnifique');
+                        expect(text).to.be.equal('Projet magnifique');
                     });
             });
 
@@ -148,11 +152,11 @@ describe('deleteMember', () => {
 
                 await driver.get('http://localhost:3000/projects/' + project._id);
 
-                await driver.findElement(By.className('btn btn-success btn-danger'))
+                await driver.findElement(By.className('far fa-trash-alt'))
                     .then(async element => {
                         await element.click();
 
-                        driver.findElements(By.className('col'))
+                        driver.findElements(By.id('name'))
                             .then(async members => {
                                 expect(members.length).to.be.equal(0);
                             });
