@@ -133,9 +133,21 @@ describe('Project unit tests', () => {
                 .catch(() => assert.fail());
         });
 
-        it('should return code 200');
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + project._id + '/members/' + member._id);
 
-        it('should remove code 404');
+            expect(res.status).to.equal(200);
+        });
+
+        it('should remove code 404', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + project._id + '/members/nonExistingMemberId');
+
+            expect(res.status).to.equal(404);
+        });
     });
 
 
