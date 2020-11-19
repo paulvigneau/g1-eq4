@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <%- include('head.ejs') %>
+    <script src="/javascript/project.js" type="text/javascript" defer></script>
 </head>
 <body>
 
@@ -58,9 +59,10 @@ function getCurrentSprint(sprints) {
                 <td id="role"><%= member.role %></td>
                 <td id="email"><%= member.email %></td>
                 <td>
-                    <form action="/projects/<%= project._id %>/members/<%= member._id %>" method="post">
-                        <button class="btn btn-danger float-right"><i class="far fa-trash-alt"></i></button>
-                    </form>
+                    <button class="btn btn-danger float-right"
+                            onclick="deleteMember('<%= project._id %>', '<%= member._id %>')">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
                 </td>
             </tr>
         <% }); %>

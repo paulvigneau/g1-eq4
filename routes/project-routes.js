@@ -40,11 +40,13 @@ router.post('/member', function (req, res) {
         });
 });
 
-router.post('/members/:memberId', function(req, res){
+router.delete('/members/:memberId', function(req, res){
     memberService.deleteMember(req.params.id, req.params.memberId)
-        .then(() => {
-            res.redirect('/projects/' + req.params.id);
-        });
+        .then(() =>
+            res.status(200).send()
+        ).catch((err) =>
+            res.status(404).send(err)
+    );
 });
 
 const backlog = require('./backlog-routes');
