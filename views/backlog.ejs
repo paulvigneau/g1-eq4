@@ -4,8 +4,8 @@
 <head>
     <%- include('head.ejs') %>
     <link rel="stylesheet" type="text/css" href="/stylesheets/backlog.css">
-<script  type="text/javascript" src="/jquery-ui/external/jquery/jquery.js"></script>
-<script type="text/javascript" src="/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/jquery-ui/external/jquery/jquery.js" defer></script>
+    <script type="text/javascript" src="/jquery-ui/jquery-ui.min.js" defer></script>
 </head>
 
 <body>
@@ -54,7 +54,7 @@
     <%- include('footer.ejs') %>
 </footer>
 
-<script> 
+<script>
     $('#backlog').sortable({
         connectWith: '.sprint',
         update: (event, ui) => {
