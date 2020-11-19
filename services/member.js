@@ -57,7 +57,9 @@ function addMember(projectId, name, email, role) {
                 });
 
                 project.members.push(member);
-                project.save(resolve());
+                project.save()
+                    .then((project) => resolve(project))
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);
@@ -84,7 +86,9 @@ function deleteMember(projectId, memberId) {
                     reject();
 
                 project.members.pull({ _id: memberId });
-                project.save(resolve());
+                project.save()
+                    .then((project) => resolve(project))
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);

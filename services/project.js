@@ -4,12 +4,9 @@ function addProject(p) {
     return new Promise((resolve, reject) => {
         const project = new Project(p);
 
-        project.save((err, project) => {
-            if (err)
-                reject(err);
-            else
-                resolve(project);
-        });
+        project.save()
+            .then((project) => resolve(project))
+            .catch((err) => reject(err));
     });
 }
 
@@ -37,7 +34,7 @@ function getProjectByID(id) {
 
 function getProjectByName(name){
     return new Promise((resolve, reject) => {
-        Project.findOne({'name': name}, (err, project) => {
+        Project.findOne({ 'name': name }, (err, project) => {
             if (err)
                 reject(err);
             else
