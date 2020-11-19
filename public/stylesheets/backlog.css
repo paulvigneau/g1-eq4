@@ -2,7 +2,8 @@
     font-size: 1.2em;
     margin-bottom: 3px !important;
     cursor: grab;
-    border-radius: 3px
+    border-radius: 3px;
+    background-color: white;
 }
 
 .user-story .description {
@@ -13,4 +14,11 @@
 
 .user-story .us-more {
     cursor: pointer;
+}
+
+.us-container {
+    background-color: white;
+    border-style: hidden;
+    min-height: 15px;
+    width: 100%;
 }

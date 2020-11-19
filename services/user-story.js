@@ -2,6 +2,7 @@ const projectService = require('./project');
 const UserStory = require('../model/user-story');
 const Backlog = require('../model/backlog');
 const sprintService = require('./sprint');
+const userStory = require('../model/user-story');
 
 function addUS(projectId, sprintId, description, difficulty) {
     return new Promise((resolve, reject) => {
@@ -82,13 +83,13 @@ function deleteUS(projectId, sprintId, USId){
         sprintService.getSprintByID(sprintId)
             .then((sprint) => {
                 if (sprint){
-                    sprint.USList.pull({_id: USId});
+                    sprint.USList.pull({ _id: USId });
                     sprint.save(resolve());
                 }else{
                     projectService.getProjectByID(projectId)
                         .then((project) => {
                             let backlog = project.management.backlog.backlog;
-                            backlog.USList.pull({_id: USId});
+                            backlog.USList.pull({ _id: USId });
                             backlog.save(resolve());
                         })
                         .catch((err) => {
@@ -167,4 +168,19 @@ function transferUS(projectId, firstSprintId, secondSprintId, USId){
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS };
+function updatePriotity(usList, sprintId) {
+    return new Promise((resolve, reject) => {
+        for (let i = 0; i < usList.lenght; i++) {
+            getUSById(sprintId, usList[i])
+                .then((userStory) => {
+                    userStory.priority = i+1;
+                    userStory.save(resolve);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        }
+    });
+}
+
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, updatePriotity };

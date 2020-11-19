@@ -74,7 +74,7 @@ function deleteSprint(projectId, sprintId){
                         reject(err);
                     });
 
-                project.management.backlog.sprints.pull({_id: sprintId});
+                project.management.backlog.sprints.pull({ _id: sprintId });
                 project.save(resolve());
             })
             .catch((err) => {
@@ -83,4 +83,22 @@ function deleteSprint(projectId, sprintId){
     });
 }
 
-module.exports = { addSprint, getSprintByID, deleteSprint };
+function updatePriority(sprintId, toUpdate){
+    return new Promise((reject, resolve) => {
+        getSprintByID(sprintId).then(sprint => {
+            toUpdate.array.forEach(usToUpdate => {
+                sprint.USList.findById(usToUpdate.id, (err, us) => {
+                    if(err) throw err;
+                    
+                    us.priority = usToUpdate.priority;
+                    sprint.save(resolve);
+                });
+            });
+        })
+        .catch((err) => {
+            reject(err);
+        });
+    });
+}
+
+module.exports = { addSprint, getSprintByID, deleteSprint, updatePriority };

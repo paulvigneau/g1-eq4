@@ -4,6 +4,8 @@
 <head>
     <%- include('head.ejs') %>
     <link rel="stylesheet" type="text/css" href="/stylesheets/backlog.css">
+<script  type="text/javascript" src="/jquery-ui/external/jquery/jquery.js"></script>
+<script type="text/javascript" src="/jquery-ui/jquery-ui.min.js"></script>
 </head>
 
 <body>
@@ -25,23 +27,25 @@
             </div>
         </div>
 
-        <% let i = 0;
-        backlog.sprints.forEach(function(sprint) { %>
+        <% let i = 0; %>
+        <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- ++i %></h2>
-            <div class="row">
+            <div class="us-container sprint" data-sprint-id=<%= sprint._id %>>
                 <%- include('sprint.ejs', {sprint : sprint}) %>
             </div>
         <% }); %>
 
         <h2>Backlog</h2>
-        <% backlog.backlog.USList.forEach(function(US) { %>
-            <div class="user-story border row m-0">
-                <span class="col-1">#<%= US.id %></span>
-                <span class="description col-9"><%= US.description %></span>
-                <span class="col-1 text-center"><span class="badge-pill badge-info"><%= US.difficulty %></span></span>
-                <span class="col-1 text-right us-more" onclick="alert('click')"><i class="fas fa-ellipsis-v"></i></span>
-            </div>
-        <% }); %>
+        <div class="us-container" id="backlog" >
+            <% backlog.backlog.USList.forEach(function(US) { %>
+                <div class="user-story border row m-0" style="cursor: grab; border-radius: 3px" data-us-id=<%= US._id %>>
+                    <span class="col-1">#<%= US.id %></span>
+                    <span class="description col-9"><%= US.description %></span>
+                    <span class="col-1 text-center"><span class="badge-pill badge-info"><%= US.difficulty %></span></span>
+                    <span class="col-1 text-right us-more" onclick="alert('click')"><i class="fas fa-ellipsis-v"></i></span>
+                </div>
+            <% }); %>
+        </div>
     </div>
 
 </div>
@@ -50,6 +54,107 @@
     <%- include('footer.ejs') %>
 </footer>
 
+<script> 
+    $('#backlog').sortable({
+        connectWith: '.sprint',
+        update: (event, ui) => {
+            let arr = $(event.target).children().toArray();
+            let data = [];
+            for(let i = 0; i<arr.length; i++){
+                data.push(arr[i].dataset.usId);
+            }
+            $.ajax({
+                type:'PUT',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'usList':JSON.stringify(data),
+                    'sprintId': null
+                }
+            });
+        },
+        receive: (event, ui) => {
+            let usId = ui.item.context.dataset.usId;
+            let to = $(event.target).context.dataset.sprintId;
+            let from = ui.sender.context.dataset.sprintId;
+            $.ajax({
+                type:'POST',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'firstSprintId': from,
+                    'secondSprintId': null,
+                    'usId': usId
+                }
+            });
+        },
+        remove: (event, ui) => {
+            let usId = ui.item.context.dataset.usId;
+            $.ajax({
+                type:'DELETE',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'sprintId': null,
+                    'usId': usId
+                }
+            });
+        }
+    }).disableSelection();
+
+    $('.sprint').sortable({
+        connectWith: '.sprint,#backlog',
+        update: (event, ui) => {
+            let arr = $(event.target).children().toArray();
+            let data = [];
+            for(let i = 0; i<arr.length; i++){
+                data.push(arr[i].dataset.usId);
+            }
+            let sprintId = $(event.target).context.dataset.sprintId;
+            $.ajax({
+                type:'PUT',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'usList':JSON.stringify(data),
+                    'sprintId': sprintId
+                }
+            });
+        },
+        receive: (event, ui) => {
+            let usId = ui.item.context.dataset.usId;
+            let to = $(event.target).context.dataset.sprintId;
+            let from = null;
+            if(ui.sender.context.className.includes('sprint'))
+                from = ui.sender.context.dataset.sprintId;
+            $.ajax({
+                type:'POST',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'firstSprintId': from,
+                    'secondSprintId': to,
+                    'usId': usId
+                }
+            });
+        },
+        remove: (event, ui) => {
+            let sprintId = $(event.target).context.dataset.sprintId;
+            let usId = ui.item.context.dataset.usId;
+            $.ajax({
+                type:'DELETE',
+                url:'/projects/<%= projectId %>/backlog/user-story',
+                dataType: 'json',
+                data: {
+                    'sprintId': sprintId,
+                    'usId': usId
+                }
+            });
+        }
+    }).disableSelection();
+</script>
+
 </body>
+
 
 </html>

@@ -64,4 +64,37 @@ router.get('/new-user-story', function(req, res){
         );
 });
 
+router.put('/user-story', function(req, res){
+    userStoryService.updatePriotity(req.body.usList, req.body.sprintId)
+        .then(() => {
+            res.redirect('back');
+        })
+        .catch(() => {
+            res.redirect('/404');
+        });
+});
+
+router.delete('/user-story', function(req, res){
+    userStoryService.deleteUS(req.params.projectId, 
+        req.body.sprintId, req.body.usId)
+        .then(() => {
+            res.redirect('back');
+        })
+        .catch(() => {
+            res.redirect('/404');
+        });
+});
+
+router.post('/user-story', function(req, res){
+    userStoryService.transferUS(req.params.projectId, 
+        req.body.firstSprintId, req.body.secondSprintId, 
+        req.body.usId)
+        .then(() => {
+            res.redirect('back');
+        })
+        .catch(() => {
+            res.redirect('/404');
+        });
+});
+
 module.exports = router;
