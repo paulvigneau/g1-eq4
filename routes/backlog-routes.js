@@ -4,13 +4,15 @@ const backlogService = require('../services/backlog.js');
 const sprintService = require('../services/sprint.js');
 const userStoryService = require('../services/user-story.js');
 const projectService = require('../services/project');
+const moment = require('moment');
 
 router.get('/', function (req, res) {
     backlogService.getAllSprints(req.params.id)
         .then((backlog) => {
             res.render('backlog', {
                 backlog: backlog,
-                projectId: req.params.id
+                projectId: req.params.id,
+                moment: moment
             });
         })
         .catch(() => {

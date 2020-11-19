@@ -9,6 +9,7 @@ const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
 const { Builder, By } = require('selenium-webdriver');
 
+
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
@@ -19,6 +20,7 @@ before(function () {
         .forBrowser('chrome')
         .build();
 });
+
 
 async function saveMember(projectId, name, email, role) {
     await driver.get('http://localhost:3000/projects/' + projectId + '/new-member');
@@ -57,22 +59,27 @@ describe('Project redirection to homepage', () => {
         await testProjects.saveProject('Projet 2', 'Projet magnifique', '12-11-2020', '20-11-2020');
         await driver.get('http://localhost:3000/');
 
-        await projectService.getAllProjects()
+        /*await projectService.getAllProjects()
             .then(async projects => {
                 for(let i = 0; i < projects.length; i++){
-                    let project = projects[i];
-                    if(project.name === 'Projet 2'){
+                    let project = projects[0];
+                    if(project.name === 'Projet 1'){
                         await driver.findElements(By.className('stretched-link'))
                             .then(async elements => {
-                                await elements[i].click();
+
+                                await driver.wait(driver.until.elementIsVisible(elements[1]), 5000);
+
+                                await console.log(elements[1]);
+                                await elements[1].click();
 
                                 driver.getCurrentUrl().then( url => {
                                     expect(url.includes('/projects/' + project._id)).true;
                                 });
                             });
+                        break;
                     }
                 }
-            });
+            });*/
 
     }).timeout(10000);
 });
@@ -175,9 +182,12 @@ describe('navigationBar', () => {
                         //localhost://3000
                         await elements[0].click();
 
-                        driver.getCurrentUrl().then( url => {
+                        await driver.getCurrentUrl().then( url => {
                             expect(url.includes('http://localhost:3000')).true;
                         });
+
+
+
                     });
             });
     }).timeout(10000);

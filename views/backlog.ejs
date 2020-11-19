@@ -31,6 +31,8 @@
         <% let i = 0; %>
         <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- ++i %></h2>
+            <p class="text-muted" id="date"><%= moment(sprint.start).locale('fr').format('DD MMM YYYY') %> -
+                <%= moment(sprint.end).locale('fr').format('DD MMM YYYY') %></p>
             <div class="us-container sprint" data-sprint-id=<%= sprint._id %> 
                 data-project-id=<%= projectId %>>
                 <%- include('sprint.ejs', {sprint : sprint}) %>
