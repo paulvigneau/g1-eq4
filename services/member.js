@@ -11,34 +11,37 @@ function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
         }
     });
 
-    projectService.getProjectByID(projectId)
-        .then((project) => {
-            if(project) {
-                let today = new Date();
-                const dd = String(today.getDate()).padStart(2, '0');
-                const mm = String(today.getMonth() + 1).padStart(2, '0');
-                const yyyy = today.getFullYear();
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (project) {
+                    let today = new Date();
+                    const dd = String(today.getDate()).padStart(2, '0');
+                    const mm = String(today.getMonth() + 1).padStart(2, '0');
+                    const yyyy = today.getFullYear();
 
-                today = dd + '/' + mm + '/' + yyyy;
+                    today = dd + '/' + mm + '/' + yyyy;
 
-                const mailOptions = {
-                    from: 'cdpproject33@gmail.com',
-                    to: memberEmail,
-                    subject: 'Hey ' + memberName + ', vous avez été ajouté à un projet !',
-                    text: 'Nous avons le plaisir de vous annoncer, très cher ' + memberName + ', que vous avez été ajouté au projet : ' + project.name + ', sous le rôle ' +
-                        memberRole + ', et le ' + today + '.'
-                };
+                    const mailOptions = {
+                        from: 'cdpproject33@gmail.com',
+                        to: memberEmail,
+                        subject: 'Hey ' + memberName + ', vous avez été ajouté à un projet !',
+                        text: 'Nous avons le plaisir de vous annoncer, très cher ' + memberName + ', que vous avez été ajouté au projet : ' + project.name + ', sous le rôle ' +
+                            memberRole + ', et le ' + today + '.'
+                    };
 
-                transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        console.log('Email sent: ' + info.response);
-                    }
-                });
-            }
-        })
-        .catch((err) => console.log(err));
+                    transporter.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                            resolve();
+                        }
+                    });
+                }
+            })
+            .catch((err) => reject(err));
+    });
 }
 
 function addMember(projectId, name, email, role) {
