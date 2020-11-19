@@ -78,44 +78,50 @@ function getAllUS(projectId, sprintId) {
     });
 }
 
-function deleteUS(projectId, sprintId, USId){
+function deleteUS(projectId, sprintId, usId){
     return new Promise((resolve, reject) => {
-        sprintService.getSprintByID(sprintId)
+        if(sprintId){
+            sprintService.getSprintByID(sprintId)
             .then((sprint) => {
-                if (sprint){
-                    sprint.USList.pull({ _id: USId });
-                    sprint.save(resolve());
-                }else{
-                    projectService.getProjectByID(projectId)
-                        .then((project) => {
-                            let backlog = project.management.backlog.backlog;
-                            backlog.USList.pull({ _id: USId });
-                            backlog.save(resolve());
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-                }
+                sprint.USList.pull({ _id: usId });
+                sprint.save(resolve());
             })
             .catch((err) => {
                 reject(err);
             });
+        }
+        else{
+            projectService.getProjectByID(projectId)
+                .then((project) => {
+                    console.log("step 1");
+                    let backlog = project.management.backlog.backlog;
+                    console.log("step 2");
+                    backlog.USList.pull({ _id: usId });
+                    console.log("step 3");
+                    project.save(resolve());
+                    console.log("step 4");
+                })
+                .catch((err) => {
+                    console.log("error");
+                    reject(err);
+                });
+        }
     });
 }
 
-function getUSById(sprintId, USId){
+function getUSById(sprintId, usId){
     return new Promise((resolve, reject) => {
         sprintService.getSprintByID(sprintId)
             .then((sprint) => {
                 if(sprint){
-                    sprint.USList.findById(USId, (err, userStory) => {
+                    sprint.USList.findById(usId, (err, userStory) => {
                         if (err)
                             reject(err);
                         else
                             resolve(userStory);
                     });
                 }else{
-                    Backlog.backlog.USList.findById(USId, (err, userStory) => {
+                    Backlog.backlog.USList.findById(usId, (err, userStory) => {
                         if (err)
                             reject(err);
                         else
@@ -126,14 +132,14 @@ function getUSById(sprintId, USId){
     });
 }
 
-function transferUS(projectId, firstSprintId, secondSprintId, USId){
+function transferUS(projectId, firstSprintId, secondSprintId, usId){
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
                     reject();
 
-                getUSById(firstSprintId, USId)
+                getUSById(firstSprintId, usId)
                     .then((userStory) => {
                         if(!userStory)
                             reject();

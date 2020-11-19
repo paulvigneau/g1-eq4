@@ -75,18 +75,24 @@ router.put('/user-story', function(req, res){
 });
 
 router.delete('/user-story', function(req, res){
-    userStoryService.deleteUS(req.params.projectId, 
+    console.log(req.params.id);
+    console.log(req.body.sprintId);
+    console.log(req.body.usId);
+    userStoryService.deleteUS(req.params.id, 
         req.body.sprintId, req.body.usId)
         .then(() => {
+            console.log('no pb in delete');
             res.redirect('back');
         })
-        .catch(() => {
+        .catch((err) => {
+            console.log('error in delete ' + err);
+
             res.redirect('/404');
         });
 });
 
 router.post('/user-story', function(req, res){
-    userStoryService.transferUS(req.params.projectId, 
+    userStoryService.transferUS(req.params.id, 
         req.body.firstSprintId, req.body.secondSprintId, 
         req.body.usId)
         .then(() => {

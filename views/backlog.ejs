@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/backlog.css">
     <script type="text/javascript" src="/jquery-ui/external/jquery/jquery.js" defer></script>
     <script type="text/javascript" src="/jquery-ui/jquery-ui.min.js" defer></script>
+    <script type="text/javascript" src="/javascript/backlog.js" defer></script>
 </head>
 
 <body>
@@ -30,13 +31,14 @@
         <% let i = 0; %>
         <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- ++i %></h2>
-            <div class="us-container sprint" data-sprint-id=<%= sprint._id %>>
+            <div class="us-container sprint" data-sprint-id=<%= sprint._id %> 
+                data-project-id=<%= projectId %>>
                 <%- include('sprint.ejs', {sprint : sprint}) %>
             </div>
         <% }); %>
 
         <h2>Backlog</h2>
-        <div class="us-container" id="backlog" >
+        <div class="us-container" id="backlog" data-project-id=<%= projectId %>>
             <% backlog.backlog.USList.forEach(function(US) { %>
                 <div class="user-story border row m-0" style="cursor: grab; border-radius: 3px" data-us-id=<%= US._id %>>
                     <span class="col-1">#<%= US.id %></span>
@@ -53,106 +55,6 @@
 <footer>
     <%- include('footer.ejs') %>
 </footer>
-
-<script>
-    $('#backlog').sortable({
-        connectWith: '.sprint',
-        update: (event, ui) => {
-            let arr = $(event.target).children().toArray();
-            let data = [];
-            for(let i = 0; i<arr.length; i++){
-                data.push(arr[i].dataset.usId);
-            }
-            $.ajax({
-                type:'PUT',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'usList':JSON.stringify(data),
-                    'sprintId': null
-                }
-            });
-        },
-        receive: (event, ui) => {
-            let usId = ui.item.context.dataset.usId;
-            let to = $(event.target).context.dataset.sprintId;
-            let from = ui.sender.context.dataset.sprintId;
-            $.ajax({
-                type:'POST',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'firstSprintId': from,
-                    'secondSprintId': null,
-                    'usId': usId
-                }
-            });
-        },
-        remove: (event, ui) => {
-            let usId = ui.item.context.dataset.usId;
-            $.ajax({
-                type:'DELETE',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'sprintId': null,
-                    'usId': usId
-                }
-            });
-        }
-    }).disableSelection();
-
-    $('.sprint').sortable({
-        connectWith: '.sprint,#backlog',
-        update: (event, ui) => {
-            let arr = $(event.target).children().toArray();
-            let data = [];
-            for(let i = 0; i<arr.length; i++){
-                data.push(arr[i].dataset.usId);
-            }
-            let sprintId = $(event.target).context.dataset.sprintId;
-            $.ajax({
-                type:'PUT',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'usList':JSON.stringify(data),
-                    'sprintId': sprintId
-                }
-            });
-        },
-        receive: (event, ui) => {
-            let usId = ui.item.context.dataset.usId;
-            let to = $(event.target).context.dataset.sprintId;
-            let from = null;
-            if(ui.sender.context.className.includes('sprint'))
-                from = ui.sender.context.dataset.sprintId;
-            $.ajax({
-                type:'POST',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'firstSprintId': from,
-                    'secondSprintId': to,
-                    'usId': usId
-                }
-            });
-        },
-        remove: (event, ui) => {
-            let sprintId = $(event.target).context.dataset.sprintId;
-            let usId = ui.item.context.dataset.usId;
-            $.ajax({
-                type:'DELETE',
-                url:'/projects/<%= projectId %>/backlog/user-story',
-                dataType: 'json',
-                data: {
-                    'sprintId': sprintId,
-                    'usId': usId
-                }
-            });
-        }
-    }).disableSelection();
-</script>
 
 </body>
 
