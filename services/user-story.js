@@ -2,7 +2,6 @@ const projectService = require('./project');
 const UserStory = require('../model/user-story');
 const Backlog = require('../model/backlog');
 const sprintService = require('./sprint');
-const userStory = require('../model/user-story');
 
 function addUS(projectId, sprintId, description, difficulty) {
     return new Promise((resolve, reject) => {
@@ -40,7 +39,9 @@ function addUS(projectId, sprintId, description, difficulty) {
                     userStory.priority = backlog.USList.length;
                     backlog.USList.push(userStory);
                 }
-                project.save(resolve());
+                project.save()
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);
@@ -84,7 +85,9 @@ function deleteUS(projectId, sprintId, usId){
             sprintService.getSprintByID(sprintId)
             .then((sprint) => {
                 sprint.USList.pull({ _id: usId });
-                sprint.save(resolve());
+                sprint.save()
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);
@@ -93,16 +96,18 @@ function deleteUS(projectId, sprintId, usId){
         else{
             projectService.getProjectByID(projectId)
                 .then((project) => {
-                    console.log("step 1");
+                    console.log('step 1');
                     let backlog = project.management.backlog.backlog;
-                    console.log("step 2");
+                    console.log('step 2');
                     backlog.USList.pull({ _id: usId });
-                    console.log("step 3");
-                    project.save(resolve());
-                    console.log("step 4");
+                    console.log('step 3');
+                    project.save()
+                        .then(() => resolve())
+                        .catch((err) => reject(err));
+                    console.log('step 4');
                 })
                 .catch((err) => {
-                    console.log("error");
+                    console.log('error');
                     reject(err);
                 });
         }
@@ -162,7 +167,9 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId){
                             userStory.priority = backlog.USList.length;
                             backlog.USList.push(userStory);
                         }
-                        project.save(resolve());
+                        project.save()
+                            .then(() => resolve())
+                            .catch((err) => reject(err));
                     })
                     .catch((err) => {
                         reject(err);
@@ -174,13 +181,15 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId){
     });
 }
 
-function updatePriotity(usList, sprintId) {
+function updatePriority(usList, sprintId) {
     return new Promise((resolve, reject) => {
         for (let i = 0; i < usList.lenght; i++) {
             getUSById(sprintId, usList[i])
                 .then((userStory) => {
                     userStory.priority = i+1;
-                    userStory.save(resolve);
+                    userStory.save()
+                        .then(() => resolve())
+                        .catch((err) => reject(err));
                 })
                 .catch((err) => {
                     reject(err);
@@ -189,4 +198,4 @@ function updatePriotity(usList, sprintId) {
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, updatePriotity };
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, updatePriority };

@@ -67,7 +67,7 @@ router.get('/new-user-story', function(req, res){
 });
 
 router.put('/user-story', function(req, res){
-    userStoryService.updatePriotity(req.body.usList, req.body.sprintId)
+    userStoryService.updatePriority(req.body.usList, req.body.sprintId)
         .then(() => {
             res.redirect('back');
         })
@@ -80,7 +80,7 @@ router.delete('/user-story', function(req, res){
     console.log(req.params.id);
     console.log(req.body.sprintId);
     console.log(req.body.usId);
-    userStoryService.deleteUS(req.params.id, 
+    userStoryService.deleteUS(req.params.id,
         req.body.sprintId, req.body.usId)
         .then(() => {
             console.log('no pb in delete');
@@ -94,8 +94,8 @@ router.delete('/user-story', function(req, res){
 });
 
 router.post('/user-story', function(req, res){
-    userStoryService.transferUS(req.params.id, 
-        req.body.firstSprintId, req.body.secondSprintId, 
+    userStoryService.transferUS(req.params.id,
+        req.body.firstSprintId, req.body.secondSprintId,
         req.body.usId)
         .then(() => {
             res.redirect('back');
