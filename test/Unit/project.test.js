@@ -97,6 +97,14 @@ describe('Project unit tests', () => {
                     && m.email === 'bob@mail.com'
             ));
         });
+
+        it('should send an email', () => {
+            return memberService.sendEmailToMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur');
+        }).timeout(10000);
     });
 
     describe('Delete member', () => {
