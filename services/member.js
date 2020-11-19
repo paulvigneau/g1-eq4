@@ -67,15 +67,20 @@ function addMember(projectId, name, email, role) {
     });
 }
 
-function getMemberById(memberId) {
-        return new Promise((resolve, reject) => {
-            Member.findById(memberId, (err, member) => {
-                if (err)
-                    reject(err);
+function getMemberById(projectId, memberId) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (project) {
+                    resolve(project.members.find(m => m._id.toString() === memberId.toString()));
+                }
                 else
-                    resolve(member);
+                    reject();
+            })
+            .catch((err) => {
+                reject(err);
             });
-        });
+    });
 }
 
 function deleteMember(projectId, memberId) {
