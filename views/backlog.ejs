@@ -29,12 +29,15 @@
             </div>
         </div>
 
-        <% let i = 0; %>
+        <%
+        backlog.sprints.sort((s1, s2) => { return new Date(s2.start) - new Date(s1.start); });
+        let i = backlog.sprints.length;
+        %>
         <% backlog.sprints.forEach(function(sprint) { %>
-            <h2>Sprint <%- ++i %></h2>
+            <h2>Sprint <%- i-- %></h2>
             <p class="text-muted" id="date"><%= moment(sprint.start).locale('fr').format('DD MMM YYYY') %> -
                 <%= moment(sprint.end).locale('fr').format('DD MMM YYYY') %></p>
-            <div class="us-container sprint" data-sprint-id=<%= sprint._id %> 
+            <div class="us-container sprint" data-sprint-id=<%= sprint._id %>
                 data-project-id=<%= projectId %>>
                 <%- include('sprint.ejs', {sprint : sprint}) %>
             </div>

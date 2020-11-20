@@ -3,11 +3,7 @@ const Sprint = require('../model/sprint');
 // const userStoryService = require('./user-story');
 
 function checkDatePeriod(start, end, date){
-    if(date >= start && date < end){
-        return true;
-    }else{
-        return false;
-    }
+    return date >= start && date < end;
 }
 
 function addSprint(projectId, start, end) {
@@ -90,7 +86,7 @@ function updatePriority(sprintId, toUpdate){
             toUpdate.array.forEach(usToUpdate => {
                 sprint.USList.findById(usToUpdate.id, (err, us) => {
                     if(err) throw err;
-                    
+
                     us.priority = usToUpdate.priority;
                     sprint.save(resolve);
                 });
