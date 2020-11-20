@@ -61,7 +61,7 @@ function addMember(projectId, name, email, role) {
 
                 project.members.push(member);
                 project.save()
-                    .then((project) => resolve(project))
+                    .then(() => resolve(member))
                     .catch((err) => reject(err));
             })
             .catch((err) => {
@@ -75,7 +75,7 @@ function getMemberById(projectId, memberId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (project) {
-                    resolve(project.members.find(m => m._id.toString() === memberId.toString()));
+                    resolve(project.members.id(memberId));
                 }
                 else
                     reject();
