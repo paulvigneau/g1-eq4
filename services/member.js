@@ -93,7 +93,7 @@ function deleteMember(projectId, memberId) {
                 if (!project)
                     reject();
 
-                project.members.pull({ _id: memberId });
+                project.members.id(memberId).remove();
                 project.save()
                     .then((project) => resolve(project))
                     .catch((err) => reject(err));
