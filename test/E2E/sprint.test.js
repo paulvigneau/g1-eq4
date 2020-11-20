@@ -43,7 +43,7 @@ async function saveSprint(projectId, start, end){
 
 describe('createSprint', () => {
     it('this should create a sprint and display it in backlog', async () => {
-        await testProjects.saveProject('Projet 8', 'Magnifique projet', '22-11-2020', '25-11-2020');
+        await testProjects.saveProject('Projet 8', 'Magnifique projet', '22-11-2021', '25-11-2021');
         await projectService.getProjectByName('Projet 8')
             .then(async (project) => {
                 await saveSprint(project._id, '22-11-2020', '25-11-2020');

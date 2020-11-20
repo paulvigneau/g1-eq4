@@ -56,7 +56,7 @@ async function saveMember(projectId, name, email, role) {
 
 describe('Project redirection to homepage', () => {
     it('This should add a project, and verify if we are redirected to it\'s homepage', async () => {
-        await testProjects.saveProject('Projet 2', 'Projet magnifique', '12-11-2020', '20-11-2020');
+        await testProjects.saveProject('Projet 2', 'Projet magnifique', '12-11-2021', '20-11-2021');
         await driver.get('http://localhost:3000/');
 
         /*await projectService.getAllProjects()
@@ -87,7 +87,7 @@ describe('Project redirection to homepage', () => {
 
 describe('addMember', () => {
     it('This should add a member', async () => {
-        await testProjects.saveProject('Projet 3', 'Encore un magnifique projet', '12-11-2020', '20-11-2020');
+        await testProjects.saveProject('Projet 3', 'Encore un magnifique projet', '12-11-2021', '20-11-2021');
         await projectService.getProjectByName('Projet 3')
             .then(async project => {
                 await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
@@ -111,7 +111,7 @@ describe('addMember', () => {
 
 describe('displayProject', () => {
     it('This should add a project, and verify that it\'s information are in the homepage', async () => {
-        await testProjects.saveProject('Projet 4', 'Projet magnifique', '12-11-2020', '20-11-2020');
+        await testProjects.saveProject('Projet 4', 'Projet magnifique', '12-11-2021', '20-11-2021');
 
         await projectService.getProjectByName('Projet 4')
             .then(async project => {
@@ -131,7 +131,7 @@ describe('displayProject', () => {
 
 describe('Redirection to new-member page', () => {
     it('Add a project, redirect to it\'s homepage, and click on button to redirect to new-member page', async () => {
-        await testProjects.saveProject('Projet 5', 'Projet magnifique', '12-11-2020', '20-11-2020');
+        await testProjects.saveProject('Projet 5', 'Projet magnifique', '12-11-2021', '20-11-2021');
 
         await projectService.getProjectByName('Projet 5')
             .then(async project => {
@@ -151,7 +151,7 @@ describe('Redirection to new-member page', () => {
 
 describe('deleteMember', () => {
     it('This should delete a member', async () => {
-        await testProjects.saveProject('Projet 6', 'Encore un magnifique projet', '12-11-2020', '20-11-2020');
+        await testProjects.saveProject('Projet 6', 'Encore un magnifique projet', '12-11-2021', '20-11-2021');
 
         await projectService.getProjectByName('Projet 6')
             .then(async project => {

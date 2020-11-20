@@ -55,16 +55,32 @@ describe('New project page', () => {
             .then(async elements => {
                 await elements[0].click();
 
-                driver.getCurrentUrl().then(url => {
-                    expect(url.includes('/new-project')).true;
-                });
+                await driver.findElement(By.name('name'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
+
+                await driver.findElement(By.name('description'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
+
+                await driver.findElement(By.name('start'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
+
+                await driver.findElement(By.name('end'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
             });
     }).timeout(10000);
 });
 
 describe('createProject & displayProjects', () => {
     it('should add a project and display it in homepage', async () => {
-        await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2020', '20-11-2020');
+        await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2021', '20-11-2021');
 
         await driver.findElements(By.className('col-12 col-sm-6 col-md-4 p-3'))
             .then(async projects => {
