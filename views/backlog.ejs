@@ -35,8 +35,13 @@
         %>
         <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- i-- %></h2>
+            <% if(new Date(sprint.end) < new Date()) { %>
+                <button class="btn btn-danger float-right"
+                    onclick="deleteSprint('<%= projectId %>', '<%= sprint._id %>')">Supprimer</button>
+        <% } %>
             <p class="text-muted" id="date"><%= moment(sprint.start).locale('fr').format('DD MMM YYYY') %> -
                 <%= moment(sprint.end).locale('fr').format('DD MMM YYYY') %></p>
+
             <div class="us-container sprint" data-sprint-id=<%= sprint._id %>
                 data-project-id=<%= projectId %>>
                 <%- include('sprint.ejs', {sprint : sprint}) %>

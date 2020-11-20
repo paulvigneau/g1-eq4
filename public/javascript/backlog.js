@@ -1,3 +1,10 @@
+async function deleteSprint(projectId, sprintId) {
+    await fetch(`/projects/${projectId}/backlog/sprints/${sprintId}`, {
+        method: 'DELETE'
+    });
+
+    document.location.reload();
+}
 
 $('#backlog').sortable({
     connectWith: '.sprint',

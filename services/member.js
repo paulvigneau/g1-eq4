@@ -49,7 +49,7 @@ function addMember(projectId, name, email, role) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    reject();
+                    return reject();
 
                 const randomColor = Math.floor(Math.random()*16777215).toString(16);
                 const member = new Member({
@@ -91,7 +91,7 @@ function deleteMember(projectId, memberId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    reject();
+                    return reject();
 
                 project.members.id(memberId).remove();
                 project.save()

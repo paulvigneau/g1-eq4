@@ -30,6 +30,16 @@ router.post('/sprint', function (req, res) {
     });
 });
 
+router.delete('/sprints/:sprintId', function (req, res) {
+    sprintService.deleteSprint(req.params.id, req.params.sprintId)
+        .then(() => {
+            res.redirect('/projects/' + req.params.id + '/backlog');
+        })
+        .catch(() => {
+            res.redirect('/404');
+        });
+});
+
 router.get('/new-sprint', function(req, res){
     res.render('new-sprint', {
         projectId: req.params.id
