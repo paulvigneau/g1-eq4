@@ -35,7 +35,7 @@
         %>
         <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- i-- %></h2>
-            <% if(new Date(sprint.end) < new Date()) { %>
+            <% if(new Date(sprint.end) > new Date()) { %>
                 <button class="btn btn-danger float-right"
                     onclick="deleteSprint('<%= projectId %>', '<%= sprint._id %>')">Supprimer</button>
         <% } %>

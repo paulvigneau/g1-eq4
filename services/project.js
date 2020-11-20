@@ -2,9 +2,9 @@ const Project = require('../model/project');
 
 function addProject(p) {
     return new Promise((resolve, reject) => {
-        if((new Date(p.end) < new Date(p.start)) || (new Date(p.start) < new Date())){
-            return reject();
-        }
+        // if((new Date(p.end) < new Date(p.start)) || (new Date(p.start) < new Date())){
+        //     return reject();
+        // }
 
         const project = new Project(p);
 
