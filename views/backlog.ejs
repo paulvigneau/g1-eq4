@@ -7,6 +7,7 @@
     <script type="text/javascript" src="/jquery-ui/external/jquery/jquery.js" defer></script>
     <script type="text/javascript" src="/jquery-ui/jquery-ui.min.js" defer></script>
     <script type="text/javascript" src="/javascript/backlog.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/menu.css">
 </head>
 
 <body>
@@ -46,7 +47,16 @@
                     <span class="col-1">#<%= US.id %></span>
                     <span class="description col-9"><%= US.description %></span>
                     <span class="col-1 text-center"><span class="badge-pill badge-info"><%= US.difficulty %></span></span>
-                    <span class="col-1 text-right us-more" onclick="alert('click')"><i class="fas fa-ellipsis-v"></i></span>
+                    <div class="dropdown">
+                        <span class="col-1 text-right us-more" onclick="showDropdown();"><i class="fas fa-ellipsis-v"></i></span>
+                        <div id="myDropdown" class="dropdown-content">
+                            <a href="#">Supprimer</a>
+                            <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
+                        </div>
+                    </div>
+                    <div class="pop-up" id="edit-user-story<%=US.id%>">
+                        <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
+                    </div>
                 </div>
             <% }); %>
         </div>
