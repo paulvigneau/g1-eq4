@@ -1,7 +1,6 @@
 const projectService = require('./project');
-const Backlog = require('../model/backlog');
 const Sprint = require('../model/sprint');
-const userStoryService = require('./user-story');
+// const userStoryService = require('./user-story');
 
 function checkDatePeriod(start, end, date){
     if(date >= start && date < end){
@@ -41,14 +40,16 @@ function addSprint(projectId, start, end) {
     });
 }
 
-function getSprintByID(id) {
+function getSprintByID(projectId, sprintId) {
     return new Promise((resolve, reject) => {
-        Backlog.sprints.findById(id, (err, project) => {
-            if (err)
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                resolve(project.management
+                    .backlog.sprints.id(sprintId));
+            })
+            .catch((err) => {
                 reject(err);
-            else
-                resolve(project);
-        });
+            });
     });
 }
 
