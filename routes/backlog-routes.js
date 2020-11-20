@@ -53,8 +53,7 @@ router.get('/new-user-story', function(req, res){
 });
 
 router.put('/user-story', function(req, res){
-    userStoryService.updatePriority(req.params.id, 
-        req.body.usList, req.body.sprintId)
+    userStoryService.updatePriority(req.params.id, req.body.usList, req.body.sprintId)
         .then(() => {
             res.status(200).json({ status:'ok' });
         })
@@ -79,10 +78,10 @@ router.delete('/user-story', function(req, res){
             // });
         })
         .catch((err) => {
-                console.log("errrrrror : "+ err);
+                console.log('errrrrror : '+ err);
             }
         );
-    userStoryService.deleteUS(req.params.id, 
+    userStoryService.deleteUS(req.params.id,
         req.body.sprintId, req.body.usId)
         .then(() => {
             res.status(200).json({ status:'ok' });
@@ -113,15 +112,15 @@ router.post('/user-story', function(req, res){
             // });
         })
         .catch((err) => {
-                console.log("errrrrror : "+ err);
+                console.log('errrrrror : '+ err);
             }
         );
     // Sprint.findById(req.params.id, (err, doc) => {
     //     if (err) console.log('fucking err : '+err);
     //     console.log('sooo : '+doc);
     // });
-    userStoryService.transferUS(req.params.id, 
-        req.body.firstSprintId, req.body.secondSprintId, 
+    userStoryService.transferUS(req.params.id,
+        req.body.firstSprintId, req.body.secondSprintId,
         req.body.usId)
         .then(() => {
             res.status(200).json({ status:'ok' });
