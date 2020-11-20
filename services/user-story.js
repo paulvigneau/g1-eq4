@@ -42,7 +42,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
 
                             console.log('after', sprint.USList);
 
-                            sprint.save() // Problem here
+                            project.save() // Problem here
                                 .then(() => resolve())
                                 .catch((err) => reject(err));
                         })
@@ -206,50 +206,6 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
         //     .catch((err) => {
         //         reject(err);
         //     });
-    });
-
-
-
-
-
-    return new Promise((resolve, reject) => {
-        projectService.getProjectByID(projectId)
-            .then((project) => {
-                if (!project)
-                    reject();
-
-                getUSById(firstSprintId, usId)
-                    .then((userStory) => {
-                        if(!userStory)
-                            reject();
-                        if (secondSprintId) {
-                            getSprintByID(secondSprintId)
-                                .then((sprint) => {
-                                    if (!sprint)
-                                        reject();
-                                    userStory.priority = sprint.USList.length;
-                                    sprint.USList.push(userStory);
-                                })
-                                .catch((err) => {
-                                    reject(err);
-                                });
-                        } else {
-                            // Backlog section add
-                            let backlog = project.management.backlog.backlog;
-                            userStory.priority = backlog.USList.length;
-                            backlog.USList.push(userStory);
-                        }
-                        project.save()
-                            .then(() => resolve())
-                            .catch((err) => reject(err));
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            })
-            .catch((err) => {
-                reject(err);
-            });
     });
 }
 

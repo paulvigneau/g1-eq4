@@ -9,6 +9,7 @@ $('#backlog').sortable({
 
         let projectId = $(event.target).context.dataset.projectId;
         let index = $(event.target).children().index(ui.item);
+        let usId = ui.item.context.dataset.usId;
         $.ajax({
             type:'PUT',
             url:'/projects/'+projectId+'/backlog/user-story',
@@ -16,7 +17,8 @@ $('#backlog').sortable({
             data: {
                 'from':from,
                 'to': to,
-                'index': index
+                'index': index,
+                'usId':usId
             },
             error: (res, status, err) =>{
                 console.log('Response status '+status+' : '+err);
@@ -42,6 +44,7 @@ $('.sprint').sortable({
         
         let projectId = $(event.target).context.dataset.projectId;
         let index = $(event.target).children().index(ui.item);
+        let usId = ui.item.context.dataset.usId;
         $.ajax({
             type:'PUT',
             url:'/projects/'+projectId+'/backlog/user-story',
@@ -49,7 +52,8 @@ $('.sprint').sortable({
             data: {
                 'from':from,
                 'to': to,
-                'index': index
+                'index': index,
+                'usId':usId
             },
             error: (res, status, err) =>{
                 console.log('Response status '+status+' : '+err);

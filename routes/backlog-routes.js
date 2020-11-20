@@ -53,7 +53,8 @@ router.get('/new-user-story', function(req, res){
 });
 
 router.put('/user-story', function(req, res){
-    userStoryService.updatePriority(req.params.id, req.body.usList, req.body.sprintId)
+    userStoryService.transferUS(req.params.id, 
+        req.body.from, req.body.to, req.body.usId, req.body.index)
         .then(() => {
             res.status(200).json({ status:'ok' });
         })
