@@ -74,6 +74,10 @@ function deleteSprint(projectId, sprintId){
                         if(!sprint)
                             return reject();
 
+                        if(new Date(sprint.end) < new Date()){
+                            return reject();
+                        }
+
                         const listLength = sprint.USList.length;
                         for(let i = 0; i < listLength; i++){
                             userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id);
