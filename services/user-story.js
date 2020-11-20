@@ -1,7 +1,5 @@
 const projectService = require('./project');
 const UserStory = require('../model/user-story');
-const Sprint = require('../model/sprint');
-const Backlog = require('../model/backlog');
 
 function addUS(projectId, sprintId, description, difficulty) {
     return new Promise((resolve, reject) => {
@@ -23,7 +21,7 @@ function addUS(projectId, sprintId, description, difficulty) {
                 });
 
                 if(sprintId) {
-                    getSprintByID(sprintId)
+                    getSprintByID(projectId, sprintId)
                         .then((sprint) => {
                             if (!sprint)
                                 reject();
@@ -51,7 +49,7 @@ function addUS(projectId, sprintId, description, difficulty) {
 
 function getAllUS(projectId, sprintId) {
     return new Promise((resolve, reject) => {
-        getSprintByID(sprintId)
+        getSprintByID(projectId, sprintId)
             .then((sprint) => {
                 if (sprint) {
                     let sprintObject = sprint.toObject();
@@ -82,7 +80,7 @@ function getAllUS(projectId, sprintId) {
 function deleteUS(projectId, sprintId, usId){
     return new Promise((resolve, reject) => {
         if(sprintId){
-            getSprintByID(sprintId)
+            getSprintByID(projectId, sprintId)
             .then((sprint) => {
                 sprint.USList.pull({ _id: usId });
                 sprint.save()
@@ -109,26 +107,35 @@ function deleteUS(projectId, sprintId, usId){
     });
 }
 
-function getUSById(sprintId, usId){
+function getUSById(projectId, sprintId, usId){
+    console.log('in getUsById');
     return new Promise((resolve, reject) => {
         if(sprintId){
-            getSprintByID(sprintId)
-            .then((sprint) => {
-                sprint.USList.findById(usId, (err, userStory) => {
-                    if (err)
-                        reject(err);
-                    else
-                        resolve(userStory);
+            console.log('in getUsById if');
+            getSprintByID(projectId, sprintId)
+                .then((sprint) => {
+                    console.log(sprint.USList.id(usId));
+                    resolve(sprint.USList.id(usId));
+                })
+                .catch((err) => {
+                    reject(err);
                 });
-            });
         }
         else{
-            UserStory.findById(usId, (err, userStory) => {
-                if (err)
+            projectService.getProjectByID(projectId)
+                .then((project) => {
+                    console.log('in getUsById else');
+                    console.log('us = '+usId);
+                    console.log(project.management
+                        .backlog.backlog.USList);
+                    console.log(project.management
+                        .backlog.backlog.USList.id(usId));
+                    resolve(project.management
+                        .backlog.backlog.USList.id(usId));
+                })
+                .catch((err) => {
                     reject(err);
-                else
-                    resolve(userStory);
-            });
+                });
         }
     });
 }
@@ -139,20 +146,26 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId){
             .then((project) => {
                 if (!project)
                     reject();
-                    
-                getUSById(firstSprintId, usId)
+                    console.log("here 1");
+                getUSById(projectId, firstSprintId, usId)
                     .then((userStory) => {
                         if(!userStory)
                             reject();
+                            console.log("here 2");
                         if (secondSprintId) {
-                            getSprintByID(secondSprintId)
+                            getSprintByID(projectId, secondSprintId)
                                 .then((sprint) => {
                                     if (!sprint)
                                         reject();
-                                    userStory.priority = sprint.USList.length;
+                                        console.log("here 3 : " + sprint);
+                                    console.log(userStory);
+                                    userStory.priority.set(sprint.USList.length);
+                                    console.log('size : '+sprint.USList.length);
                                     sprint.USList.push(userStory);
+                                    console.log("here 4");
                                 })
                                 .catch((err) => {
+                                    console.log("here 5");
                                     reject(err);
                                 });
                         } else {
@@ -175,10 +188,10 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId){
     });
 }
 
-function updatePriority(usList, sprintId) {
+function updatePriority(projectId, usList, sprintId) {
     return new Promise((resolve, reject) => {
         for (let i = 0; i < usList.lenght; i++) {
-            getUSById(sprintId, usList[i])
+            getUSById(projectId, sprintId, usList[i])
                 .then((userStory) => {
                     userStory.priority = i+1;
                     userStory.save()
@@ -196,6 +209,9 @@ function getSprintByID(projectId, sprintId) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
+                console.log(sprintId);
+                console.log(project.management
+                    .backlog.sprints.id(sprintId));
                 resolve(project.management
                     .backlog.sprints.id(sprintId));
             })
