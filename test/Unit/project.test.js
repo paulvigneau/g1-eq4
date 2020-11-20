@@ -22,8 +22,8 @@ describe('Project unit tests', () => {
             project = await projectService.addProject({
                 name: 'Super Projet',
                 description: 'Une description intéressante',
-                start: '2020-10-10',
-                end: '2020-10-20'
+                start: '2021-10-10',
+                end: '2021-10-20'
             });
         });
 
@@ -53,8 +53,8 @@ describe('Project unit tests', () => {
             const p = await projectService.getProjectByID(project._id);
             assert(p.name === 'Super Projet'
                 && p.description === 'Une description intéressante'
-                && new Date(p.start).valueOf() === new Date('2020-10-10').valueOf()
-                && new Date(p.end).valueOf() === new Date('2020-10-20').valueOf()
+                && new Date(p.start).valueOf() === new Date('2021-10-10').valueOf()
+                && new Date(p.end).valueOf() === new Date('2021-10-20').valueOf()
             );
 
         });
@@ -67,8 +67,8 @@ describe('Project unit tests', () => {
             project = await projectService.addProject({
                 name: 'Super Projet',
                 description: 'Une description intéressante',
-                start: '2020-10-10',
-                end: '2020-10-20'
+                start: '2021-10-10',
+                end: '2021-10-20'
             });
         });
 
@@ -115,8 +115,8 @@ describe('Project unit tests', () => {
             project = await projectService.addProject({
                 name: 'Super Projet',
                 description: 'Une description intéressante',
-                start: '2020-10-10',
-                end: '2020-10-20'
+                start: '2021-10-10',
+                end: '2021-10-20'
             });
         });
 

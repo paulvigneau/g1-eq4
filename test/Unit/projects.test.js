@@ -44,8 +44,8 @@ describe('Projects unit tests', () => {
             .send({
                 name: 'Projet Test',
                 description: 'Description de projet de test',
-                start: '2020-11-10',
-                end: '2020-11-20'
+                start: '2021-11-10',
+                end: '2021-11-20'
             });
 
         expect(res.status).to.equal(200);
@@ -54,8 +54,8 @@ describe('Projects unit tests', () => {
         assert(projects.find(
             (p) => p.name === 'Projet Test'
                 && p.description === 'Description de projet de test'
-                && new Date(p.start).valueOf() === new Date('2020-11-10').valueOf()
-                && new Date(p.end).valueOf() === new Date('2020-11-20').valueOf()
+                && new Date(p.start).valueOf() === new Date('2021-11-10').valueOf()
+                && new Date(p.end).valueOf() === new Date('2021-11-20').valueOf()
         ));
     });
 });
