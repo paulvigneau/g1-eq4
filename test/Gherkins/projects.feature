@@ -1,4 +1,4 @@
-Feature : Fonctionnalité de la page d'accueil
+Feature : Fonctionnalités de la page d'accueil
     cf(US)
     Fonctionnalités diverses et variées de la page d'acceuil de l'application.
 
