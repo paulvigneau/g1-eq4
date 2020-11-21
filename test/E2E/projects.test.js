@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const chai = require('chai');
+const projectService = require('../../services/project');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
@@ -93,6 +94,24 @@ describe('createProject & displayProjects', () => {
             });
 
     }).timeout(15000);
+});
+
+describe('Project redirection to homepage', () => {
+    it('This should add a project, and verify if we are redirected to it\'s homepage', async () => {
+        await driver.get('http://localhost:3000/');
+
+        await projectService.getProjectByName('Projet 1')
+            .then(async project => {
+                await driver.findElement(By.className('card-body'))
+                    .then(async element => {
+                        await element.click();
+
+                        driver.getCurrentUrl().then( url => {
+                            expect(url).to.be.equal('/projects/' + project._id);
+                        });
+                    });
+            });
+    }).timeout(10000);
 });
 
 after(function(done) {
