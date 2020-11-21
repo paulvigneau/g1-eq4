@@ -54,21 +54,22 @@ describe('New userStory page', () => {
         await driver.findElements(By.className('btn btn-success'))
             .then(async elements => {
                 await elements[0].click();
-
-                await driver.findElement(By.name('description'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
-
-                await driver.findElement(By.name('difficulty'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
             });
+
+        await driver.findElement(By.id('description'))
+            .then(async (element) => {
+                expect(element).to.be.not.undefined;
+            });
+
+        await driver.findElement(By.id('difficulty'))
+            .then(async (element) => {
+                expect(element).to.be.not.undefined;
+            });
+
     }).timeout(10000);
 });
 
-describe('displayUS', () => {
+describe('addUserStory & displayUS', () => {
     it('this should create an user story and display it in backlog', async () => {
         await testProjects.saveProject('Projet 10', 'Magnifique projet', '22-11-2021', '25-11-2021');
         await projectService.getProjectByName('Projet 10')
@@ -82,15 +83,15 @@ describe('displayUS', () => {
                     });
 
                 const userStoryRows = await driver.findElement(By.className('user-story border row m-0'));
-                userStoryRows.findElement(By.name('userStoryId')).getText()
+                userStoryRows.findElement(By.id('userStoryId')).getText()
                     .then((text) => {
                         expect(text).to.be.equal('1');
                     });
-                userStoryRows.findElement(By.name('userStoryDescription')).getText()
+                userStoryRows.findElement(By.id('userStoryDescription')).getText()
                     .then((text) => {
                         expect(text).to.be.equal('En tant que..., je souhaite pouvoir..., afin de...');
                     });
-                userStoryRows.findElement(By.name('userStoryDifficulty')).getText()
+                userStoryRows.findElement(By.id('userStoryDifficulty')).getText()
                     .then((text) => {
                         expect(text).to.be.equal('3');
                     });

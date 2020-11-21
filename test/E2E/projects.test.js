@@ -92,7 +92,7 @@ describe('createProject & displayProjects', () => {
                 expect(text).to.be.equal('Projet 1');
             });
 
-    }).timeout(10000);
+    }).timeout(15000);
 });
 
 after(function(done) {

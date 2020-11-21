@@ -111,7 +111,7 @@ describe('addMember', () => {
 
                     });
             });
-    }).timeout(10000);
+    }).timeout(15000);
 });
 
 describe('displayProject', () => {
@@ -182,17 +182,49 @@ describe('navigationBar', () => {
         await projectService.getProjectByName('Projet 6')
             .then(async project => {
                 await driver.get('http://localhost:3000/projects/' + project._id);
-                await driver.findElements(By.className('nav-link'))
+                await driver.findElements(By.className('nav-item'))
                     .then(async elements => {
-                        //localhost://3000
-                        await elements[0].click();
+                        await console.log(elements);
 
-                        await driver.getCurrentUrl().then( url => {
-                            expect(url.includes('http://localhost:3000')).true;
+                        elements.forEach(async (element) => {
+
+
+
+                            await element.findElement(By.className('nav-link'))
+                                   .then(async navLinkElement => {
+                                       let i = await elements.indexOf(element);
+                                       console.log(i);
+                                       await navLinkElement.click();
+                                       await driver.getCurrentUrl().then(async url => {
+                                           let navUrl;
+
+                                           if(i == 0){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id;
+                                           }
+                                           if(i == 1){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/gtgtg';
+                                           }
+                                           if(i == 2){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/tasks';
+                                           }
+                                           if(i == 3){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/tests';
+                                           }
+                                           if(i == 4){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id + 'documentations';
+                                           }
+                                           if(i == 5){
+                                               navUrl = 'http://localhost:3000/projects/' + project._id + 'releases';
+                                           }
+                                           await console.log(navUrl);
+                                           await expect(url.includes(navUrl)).true;
+                                       });
+
+                                       await driver.get('http://localhost:3000/projects/' + project._id);
+                                   });
+
+
                         });
-
-
-
                     });
             });
     }).timeout(10000);

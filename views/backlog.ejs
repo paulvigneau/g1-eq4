@@ -53,9 +53,9 @@
             <% backlog.backlog.USList.sort((s1, s2) => { return new Date(s2.priority) - new Date(s1.priority); }); %>
             <% backlog.backlog.USList.forEach(function(US) { %>
                 <div class="user-story border row m-0" data-us-id="<%= US._id %>">
-                    <span class="col-1" name="userStoryId">#<%= US.id %></span>
-                    <span class="description col-9" name="userStoryDescription"><%= US.description %></span>
-                    <span class="col-1 text-center"><span class="badge-pill badge-info" name="userStoryDifficulty"><%= US.difficulty %></span></span>
+                    <span class="col-1" id="userStoryId">#<%= US.id %></span>
+                    <span class="description col-9" id="userStoryDescription"><%= US.description %></span>
+                    <span class="col-1 text-center"><span class="badge-pill badge-info" id="userStoryDifficulty"><%= US.difficulty %></span></span>
                     <div class="dropdown">
                         <span class="col-1 text-right us-more" onclick="showDropdown();"><i class="fas fa-ellipsis-v"></i></span>
                         <div id="myDropdown" class="dropdown-content">
