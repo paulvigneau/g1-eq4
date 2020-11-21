@@ -28,10 +28,18 @@ async function saveUserStory(projectId, description, difficulty){
             await element.sendKeys(description);
         });
 
-    await driver.findElement(By.id('difficulty'))
-        .then(async element => {
-            await element.sendKeys();
-        });
+    if(difficulty == 1){
+        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[1]')).click();
+    }
+    if(difficulty == 2){
+        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[2]')).click();
+    }
+    if(difficulty == 3){
+        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[3]')).click();
+    }
+    if(difficulty == 5){
+        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[4]')).click();
+    }
 
     await driver.findElement(By.className('btn btn-success'))
         .then(async element => {
@@ -39,21 +47,56 @@ async function saveUserStory(projectId, description, difficulty){
         });
 }
 
-// describe('displayUS', () => {
-//     it('this should create an user story and display it in backlog', async () => {
-//         await testProjects.saveProject('Projet 10', 'Magnifique projet', '22-11-2021', '25-11-2021');
-//         await projectService.getProjectByName('Projet 10')
-//             .then(async (project) => {
-//                 await saveSprint(project._id, '23-11-2020', '25-11-2020');
-//                 await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
-//                 const divClass = await driver.findElement(By.className('mt-3'));
-//                 divClass.findElement(By.id('date')).getText()
-//                     .then((text) => {
-//                         expect(text).to.be.equal('23 nov. 2020 - 25 nov. 2020');
-//                     });
-//             });
-//     }).timeout(10000);
-// });
+describe('New userStory page', () => {
+    it('should be redirected to the creation page of user stories', async () => {
+        await driver.get('http://localhost:3000');
+
+        await driver.findElements(By.className('btn btn-success'))
+            .then(async elements => {
+                await elements[0].click();
+
+                await driver.findElement(By.name('description'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
+
+                await driver.findElement(By.name('difficulty'))
+                    .then(async (element) => {
+                        expect(element).to.be.not.undefined;
+                    });
+            });
+    }).timeout(10000);
+});
+
+describe('displayUS', () => {
+    it('this should create an user story and display it in backlog', async () => {
+        await testProjects.saveProject('Projet 10', 'Magnifique projet', '22-11-2021', '25-11-2021');
+        await projectService.getProjectByName('Projet 10')
+            .then(async (project) => {
+                await saveUserStory(project._id, 'En tant que..., je souhaite pouvoir..., afin de...', 3);
+                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+                await driver.findElements(By.className('us-container'))
+                    .then(async userStories => {
+                        expect(userStories.length).to.be.equal(1);
+                    });
+
+                const userStoryRows = await driver.findElement(By.className('user-story border row m-0'));
+                userStoryRows.findElement(By.name('userStoryId')).getText()
+                    .then((text) => {
+                        expect(text).to.be.equal('1');
+                    });
+                userStoryRows.findElement(By.name('userStoryDescription')).getText()
+                    .then((text) => {
+                        expect(text).to.be.equal('En tant que..., je souhaite pouvoir..., afin de...');
+                    });
+                userStoryRows.findElement(By.name('userStoryDifficulty')).getText()
+                    .then((text) => {
+                        expect(text).to.be.equal('3');
+                    });
+            });
+    }).timeout(10000);
+});
 
 after(function(done) {
     driver.quit();

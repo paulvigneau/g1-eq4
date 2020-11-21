@@ -75,7 +75,7 @@ describe('New project page', () => {
                         expect(element).to.be.not.undefined;
                     });
             });
-    }).timeout(10000);
+    }).timeout(15000);
 });
 
 describe('createProject & displayProjects', () => {

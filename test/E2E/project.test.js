@@ -59,27 +59,27 @@ describe('Project redirection to homepage', () => {
         await testProjects.saveProject('Projet 2', 'Projet magnifique', '12-11-2021', '20-11-2021');
         await driver.get('http://localhost:3000/');
 
-        /*await projectService.getAllProjects()
-            .then(async projects => {
-                for(let i = 0; i < projects.length; i++){
-                    let project = projects[0];
-                    if(project.name === 'Projet 1'){
-                        await driver.findElements(By.className('stretched-link'))
-                            .then(async elements => {
-
-                                await driver.wait(driver.until.elementIsVisible(elements[1]), 5000);
-
-                                await console.log(elements[1]);
-                                await elements[1].click();
-
-                                driver.getCurrentUrl().then( url => {
-                                    expect(url.includes('/projects/' + project._id)).true;
-                                });
-                            });
-                        break;
-                    }
-                }
-            });*/
+        // await projectService.getAllProjects()
+        //     .then(async projects => {
+        //         for(let i = 0; i < projects.length; i++){
+        //             let project = projects[0];
+        //             if(project.name === 'Projet 1'){
+        //                 await driver.findElements(By.className('stretched-link'))
+        //                     .then(async elements => {
+        //
+        //                         await driver.wait(driver.until.elementIsVisible(elements[1]), 5000);
+        //
+        //                         await console.log(elements[1]);
+        //                         await elements[1].click();
+        //
+        //                         driver.getCurrentUrl().then( url => {
+        //                             expect(url.includes('/projects/' + project._id)).true;
+        //                         });
+        //                     });
+        //                 break;
+        //             }
+        //         }
+        //     });
 
     }).timeout(10000);
 });
