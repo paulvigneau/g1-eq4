@@ -1,0 +1,61 @@
+process.env.NODE_ENV = 'test';
+
+const testProjects = require('./projects.test');
+const projectService = require('../../services/project');
+const chai = require('chai');
+const mongoose = require('mongoose');
+const { describe, it } = require('mocha');
+const chaiHttp = require('chai-http');
+const dirtyChai = require('dirty-chai');
+const { Builder, By } = require('selenium-webdriver');
+
+const expect = chai.expect;
+chai.use(chaiHttp);
+chai.use(dirtyChai);
+let driver;
+
+before(function () {
+    driver = new Builder()
+        .forBrowser('chrome')
+        .build();
+});
+
+async function saveUserStory(projectId, description, difficulty){
+    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog/new-user-story');
+
+    await driver.findElement(By.id('description'))
+        .then(async element => {
+            await element.sendKeys(description);
+        });
+
+    await driver.findElement(By.id('difficulty'))
+        .then(async element => {
+            await element.sendKeys();
+        });
+
+    await driver.findElement(By.className('btn btn-success'))
+        .then(async element => {
+            await element.click();
+        });
+}
+
+// describe('displayUS', () => {
+//     it('this should create an user story and display it in backlog', async () => {
+//         await testProjects.saveProject('Projet 10', 'Magnifique projet', '22-11-2021', '25-11-2021');
+//         await projectService.getProjectByName('Projet 10')
+//             .then(async (project) => {
+//                 await saveSprint(project._id, '23-11-2020', '25-11-2020');
+//                 await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+//                 const divClass = await driver.findElement(By.className('mt-3'));
+//                 divClass.findElement(By.id('date')).getText()
+//                     .then((text) => {
+//                         expect(text).to.be.equal('23 nov. 2020 - 25 nov. 2020');
+//                     });
+//             });
+//     }).timeout(10000);
+// });
+
+after(function(done) {
+    driver.quit();
+    mongoose.model('project').deleteMany({}, done);
+});

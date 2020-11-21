@@ -92,18 +92,23 @@ describe('addMember', () => {
             .then(async project => {
                 await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
                 await driver.get('http://localhost:3000/projects/' + project._id);
-                await driver.findElement(By.id('name')).getText()
-                    .then(async text => {
-                        expect(text).to.be.equal('Nom : Bob');
-                    });
-                await driver.findElement(By.id('role')).getText()
-                    .then(async text => {
-                        expect(text).to.be.equal('Rôle : Testeur');
 
-                    });
-                await driver.findElement(By.id('email')).getText()
+                const member = await driver.findElement(By.xpath('.//table[@class="table"]//tbody//tr'));
+                const rows = await member.findElements(By.css('td'));
+                const name = await member.findElement(By.id('name'));
+
+                await name.getText()
                     .then(async text => {
-                        expect(text).to.be.equal('Email : John@Doe.com');
+                    expect(text).to.be.equal('Bob');
+                });
+                await rows[0].getText()
+                    .then(async text => {
+                        expect(text).to.be.equal('Testeur');
+                    });
+                await rows[1].getText()
+                    .then(async text => {
+                        expect(text).to.be.equal('John@Doe.com');
+
                     });
             });
     }).timeout(10000);
