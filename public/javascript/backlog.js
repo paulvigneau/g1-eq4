@@ -11,29 +11,13 @@ $('#backlog').sortable({
     update: (event, ui) => {
         let to = null;
         let from = null;
-        if(ui.sender)
+        if(ui.sender){
             from = ui.sender.context.dataset.sprintId;
-
-        let projectId = $(event.target).context.dataset.projectId;
-        let index = $(event.target).children().index(ui.item);
-        let usId = ui.item.context.dataset.usId;
-        $.ajax({
-            type:'PUT',
-            url:'/projects/'+projectId+'/backlog/user-story',
-            dataType: 'json',
-            data: {
-                'from':from,
-                'to': to,
-                'index': index,
-                'usId':usId
-            },
-            error: (res, status, err) =>{
-                console.log('Response status '+status+' : '+err);
-            },
-            complete: (res, status) =>{
-                location.reload();
-            }
-        });
+            update(event, ui, from, to);
+        }
+        else{
+            update(event, ui, from, to);
+        } 
     }
 }).disableSelection();
 
@@ -47,27 +31,33 @@ $('.sprint').sortable({
                 from = ui.sender.context.dataset.sprintId;
             else
                 from = null;
+            update(event, ui, from, to);
         }
-        
-        let projectId = $(event.target).context.dataset.projectId;
-        let index = $(event.target).children().index(ui.item);
-        let usId = ui.item.context.dataset.usId;
-        $.ajax({
-            type:'PUT',
-            url:'/projects/'+projectId+'/backlog/user-story',
-            dataType: 'json',
-            data: {
-                'from':from,
-                'to': to,
-                'index': index,
-                'usId':usId
-            },
-            error: (res, status, err) =>{
-                console.log('Response status '+status+' : '+err);
-            },
-            complete: (res, status) =>{
-                location.reload();
-            }
-        });
+        else{
+            update(event, ui, from, to);
+        } 
     }
 }).disableSelection();
+
+function update(event, ui, from, to){
+    let projectId = $(event.target).context.dataset.projectId;
+    let index = $(event.target).children().index(ui.item);
+    let usId = ui.item.context.dataset.usId;
+    $.ajax({
+        type:'PUT',
+        url:'/projects/'+projectId+'/backlog/user-story',
+        dataType: 'json',
+        data: {
+            'from':from,
+            'to': to,
+            'index': index,
+            'usId':usId
+        },
+        error: (res, status, err) =>{
+            console.log('Response status '+status+' : '+err);
+        },
+        complete: (res, status) =>{
+            location.reload();
+        }
+    });
+}
