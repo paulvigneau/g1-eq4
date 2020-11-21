@@ -30,3 +30,8 @@ Feature : Fonctionnalité de la page project
         And Le nouveau projet est visible sur la page d'accueil
         And Ses informations correspondent a celles entrées par l'utilisateur plus tôt
     
+    #navigationBar
+    Scenario : L'utilisateur navigue entre les différentes pages d'un projet 
+        Given L'utilisateur est sur la page de gestion d'un projet
+        When Il clique sur un des les liens de la barre de navigation
+        Then Il est redirigé vers la page correspondant au lien cliqué.
