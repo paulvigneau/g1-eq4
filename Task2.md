@@ -22,8 +22,6 @@ Il y a 3 Definition Of Done :
 
 Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évolution d'une tâche, on écrit dans la colonne DOD le nom de la DOD ainsi que les lettres de la checklist qui ont été réalisées.
 
-##User stories
-
 | ID | Description | Coût (durée/homme) | US liées | Dépendances | Phase d’avancement | DOD | Développeur |
 |:-:|-|-|:-:|:-:|:-:|:-:|:-:|
 | #38 | Ajouter dans la définition de la route POST  /projects/:id/member dans le fichier routes/projectsRoutes.js l’appel à la fonction sendEmailToNewMember du fichier /models/member.js au moment de l’ajout du membre en base de données. | 5min | US6 | #36 | DONE | DEV I-R-T-P | Alexandre |
@@ -95,13 +93,3 @@ Chaque tâche a une de ces trois DOD qui lui est attribuée. Pour suivre l'évol
 | #104 | Implémenter le test sélénium du scénario labelAfterSprintDeletion dans le fichier backlog.test.js. | 30min | US16 | #56, #92, #97, #98, #99, #103 | TODO | TEST | / |
 | #105 | Créer le scénario gherkin deleteLabelWhenMovingUS qui vérifie que si on ajoute une US à un sprint alors que l’US avait un label, alors son champ label redevient vide. | 30min | US16 | #1 | TODO | GEN | / |
 | #106 | Implémenter le test sélénium du scénario deleteLabelWhenMovingUS dans le fichier backlog.test.js. | 30min | US16 | #87, #105 | TODO | TEST | / |
-
-##Tasks
-
-| ID | Description | Coût (durée/homme) | US liées | Dépendances | Phase d’avancement | DOD | Développeur |
-|:-:|-|-|:-:|:-:|:-:|:-:|:-:|
-| #107 | Modifier le fichier models/projects.js afin d'inclure les trois types de DOD (GEN, DEV, et TEST) dans le schéma d'un project. | 30min | US17 | #1 | WIP | DEV I-P | Alexandre |
-| #108 | Créer un fichier models/dod.js permettant d'avoir les trois types de DOD (GEN, DEV et TEST) et une liste d'objets String dans un objet "Checklist", représentant chaque ligne de la checklist. Ces lignes seront préremplies par des squelettes de bonnes pratiques par défaut. | 30min | US17 | #1 | WIP | DEV I-P | Alexandre |
-| #109 | Créer un fichier services/dod.js et implémenter la fonction addLine qui permet d'ajouter une ligne String dans une DOD. | 30min | #1, #108 | TODO | DEV | / |
-
-| #111 | Créer le fichier models/tasks.js afin d'avoir le schéma Mongoose pour les tasks d'un projet. Le schéma contiendra les éléments suivants : 
