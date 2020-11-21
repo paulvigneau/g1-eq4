@@ -181,51 +181,77 @@ describe('navigationBar', () => {
     it('Click on every element from the navigation bar, and test if we are redirected to the good pages', async () => {
         await projectService.getProjectByName('Projet 6')
             .then(async project => {
+
                 await driver.get('http://localhost:3000/projects/' + project._id);
-                await driver.findElements(By.className('nav-item'))
-                    .then(async elements => {
-                        await console.log(elements);
 
-                        elements.forEach(async (element) => {
-
-
-
-                            await element.findElement(By.className('nav-link'))
-                                   .then(async navLinkElement => {
-                                       let i = await elements.indexOf(element);
-                                       console.log(i);
-                                       await navLinkElement.click();
-                                       await driver.getCurrentUrl().then(async url => {
-                                           let navUrl;
-
-                                           if(i == 0){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id;
-                                           }
-                                           if(i == 1){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/gtgtg';
-                                           }
-                                           if(i == 2){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/tasks';
-                                           }
-                                           if(i == 3){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id + '/tests';
-                                           }
-                                           if(i == 4){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id + 'documentations';
-                                           }
-                                           if(i == 5){
-                                               navUrl = 'http://localhost:3000/projects/' + project._id + 'releases';
-                                           }
-                                           await console.log(navUrl);
-                                           await expect(url.includes(navUrl)).true;
-                                       });
-
-                                       await driver.get('http://localhost:3000/projects/' + project._id);
-                                   });
-
-
+                await driver.findElement(By.linkText('Accueil'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/');
                         });
                     });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Projet'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id);
+                        });
+                    });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Backlog'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/backlog');
+                        });
+                    });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Tâches'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/tasks');
+                        });
+                    });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Tests'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/tests');
+                        });
+                    });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Documentation'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/documentations');
+                        });
+                    });
+
+                await driver.get('http://localhost:3000/projects/' + project._id);
+
+                await driver.findElement(By.linkText('Release'))
+                    .then(async navLinkElement => {
+                        await navLinkElement.click();
+                        await driver.getCurrentUrl().then(url => {
+                            expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/releases');
+                        });
+                    });
+
             });
     }).timeout(10000);
 });
