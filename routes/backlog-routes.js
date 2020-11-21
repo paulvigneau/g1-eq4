@@ -63,13 +63,13 @@ router.get('/new-user-story', function(req, res){
 });
 
 router.put('/user-story', function(req, res){
-    userStoryService.transferUS(req.params.id, 
+    userStoryService.transferUS(req.params.id,
         req.body.from, req.body.to, req.body.usId, req.body.index)
         .then(() => {
-            res.status(200).json({ status:'ok' });
+            res.status(200).send();
         })
         .catch(() => {
-            res.status(404).json({ status:'error', redirect:'/404' });
+            res.status(404).send();
         });
 });
 
