@@ -88,7 +88,7 @@ describe('Project unit tests', () => {
                 });
 
 
-        expect(res.status).to.equal(200);
+            expect(res.status).to.equal(200);
 
             let p = await projectService.getProjectByID(project._id);
             assert(p.members.find(
