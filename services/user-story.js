@@ -17,7 +17,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject();
+                    return reject(`No project ${projectId} found.`);
 
                 if (isNew) {
                     let newIncr = project.incrUS + 1;
@@ -34,7 +34,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                     USList = project.management.backlog.backlog.USList;
 
                 if (!USList)
-                    return reject();
+                    return reject(`No sprint ${sprintId} found.`);
 
                 const newPriority = (priority > -1) ? Math.min(priority, USList.length) : 0;
                 USList = shiftUSPriorityToAdd(USList, newPriority);
@@ -57,14 +57,14 @@ function getAllUS(projectId, sprintId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject();
+                    return reject(`No project ${projectId} found.`);
 
                 if (sprintId) {
                     const sprint = project.management.backlog.sprints.id(sprintId);
                     if (sprint)
                         resolve(sprint.USList);
                     else
-                        return reject();
+                        return reject(`No sprint ${sprintId} found.`);
                 }
                 else
                     resolve(project.management.backlog.backlog.USList);
@@ -81,7 +81,7 @@ function deleteUS(projectId, sprintId, usId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject();
+                    return reject(`No project ${projectId} found.`);
 
                 let USList;
                 if (sprintId) {
@@ -89,7 +89,7 @@ function deleteUS(projectId, sprintId, usId) {
                     if (sprint)
                         USList = sprint.USList;
                     else
-                        return reject();
+                        return reject(`No sprint ${sprintId} found.`);
                 }
                 else {
                     USList = project.management.backlog.backlog.USList;
@@ -116,7 +116,7 @@ function getUSById(projectId, sprintId, usId) {
             getSprintByID(projectId, sprintId)
                 .then((sprint) => {
                     if (!sprint)
-                        return reject();
+                        return reject(`No sprint ${sprint} found.`);
 
                     resolve(sprint.USList.id(usId));
                 })
@@ -128,7 +128,7 @@ function getUSById(projectId, sprintId, usId) {
             projectService.getProjectByID(projectId)
                 .then((project) => {
                     if (!project)
-                        return reject();
+                        return reject(`No project ${projectId} found.`);
 
                     resolve(project.management.backlog.backlog.USList.id(usId));
                 })
@@ -144,7 +144,7 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
         getUSById(projectId, firstSprintId, usId)
             .then((userStory) => {
                 if (!userStory)
-                    return reject();
+                    return reject(`No User Story ${usId} found.`);
 
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {

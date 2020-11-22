@@ -66,36 +66,43 @@ function getSprintByID(projectId, sprintId) {
 function deleteSprint(projectId, sprintId){
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
-            .then((project) => {
+            .then(async (project) => {
                 if (!project)
-                    return reject();
-                getSprintByID(projectId, sprintId)
-                    .then((sprint) => {
+                    return reject(`No project ${projectId} found.`);
+                await getSprintByID(projectId, sprintId)
+                    .then(async (sprint) => {
                         if(!sprint)
                             return reject();
-                        if(new Date(sprint.end) < new Date()){
+                        if (new Date(sprint.end) < new Date()) {
                             return reject();
                         }
 
                         const listLength = sprint.USList.length;
                         let backlog = project.management.backlog.backlog;
                         for(let i = 0; i < listLength; i++){
-                            //sprint.USList[i].label = 'test';
+                            // sprint.USList[i].label = 'test';
                             let backlogLength = backlog.USList.length;
-                            userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id, backlogLength);
-                            console.log(project.management.backlog.backlog.USList);
+                            await userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id, backlogLength);
                         }
 
                      })
                      .catch((err) => {
-                        reject(err);
+                        return reject(err);
                     });
+            })
+            .then(async () => {
+                // Get the project variable again after updating it in database
+                const project = await projectService.getProjectByID(projectId);
+                if (!project)
+                    return reject(`No project ${projectId} found.`);
 
-                project.management.backlog.sprints.pull({ _id: sprintId });
-                project.save(resolve());
+                project.management.backlog.sprints.id(sprintId).remove();
+                project.save()
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
-                reject(err);
+                return reject(err);
             });
     });
 }
