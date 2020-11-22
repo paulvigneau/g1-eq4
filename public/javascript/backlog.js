@@ -4,16 +4,10 @@ usForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(usForm));
+    // eslint-disable-next-line no-undef
     await sendForm('backlog/new-user-story', data);
     document.location.reload();
 });
-
-function sendForm(url, data) {
-    return fetch(url, {
-        method: 'POST',
-        body: data
-    });
-}
 
 async function deleteSprint(projectId, sprintId) {
     await fetch(`/projects/${projectId}/backlog/sprints/${sprintId}`, {

@@ -15,9 +15,10 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 
 describe('Project unit tests', () => {
-    let project;
 
     describe('Project informations', () => {
+        let project;
+
         before(async function() {
             project = await projectService.addProject({
                 name: 'Super Projet',
@@ -31,31 +32,33 @@ describe('Project unit tests', () => {
             mongoose.model('project').deleteMany({}, done);
         });
 
-        it('should get return status 404 and redirect to /404', async () => {
-            let res = await chai
-                .request(app)
-                .get('/projects/notExistingId')
-                .send();
+        it('should get an existing project from its Id', async () => {
+            const p = await projectService.getProjectByID(project._id);
 
-            expect(res).to.have.status(404);
-            expect(res.redirects[0]).contain('/404');
-
+            assert(p.name === project.name
+                && p.description === project.description
+                && new Date(p.start).valueOf() === new Date(project.start).valueOf()
+                && new Date(p.end).valueOf() === new Date(project.end).valueOf()
+            );
         });
 
-        it('should get an existing project from its Id', async () => {
+        it('should return code 200', async () => {
             let res = await chai
                 .request(app)
                 .get('/projects/' + project._id)
                 .send();
 
-            expect(res).to.have.status(200);
+            expect(res.status).to.equal(200);
+        });
 
-            const p = await projectService.getProjectByID(project._id);
-            assert(p.name === 'Super Projet'
-                && p.description === 'Une description intéressante'
-                && new Date(p.start).valueOf() === new Date('2021-10-10').valueOf()
-                && new Date(p.end).valueOf() === new Date('2021-10-20').valueOf()
-            );
+        it('should return code 404 and redirect to /404', async () => {
+            let res = await chai
+                .request(app)
+                .get('/projects/notExistingId')
+                .send();
+
+            expect(res.status).to.equal(404);
+            expect(res.redirects[0]).contain('/404');
 
         });
     });
@@ -77,6 +80,18 @@ describe('Project unit tests', () => {
         });
 
         it('should add a member to a project', async () => {
+            const newMember = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
+            );
+            const receivedMember = await memberService.getMemberById(project._id, newMember._id);
+
+            assert(newMember.toString() === receivedMember.toString());
+        });
+
+        it('should return code 200', async () => {
             let res = await chai
                 .request(app)
                 .post('/projects/' + project._id + '/member')
@@ -87,15 +102,21 @@ describe('Project unit tests', () => {
                     email: 'bob@mail.com',
                 });
 
-
             expect(res.status).to.equal(200);
+        });
 
-            let p = await projectService.getProjectByID(project._id);
-            assert(p.members.find(
-                (m) => m.name === 'Bob'
-                    && m.role === 'Développeur'
-                    && m.email === 'bob@mail.com'
-            ));
+        it('should return code 400', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/member')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    name: 'Bob',
+                    role: 'Développeur',
+                    email: 'notAValidMail',
+                });
+
+            expect(res.status).to.equal(400);
         });
 
         it('should send an email', () => {
@@ -149,7 +170,7 @@ describe('Project unit tests', () => {
             expect(res.status).to.equal(200);
         });
 
-        it('should remove code 404', async () => {
+        it('should return code 404', async () => {
             let res = await chai
                 .request(app)
                 .delete('/projects/' + project._id + '/members/nonExistingMemberId');
@@ -157,6 +178,4 @@ describe('Project unit tests', () => {
             expect(res.status).to.equal(404);
         });
     });
-
-
 });

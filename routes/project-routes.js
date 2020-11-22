@@ -36,7 +36,10 @@ router.post('/member', function (req, res) {
     memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)
         .then(() => {
             memberService.sendEmailToMember(req.params.id, req.body.name, req.body.email, req.body.role);
-            res.redirect('/projects/' + req.params.id);
+            res.status(200).send();
+        })
+        .catch((err) => {
+            res.status(400).send(err);
         });
 });
 

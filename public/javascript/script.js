@@ -12,6 +12,13 @@ function closePopup() {
     popups.forEach(p => p.style.display = 'none');
 }
 
+function sendForm(url, data) {
+    return fetch(url, {
+        method: 'POST',
+        body: data
+    });
+}
+
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 function showDropdown() {
