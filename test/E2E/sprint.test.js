@@ -42,6 +42,21 @@ async function saveSprint(projectId, start, end){
         });
 }
 
+async function checkTransferUs(from, to){
+    from.findElements(By.className('user-story border row m-0'))
+        .then(async userStories => {
+            expect(userStories.length).to.be.equal(1);
+        });
+    from.findElement(By.className('user-story border row m-0'))
+        .then((userStory) => {
+            userStory.dragAndDrop(from, to);
+        });
+    from.findElements(By.className('user-story border row m-0'))
+        .then(async userStories => {
+            expect(userStories.length).to.be.equal(0);
+        });
+}
+
 describe('createSprint', () => {
     it('this should create a sprint and display it in backlog', async () => {
         await testProjects.saveProject('Projet 8', 'Magnifique projet', '22-11-2021', '25-11-2021');
@@ -64,24 +79,21 @@ describe('drag and drop', () => {
         await projectService.getProjectByName('Projet 9')
             .then(async (project) => {
                 await saveSprint(project._id, '23-11-2026', '25-11-2026');
+                await saveSprint(project._id, '23-11-2027', '25-11-2027');
                 await testUserStory.saveUserStory(project._id, 'En tant que..., je souhaite pouvoir..., afin de...', 1);
                 
                 await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
                 
-                const sprint = await driver.findElement(By.className('us-container sprint'));
+                // const sprint1 = await driver.findElement(By.className('us-container sprint'));
+                const allSprints = await driver.findElements(By.className('us-container sprint'));
+                const sprint1 = await allSprints[0];
+                const sprint2 = await allSprints[1];
+
                 const backlog = await driver.findElement(By.id('backlog'));
-                backlog.findElements(By.className('user-story border row m-0'))
-                    .then(async userStories => {
-                        expect(userStories.length).to.be.equal(1);
-                    });
-                backlog.findElement(By.className('user-story border row m-0'))
-                    .then((userStory) => {
-                        userStory.dragAndDrop(backlog, sprint);
-                    });
-                backlog.findElements(By.className('user-story border row m-0'))
-                    .then(async userStories => {
-                        expect(userStories.length).to.be.equal(0);
-                    });
+
+                checkTransferUs(backlog, sprint1);
+                checkTransferUs(sprint1, sprint2);
+                checkTransferUs(sprint2, backlog);
             });
     }).timeout(10000);
 });

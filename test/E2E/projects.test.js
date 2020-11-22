@@ -76,7 +76,7 @@ describe('New project page', () => {
                         expect(element).to.be.not.undefined;
                     });
             });
-    }).timeout(20000);
+    }).timeout(15000);
 });
 
 describe('createProject & displayProjects', () => {
@@ -93,7 +93,7 @@ describe('createProject & displayProjects', () => {
                 expect(text).to.be.equal('Projet 1');
             });
 
-    }).timeout(20000);
+    }).timeout(15000);
 });
 
 describe('Project redirection to homepage', () => {
@@ -111,7 +111,7 @@ describe('Project redirection to homepage', () => {
                         });
                     });
             });
-    }).timeout(20000);
+    }).timeout(10000);
 });
 
 after(function(done) {
