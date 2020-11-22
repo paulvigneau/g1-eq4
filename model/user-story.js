@@ -5,7 +5,7 @@ const ObjectId = mongoose.ObjectId;
 let UserStorySchema = new Schema({
         id: { type: Number, required: true, min: 0 },
         description: { type: String, required: true },
-        difficulty: { type: Number, required: true, min: 0 },
+        difficulty: { type: Number, required: true, enum: [ 1, 2, 3, 5 ] },
         priority: { type: Number, required: true, min: 0 },
         status: { type: Number, default: null },
         parent: { type: ObjectId, default: null }
