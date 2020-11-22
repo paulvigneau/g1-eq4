@@ -104,3 +104,5 @@ after(function(done) {
     driver.quit();
     mongoose.model('project').deleteMany({}, done);
 });
+
+module.exports = { saveUserStory };

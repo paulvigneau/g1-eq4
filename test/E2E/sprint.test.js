@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const testProjects = require('./projects.test');
+const testUserStory = require('./user-story.test');
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
@@ -55,6 +56,34 @@ describe('createSprint', () => {
                     });
             });
     }).timeout(20000);
+});
+
+describe('drag and drop', () => {
+    it('this should drag an us from a sprint to the backlog section', async () => {
+        await testProjects.saveProject('Projet 9', 'Magnifique projet', '22-11-2025', '25-12-2031');
+        await projectService.getProjectByName('Projet 9')
+            .then(async (project) => {
+                await saveSprint(project._id, '23-11-2026', '25-11-2026');
+                await testUserStory.saveUserStory(project._id, 'En tant que..., je souhaite pouvoir..., afin de...', 1);
+                
+                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+                
+                const sprint = await driver.findElement(By.className('us-container sprint'));
+                const backlog = await driver.findElement(By.id('backlog'));
+                backlog.findElements(By.className('user-story border row m-0'))
+                    .then(async userStories => {
+                        expect(userStories.length).to.be.equal(1);
+                    });
+                backlog.findElement(By.className('user-story border row m-0'))
+                    .then((userStory) => {
+                        userStory.dragAndDrop(backlog, sprint);
+                    });
+                backlog.findElements(By.className('user-story border row m-0'))
+                    .then(async userStories => {
+                        expect(userStories.length).to.be.equal(0);
+                    });
+            });
+    }).timeout(10000);
 });
 
 describe('deleteSprint success', () => {
