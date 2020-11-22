@@ -48,10 +48,10 @@ router.get('/new-sprint', function(req, res){
 router.post('/new-user-story', function (req, res) {
     userStoryService.addUS(req.params.id, null, req.body.description, req.body.difficulty)
         .then(() => {
-            res.redirect('/projects/' + req.params.id + '/backlog');
+            res.status(200).send();
         })
         .catch(() => {
-            res.redirect('/404');
+            res.status(400).send();
         });
 });
 
