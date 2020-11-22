@@ -9,4 +9,9 @@ let MemberSchema = new Schema({
     }
 );
 
+MemberSchema.path('email').validate((email) => {
+    const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    return emailRegex.test(email.text);
+}, 'Le champ email n\'est pas conforme.');
+
 module.exports = mongoose.model('member', MemberSchema);
