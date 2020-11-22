@@ -42,7 +42,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                 USList.push(userStory);
 
                 project.save()
-                    .then(() => resolve())
+                    .then(() => resolve(userStory))
                     .catch((err) => reject(err));
 
             })
