@@ -8,7 +8,8 @@ let UserStorySchema = new Schema({
         difficulty: { type: Number, required: true, enum: [ 1, 2, 3, 5 ] },
         priority: { type: Number, required: true, min: 0 },
         status: { type: Number, default: null },
-        parent: { type: ObjectId, default: null }
+        parent: { type: ObjectId, default: null },
+        label: {type: String, default: null }
     }
 );
 
