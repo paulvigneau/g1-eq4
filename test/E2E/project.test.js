@@ -80,7 +80,7 @@ describe('addMember', () => {
 
                     });
             });
-    }).timeout(15000);
+    }).timeout(20000);
 });
 
 describe('displayProject', () => {
@@ -100,7 +100,7 @@ describe('displayProject', () => {
                     });
             });
 
-    }).timeout(10000);
+    }).timeout(20000);
 });
 
 describe('Redirection to new-member page', () => {
@@ -120,7 +120,7 @@ describe('Redirection to new-member page', () => {
                     });
             });
 
-    }).timeout(10000);
+    }).timeout(20000);
 });
 
 describe('deleteMember', () => {
@@ -143,7 +143,7 @@ describe('deleteMember', () => {
                             });
                     });
             });
-    }).timeout(10000);
+    }).timeout(20000);
 });
 
 describe('navigationBar', () => {
@@ -222,7 +222,7 @@ describe('navigationBar', () => {
                     });
 
             });
-    }).timeout(10000);
+    }).timeout(20000);
 });
 
 after(function(done) {
