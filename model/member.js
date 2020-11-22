@@ -10,8 +10,8 @@ let MemberSchema = new Schema({
 );
 
 MemberSchema.path('email').validate((email) => {
-    const emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    return emailRegex.test(email.text);
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailRegex.test(String(email).toLowerCase());
 }, 'Le champ email n\'est pas conforme.');
 
 module.exports = mongoose.model('member', MemberSchema);
