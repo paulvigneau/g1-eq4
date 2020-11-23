@@ -31,13 +31,13 @@ router.post('/sprint', function (req, res) {
 
 router.delete('/sprints/:sprintId', function (req, res) {
     sprintService.deleteSprint(req.params.id, req.params.sprintId)
-        .then(() => {
-            res.redirect('/projects/' + req.params.id + '/backlog');
-        })
-        .catch(() => {
-            res.redirect('/404');
-        });
-}); // TODO Modify it to send response instead of redirecting
+        .then(() =>
+            res.status(200).send()
+        )
+        .catch((err) =>
+            res.status(400).send({ message: err })
+        );
+});
 
 router.get('/new-sprint', function(req, res){
     res.render('new-sprint', {

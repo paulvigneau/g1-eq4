@@ -34,9 +34,13 @@ sprintForm.addEventListener('submit', async (event) => {
 async function deleteSprint(projectId, sprintId) {
     await fetch(`/projects/${projectId}/backlog/sprints/${sprintId}`, {
         method: 'DELETE'
+    }).then((resp) => {
+        if (resp.status === 400) {
+            resp.json().then(text => alert(text.message));
+        }
+        else
+            document.location.reload();
     });
-
-    document.location.reload();
 }
 
 $('#backlog').sortable({
