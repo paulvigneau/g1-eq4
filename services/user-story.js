@@ -220,7 +220,34 @@ function getSprintByID(projectId, sprintId) {
 }
 
 function closeUS(projectId, sprintId, usId){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if(!project)
+                    return reject(`No project ${projectId} found.`);
 
+                getSprintByID(projectId, sprintId)
+                    .then((sprint) => {
+                        if(!sprint)
+                            return reject(`No sprint ${sprintId} found.`);
+
+                            let userStory = sprint.USList.id(usId);
+                            if(!userStory)
+                                return reject(`No user story ${usId} found.`);
+
+                            userStory.status = 'Frozen';
+                            project.save()
+                                .then(() => resolve(userStory))
+                                .catch((err) => reject(err));
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
 }
 
 module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS };
