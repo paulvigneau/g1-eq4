@@ -30,7 +30,7 @@ router.get('/new-member', function(req, res){
             res.redirect('/404');
         }
     );
-});
+}); // TODO Update e2e tests and delete this route
 
 router.post('/member', function (req, res) {
     memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)

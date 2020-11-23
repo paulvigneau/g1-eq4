@@ -27,7 +27,7 @@ router.post('/sprint', function (req, res) {
     .catch(() => {
         res.redirect('/404');
     });
-});
+}); // TODO Modify it to send response instead of redirecting
 
 router.delete('/sprints/:sprintId', function (req, res) {
     sprintService.deleteSprint(req.params.id, req.params.sprintId)
@@ -37,13 +37,13 @@ router.delete('/sprints/:sprintId', function (req, res) {
         .catch(() => {
             res.redirect('/404');
         });
-});
+}); // TODO Modify it to send response instead of redirecting
 
 router.get('/new-sprint', function(req, res){
     res.render('new-sprint', {
         projectId: req.params.id
     });
-});
+}); // TODO Update e2e tests and delete this route
 
 router.post('/new-user-story', function (req, res) {
     userStoryService.addUS(req.params.id, null, req.body.description, req.body.difficulty)
@@ -59,7 +59,7 @@ router.get('/new-user-story', function(req, res){
     res.render('new-user-story', {
         projectId: req.params.id
     });
-});
+}); // TODO Update e2e tests and delete this route
 
 router.put('/user-story', function(req, res){
     userStoryService.transferUS(req.params.id,
