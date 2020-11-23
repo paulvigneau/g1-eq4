@@ -4,6 +4,15 @@
         <span class="col-1">#<%= US.id %></span>
         <span class="description col-9"><%= US.description %></span>
         <span class="col-1 text-center"><span class="badge-pill badge-info"><%= US.difficulty %></span></span>
-        <span class="col-1 text-right us-more" onclick="alert('click')"><i class="fas fa-ellipsis-v"></i></span>
+        <div class="dropdown">
+            <span class="col-1 text-right us-more" onclick="alert('click')"><i class="fas fa-ellipsis-v"></i></span>
+            <div id="myDropdown" class="dropdown-content">
+                <a onclick="closeUS('<%= projectId %>', '<%= sprint._id %>', '<%= US._id %>')">Fermer l'US</a>
+                <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
+            </div>
+        </div>
+        <div class="pop-up" id="edit-user-story<%=US.id%>">
+            <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
+        </div>
     </div>
 <% }); %>

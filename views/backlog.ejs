@@ -44,7 +44,7 @@
 
             <div class="us-container sprint" data-sprint-id=<%= sprint._id %>
                 data-project-id=<%= projectId %>>
-                <%- include('sprint.ejs', {sprint : sprint}) %>
+                <%- include('sprint.ejs', {projectId: projectId, sprint : sprint}) %>
             </div>
         <% }); %>
 
@@ -59,7 +59,6 @@
                     <div class="dropdown">
                         <span class="col-1 text-right us-more" onclick="showDropdown();"><i class="fas fa-ellipsis-v"></i></span>
                         <div id="myDropdown" class="dropdown-content">
-                            <a href="#">Supprimer</a>
                             <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
                         </div>
                     </div>

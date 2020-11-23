@@ -39,6 +39,19 @@ async function deleteSprint(projectId, sprintId) {
     document.location.reload();
 }
 
+function closeUS(projectId, sprintId, usId){
+    fetch(`/projects/${projectId}/backlog/${sprintId}/${usId}/close`, {
+        method: 'PUT'
+    })
+        .then((resp) => {
+            if (resp.status === 400) {
+                resp.json().then(text => alert(text.message));
+            }
+            else
+                document.location.reload();
+            });
+}
+
 $('#backlog').sortable({
     connectWith: '.sprint',
     update: (event, ui) => {
