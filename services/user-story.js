@@ -219,4 +219,8 @@ function getSprintByID(projectId, sprintId) {
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS };
+function closeUS(projectId, sprintId, usId){
+
+}
+
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS };

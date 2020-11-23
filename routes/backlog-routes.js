@@ -72,4 +72,14 @@ router.put('/user-story', function(req, res){
         });
 });
 
+router.put('/:sprintId/:usId/close', function(req, res) {
+    userStoryService.closeUS(req.params.id, req.params.sprintId, req.params.usId)
+        .then(() => {
+            res.status(200).send();
+        })
+        .catch((err) => {
+            res.status(400).send({ message: err });
+        });
+});
+
 module.exports = router;
