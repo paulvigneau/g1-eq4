@@ -74,6 +74,7 @@ function deleteSprint(projectId, sprintId){
                     .then(async (sprint) => {
                         if(!sprint)
                             return reject();
+
                         if (new Date(sprint.end) < new Date()) {
                             return reject();
                         }
@@ -81,9 +82,10 @@ function deleteSprint(projectId, sprintId){
                         const listLength = sprint.USList.length;
                         let backlog = project.management.backlog.backlog;
                         for(let i = 0; i < listLength; i++){
-                            // sprint.USList[i].label = 'test';
                             let backlogLength = backlog.USList.length;
                             await userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id, backlogLength);
+                            await userStoryService.addLabelToUS(projectId, sprint.USList[i]._id);
+                            console.log(sprint.USList[i]);
                         }
 
                      })

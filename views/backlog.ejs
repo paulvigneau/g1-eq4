@@ -63,6 +63,7 @@
                             <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
                         </div>
                     </div>
+                    <span><p class="text-muted"><%= US.label %></p></span>
                     <div class="pop-up" id="edit-user-story<%=US.id%>">
                         <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
                     </div>

@@ -26,12 +26,13 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                 }
 
                 let USList;
-                if (sprintId)
+                if (sprintId) {
                     USList = project.management.backlog.sprints.id(sprintId) ?
                         project.management.backlog.sprints.id(sprintId).USList :
                         null;
-                else
+                }else {
                     USList = project.management.backlog.backlog.USList;
+                }
 
                 if (!USList)
                     return reject(`No sprint ${sprintId} found.`);
@@ -139,6 +140,29 @@ function getUSById(projectId, sprintId, usId) {
     });
 }
 
+function addLabelToUS(projectId, usId){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if(!project)
+                    return reject(`No project ${projectId} found.`);
+
+                    let userStory = project.management.backlog.backlog.USList.id(usId);
+                    if(!userStory)
+                        return reject(`No user story ${usId} found.`);
+
+                    userStory.label = 'Issue d\'un sprint supprimé';
+                    project.save()
+                        .then(() => resolve(userStory))
+                        .catch((err) => reject(err));
+                    })
+            .catch((err) => {
+                reject(err);
+            });
+
+    });
+}
+
 function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition) {
     return new Promise((resolve, reject) => {
         getUSById(projectId, firstSprintId, usId)
@@ -148,6 +172,9 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
 
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
+                        if((firstSprintId == null) && (secondSprintId != null) && (userStory.label != null)){
+                            userStory.label = null;
+                        }
                         addExistingUS(projectId, secondSprintId, userStory, newPosition)
                             .then(() => {
                                 resolve();
@@ -194,4 +221,4 @@ function getSprintByID(projectId, sprintId) {
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS };
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS };
