@@ -87,24 +87,23 @@ function deleteSprint(projectId, sprintId){
                             await userStoryService.addLabelToUS(projectId, sprint.USList[i]._id);
                         }
 
+                        await projectService.getProjectByID(projectId)
+                            .then(async project => {
+                                if (!project)
+                                    return reject(`No project ${projectId} found.`);
+
+                                project.management.backlog.sprints.id(sprintId).remove();
+                                project.save()
+                                    .then(() => resolve())
+                                    .catch((err) => reject(err));
+                            })
+                            .catch((err) => {
+                                return reject(err);
+                            });
                      })
                      .catch((err) => {
                         return reject(err);
                     });
-            })
-            .then(async () => {
-                // Get the project variable again after updating it in database
-                const project = await projectService.getProjectByID(projectId);
-                if (!project)
-                    return reject(`No project ${projectId} found.`);
-
-                project.management.backlog.sprints.id(sprintId).remove();
-                project.save()
-                    .then(() => resolve())
-                    .catch((err) => reject(err));
-            })
-            .catch((err) => {
-                return reject(err);
             });
     });
 }
