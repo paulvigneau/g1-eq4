@@ -174,8 +174,8 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
                         addExistingUS(projectId, secondSprintId, userStory, newPosition)
-                            .then(() => {
-                                resolve();
+                            .then((userStory) => {
+                                resolve(userStory);
                             })
                             .catch((err) => {
                                 reject(err);

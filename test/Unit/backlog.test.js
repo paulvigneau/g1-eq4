@@ -16,18 +16,22 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 
 describe('Backlog unit tests', () => {
-    let project;
+    describe('Add User Story', function () {
+        let project;
 
-    before(async function() {
-        project = await projectService.addProject({
-            name: 'Super Projet',
-            description: 'Une description intéressante',
-            start: '2070-10-10',
-            end: '2070-10-20'
+        before(async function() {
+            project = await projectService.addProject({
+                name: 'Super Projet',
+                description: 'Une description intéressante',
+                start: '2070-10-10',
+                end: '2070-10-20'
+            });
         });
-    });
 
-    describe('User Stories', function () {
+        after(function(done) {
+            mongoose.model('project').deleteMany({}, done);
+        });
+
         it('should add a new user story in database', async () => {
             let newUS = await userStoryService.addUS(project._id, null, 'Super User Story', 1);
             let receivedUS = await userStoryService.getUSById(project._id, null, newUS._id);
@@ -62,7 +66,99 @@ describe('Backlog unit tests', () => {
         });
     });
 
-    describe('Sprints', function () {
+    describe('Update User Story position', function () {
+        let project;
+        let sprint;
+        let userStory;
+
+        before(async function() {
+            project = await projectService.addProject({
+                name: 'Super Projet',
+                description: 'Une description intéressante',
+                start: '2070-10-10',
+                end: '2070-10-20'
+            });
+
+            sprint = await sprintService.addSprint(
+                project._id,
+                '2070-10-11',
+                '2070-10-12'
+            );
+        });
+
+        beforeEach(async function () {
+            userStory = await userStoryService.addUS(
+                project._id,
+                null,
+                'Super User Story',
+                1
+            );
+        });
+
+        after(function(done) {
+            mongoose.model('project').deleteMany({}, done);
+        });
+
+        it('should update the position of a sprint in database', async () => {
+            let newUS = await userStoryService.transferUS(
+                project._id,
+                null,
+                sprint._id,
+                userStory._id,
+                0
+            );
+            let receivedUS = await userStoryService.getUSById(project._id, sprint._id, newUS._id);
+
+            assert(newUS.toString() === receivedUS.toString());
+        });
+
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    from: null,
+                    to: sprint._id.toString(),
+                    usId: userStory._id.toString(),
+                    index: 0
+                });
+
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 400', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    from: sprint._id.toString(),
+                    to: sprint._id.toString(),
+                    usId: userStory._id.toString(),
+                    index: 0
+                });
+
+            expect(res.status).to.equal(400);
+        });
+    });
+
+    describe('Add sprint', function () {
+        let project;
+
+        before(async function() {
+            project = await projectService.addProject({
+                name: 'Super Projet',
+                description: 'Une description intéressante',
+                start: '2070-10-10',
+                end: '2070-10-20'
+            });
+        });
+
+        after(function(done) {
+            mongoose.model('project').deleteMany({}, done);
+        });
+
         it('should add a new sprint in database', async () => {
             let newSprint = await sprintService.addSprint(project._id, '2070-10-11', '2070-10-12');
             let receivedSprint = await sprintService.getSprintByID(project._id, newSprint._id);

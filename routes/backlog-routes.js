@@ -68,7 +68,7 @@ router.put('/user-story', function(req, res){
             res.status(200).send();
         })
         .catch(() => {
-            res.status(404).send();
+            res.status(400).send();
         });
 });
 
