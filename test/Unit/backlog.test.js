@@ -9,6 +9,7 @@ const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
 let projectService = require('../../services/project');
 let userStoryService = require('../../services/user-story');
+let sprintService = require('../../services/sprint');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -26,37 +27,74 @@ describe('Backlog unit tests', () => {
         });
     });
 
-    it('should add a new user story in database', async () => {
-        let newUS = await userStoryService.addUS(project._id, null, 'Super User Story', 1);
-        let receivedUS = await userStoryService.getUSById(project._id, null, newUS._id);
+    describe('User Stories', function () {
+        it('should add a new user story in database', async () => {
+            let newUS = await userStoryService.addUS(project._id, null, 'Super User Story', 1);
+            let receivedUS = await userStoryService.getUSById(project._id, null, newUS._id);
 
-        assert(newUS.toString() === receivedUS.toString());
+            assert(newUS.toString() === receivedUS.toString());
+        });
+
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/backlog/new-user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Bob',
+                    difficulty: '1'
+                });
+
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 400', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/backlog/new-user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Bob',
+                    difficulty: '4'
+                });
+
+            expect(res.status).to.equal(400);
+        });
     });
 
-    it('should return code 200', async () => {
-        let res = await chai
-            .request(app)
-            .post('/projects/' + project._id + '/backlog/new-user-story')
-            .set('content-type', 'application/x-www-form-urlencoded')
-            .send({
-                description: 'Bob',
-                difficulty: '1'
-            });
+    describe('Sprints', function () {
+        it('should add a new sprint in database', async () => {
+            let newSprint = await sprintService.addSprint(project._id, '2070-10-11', '2070-10-12');
+            let receivedSprint = await sprintService.getSprintByID(project._id, newSprint._id);
 
-        expect(res.status).to.equal(200);
-    });
+            assert(newSprint.toString() === receivedSprint.toString());
+        });
 
-    it('should return code 400', async () => {
-        let res = await chai
-            .request(app)
-            .post('/projects/' + project._id + '/backlog/new-user-story')
-            .set('content-type', 'application/x-www-form-urlencoded')
-            .send({
-                description: 'Bob',
-                difficulty: '4'
-            });
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/backlog/sprint')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    start: '2070-10-13',
+                    end: '2070-10-14'
+                });
 
-        expect(res.status).to.equal(400);
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 400', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/backlog/sprint')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    start: '2070-10-19',
+                    end: '2070-10-21'
+                });
+
+            expect(res.status).to.equal(400);
+        });
     });
 });
 
