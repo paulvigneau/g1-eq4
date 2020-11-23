@@ -19,15 +19,15 @@ router.get('/', function (req, res) {
 
 router.get('/new-project', function (req, res) {
     res.render('new-project');
-});
+}); // TODO Update e2e tests and delete this route
 
 router.post('/project', function (req, res) {
     projectService.addProject(req.body)
         .then(() =>
-            res.redirect('/')
+            res.status(200).send()
         )
         .catch((err) =>
-            res.status(404).send(err)
+            res.status(400).send({ message: err })
         );
 });
 

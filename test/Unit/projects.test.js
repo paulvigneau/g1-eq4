@@ -27,7 +27,7 @@ describe('Projects unit tests', () => {
         });
     });
 
-    it('should get return status 200 when requesting for projects', async () => {
+    it('should get code 200 when requesting for projects', async () => {
         let res = await chai
             .request(app)
             .get('/')
@@ -37,6 +37,23 @@ describe('Projects unit tests', () => {
     });
 
     it('should add a new project in database', async () => {
+        const project = await projectService.addProject({
+            name: 'Super Projet',
+            description: 'Une description intéressante',
+            start: '2070-10-10',
+            end: '2070-10-20'
+        });
+
+        const projects = await projectService.getAllProjects();
+        assert(projects.find(
+            (p) => p.name === project.name
+                && p.description === project.description
+                && new Date(p.start).valueOf() === new Date(project.start).valueOf()
+                && new Date(p.end).valueOf() === new Date(project.end).valueOf()
+        ));
+    });
+
+    it('should return code 200 when adding project', async () => {
         let res = await chai
             .request(app)
             .post('/project')
@@ -44,19 +61,26 @@ describe('Projects unit tests', () => {
             .send({
                 name: 'Projet Test',
                 description: 'Description de projet de test',
-                start: '2021-11-10',
-                end: '2021-11-20'
+                start: '2070-11-10',
+                end: '2070-11-20'
             });
 
         expect(res.status).to.equal(200);
+    });
 
-        const projects = await projectService.getAllProjects();
-        assert(projects.find(
-            (p) => p.name === 'Projet Test'
-                && p.description === 'Description de projet de test'
-                && new Date(p.start).valueOf() === new Date('2021-11-10').valueOf()
-                && new Date(p.end).valueOf() === new Date('2021-11-20').valueOf()
-        ));
+    it('should return code 400 when adding project with bad values', async () => {
+        let res = await chai
+            .request(app)
+            .post('/project')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({
+                name: 'Projet Test',
+                description: 'Description de projet de test',
+                start: '2000-11-10',
+                end: '2070-11-20'
+            });
+
+        expect(res.status).to.equal(400);
     });
 });
 
