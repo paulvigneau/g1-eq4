@@ -40,6 +40,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                 const newPriority = (priority > -1) ? Math.min(priority, USList.length) : 0;
                 USList = shiftUSPriorityToAdd(USList, newPriority);
                 userStory.priority = newPriority;
+                userStory.label = null;
                 USList.push(userStory);
 
                 project.save()
@@ -172,9 +173,6 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
 
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
-                        if((firstSprintId == null) && (secondSprintId != null) && (userStory.label != null)){
-                            userStory.label = null;
-                        }
                         addExistingUS(projectId, secondSprintId, userStory, newPosition)
                             .then(() => {
                                 resolve();

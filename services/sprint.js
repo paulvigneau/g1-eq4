@@ -85,7 +85,6 @@ function deleteSprint(projectId, sprintId){
                             let backlogLength = backlog.USList.length;
                             await userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id, backlogLength);
                             await userStoryService.addLabelToUS(projectId, sprint.USList[i]._id);
-                            console.log(sprint.USList[i]);
                         }
 
                      })
