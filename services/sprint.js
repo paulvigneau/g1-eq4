@@ -1,7 +1,6 @@
 const projectService = require('./project');
 const Sprint = require('../model/sprint');
 const userStoryService = require('./user-story');
-const Backlog = require('../model/backlog');
 
 function checkDatePeriod(start, end, date){
     return date >= start && date <= end;
@@ -12,26 +11,26 @@ function addSprint(projectId, start, end) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project) {
-                    return reject();
+                    return reject(`No project ${projectId} found.`);
                 }
 
                 if(new Date(start) > new Date(end)){
-                    return reject();
+                    return reject('Les dates doivent être dans le bon ordre.');
                 }
 
                 if(!checkDatePeriod(new Date(project.start), new Date(project.end), new Date(start))){
-                    return reject();
+                    return reject('La date de début doit se trouver dans l\'intervalle du projet.');
                 }
 
                 if(!checkDatePeriod(new Date(project.start), new Date(project.end), new Date(end))){
-                    return reject();
+                    return reject('La date de fin doit se trouver dans l\'intervalle du projet.');
                 }
 
                 for(let i = 0; i < project.management.backlog.sprints.length; i++){
                     let curSprint = project.management.backlog.sprints[i];
                     if(checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.start)) ||
                         checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.end))){
-                        return reject();
+                        return reject('Le nouveau sprint ne doit pas chevaucher un sprint existant.');
                     }
                 }
 
@@ -42,7 +41,9 @@ function addSprint(projectId, start, end) {
                 });
 
                 project.management.backlog.sprints.push(sprint);
-                project.save(resolve());
+                project.save()
+                    .then(() => resolve(sprint))
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);

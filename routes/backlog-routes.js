@@ -21,13 +21,13 @@ router.get('/', function (req, res) {
 
 router.post('/sprint', function (req, res) {
     sprintService.addSprint(req.params.id, req.body.start, req.body.end)
-    .then(() => {
-        res.redirect('/projects/' + req.params.id + '/backlog');
-    })
-    .catch(() => {
-        res.redirect('/404');
-    });
-}); // TODO Modify it to send response instead of redirecting
+    .then(() =>
+        res.status(200).send()
+    )
+    .catch((err) =>
+        res.status(400).send({ message: err })
+    );
+});
 
 router.delete('/sprints/:sprintId', function (req, res) {
     sprintService.deleteSprint(req.params.id, req.params.sprintId)
@@ -50,8 +50,8 @@ router.post('/new-user-story', function (req, res) {
         .then(() => {
             res.status(200).send();
         })
-        .catch(() => {
-            res.status(400).send();
+        .catch((err) => {
+            res.status(400).send({ message: err });
         });
 });
 

@@ -1,12 +1,34 @@
 const usForm = document.querySelector('#new-us-form');
+const sprintForm = document.querySelector('#new-sprint-form');
 
 usForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(usForm));
     // eslint-disable-next-line no-undef
-    await sendForm('backlog/new-user-story', data);
-    document.location.reload();
+    await sendForm('backlog/new-user-story', data)
+        .then((resp) => {
+            if (resp.status === 400) {
+                resp.json().then(text => alert(text.message));
+            }
+            else
+                document.location.reload();
+        });
+});
+
+sprintForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const data = new URLSearchParams(new FormData(sprintForm));
+    // eslint-disable-next-line no-undef
+    await sendForm('backlog/sprint', data)
+        .then((resp) => {
+            if (resp.status === 400) {
+                resp.json().then(text => alert(text.message));
+            }
+            else
+                document.location.reload();
+        });
 });
 
 async function deleteSprint(projectId, sprintId) {
