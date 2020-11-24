@@ -27,6 +27,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
 
                 let USList;
                 if (sprintId) {
+                    userStory.label = null;
                     USList = project.management.backlog.sprints.id(sprintId) ?
                         project.management.backlog.sprints.id(sprintId).USList :
                         null;
@@ -40,7 +41,6 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                 const newPriority = (priority > -1) ? Math.min(priority, USList.length) : 0;
                 USList = shiftUSPriorityToAdd(USList, newPriority);
                 userStory.priority = newPriority;
-                userStory.label = null;
                 USList.push(userStory);
 
                 project.save()
@@ -171,6 +171,9 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
                 if (!userStory)
                     return reject(`No User Story ${usId} found.`);
 
+                if(userStory.status === 'Frozen')
+                    return reject(`User Story ${usId} is frozen.`);
+
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
                         addExistingUS(projectId, secondSprintId, userStory, newPosition)
@@ -224,25 +227,23 @@ function closeUS(projectId, sprintId, usId){
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if(!project)
-                    return reject(`No project ${projectId} found.`);
+                return reject(`No project ${projectId} found.`);
 
-                getSprintByID(projectId, sprintId)
-                    .then((sprint) => {
-                        if(!sprint)
-                            return reject(`No sprint ${sprintId} found.`);
+                let sprint = project.management.backlog.sprints.id(sprintId);
+                if(!sprint )
+                    return reject(`No sprint  ${sprintId} found.`);
 
-                            let userStory = sprint.USList.id(usId);
-                            if(!userStory)
-                                return reject(`No user story ${usId} found.`);
+                let userStory = sprint.USList.id(usId);
+                if(!userStory)
+                    return reject(`No user story ${usId} found.`);
 
-                            userStory.status = 'Frozen';
-                            project.save()
-                                .then(() => resolve(userStory))
-                                .catch((err) => reject(err));
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
+                if(userStory.status === 'Frozen')
+                    return reject(`User story ${usId} is already frozen.`);
+
+                userStory.status = 'Frozen';
+                project.save()
+                    .then(() => resolve(userStory))
+                    .catch((err) => reject(err));
             })
             .catch((err) => {
                 reject(err);

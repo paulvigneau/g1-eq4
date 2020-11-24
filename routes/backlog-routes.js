@@ -75,6 +75,8 @@ router.put('/user-story', function(req, res){
 router.put('/:sprintId/:usId/close', function(req, res) {
     userStoryService.closeUS(req.params.id, req.params.sprintId, req.params.usId)
         .then(() => {
+            console.log('SprintID ' + req.params.sprintId);
+            console.log('usID ' + req.params.usId);
             res.status(200).send();
         })
         .catch((err) => {
