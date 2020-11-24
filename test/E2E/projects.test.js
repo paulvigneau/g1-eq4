@@ -88,7 +88,9 @@ describe('createProject & displayProjects', () => {
     it('should add a project and display it in homepage', async () => {
         await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2021', '20-11-2021');
 
-        await driver.findElements(By.className('col-12 col-sm-6 col-md-4 p-3'))
+        await driver.get('http://localhost:3000/');
+
+        await driver.findElements(By.css('body > div > div.row.justify-content-start > div:nth-child(1)'))
             .then(async projects => {
                 expect(projects.length).to.be.equal(1);
             });
