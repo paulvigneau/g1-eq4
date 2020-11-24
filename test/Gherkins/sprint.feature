@@ -20,3 +20,9 @@ Feature : Fonctionnalités liées aux sprints
         Then La pop-up se ferme
         And Le sprint a disparu de la page
         And Toutes les user stories que contenait le sprint sont désormais dans la section backlog
+
+    #sprintOrder
+    Scenario : L'utilisateur voit tous les sprints triés par date
+        Given L'utilisateur est sur la page backlog d'un projet
+        When Des sprints sont créés
+        Then Les sprints doivent être triés par date de début, de la plus proche à la plus lointaine
