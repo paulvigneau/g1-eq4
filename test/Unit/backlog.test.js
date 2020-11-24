@@ -199,6 +199,81 @@ describe('Backlog unit tests', () => {
             expect(res.status).to.equal(400);
         });
     });
+
+    describe('Delete sprint', () => {
+        let project;
+        let sprint;
+
+        before(async function() {
+            project = await projectService.addProject({
+                name: 'Super Projet',
+                description: 'Une description intéressante',
+                start: '2070-10-10',
+                end: '2070-10-20'
+            });
+        });
+
+        beforeEach(async function () {
+            sprint = await sprintService.addSprint(
+                project._id,
+                '2070-10-11',
+                '2070-10-12'
+            );
+        });
+
+        afterEach(async function () {
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints = [];
+            await p.save();
+        });
+
+        after(function(done) {
+            mongoose.model('project').deleteMany({}, done);
+        });
+
+        it('should delete a sprint', async () => {
+            await sprintService.deleteSprint(project._id, sprint._id);
+            const receivedSprint = await sprintService.getSprintByID(project._id, sprint._id);
+
+            assert(!receivedSprint);
+        });
+
+        it('should not delete a sprint because sprint is over', async () => {
+            // Shift sprint's dates
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints.id(sprint._id).start = '2000-01-01';
+            p.management.backlog.sprints.id(sprint._id).end = '2000-01-02';
+            await p.save();
+
+            await sprintService.deleteSprint(p._id, sprint._id)
+                .catch(() => {}); // Avoid thrown error for this test
+            const receivedSprint = await sprintService.getSprintByID(p._id, sprint._id);
+
+            assert(receivedSprint);
+        });
+
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + project._id + '/backlog/sprints/' + sprint._id);
+
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 400 because sprint is over', async () => {
+            // Shift sprint's dates
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints.id(sprint._id).start = '2000-01-01';
+            p.management.backlog.sprints.id(sprint._id).end = '2000-01-02';
+            await p.save();
+
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + p._id + '/backlog/sprints/' + sprint._id);
+
+            expect(res.status).to.equal(400);
+        });
+    });
 });
 
 after(function(done) {
