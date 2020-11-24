@@ -141,6 +141,13 @@ describe('Backlog unit tests', () => {
 
             expect(res.status).to.equal(400);
         });
+
+        it('should delete user story', async () => {
+            await userStoryService.deleteUS(project._id, null, userStory._id);
+            const receivedUS = await userStoryService.getUSById(project._id, null, userStory._id);
+
+            assert(!receivedUS);
+        });
     });
 
     describe('Add sprint', function () {
