@@ -20,7 +20,12 @@ before(function () {
 });
 
 async function saveProject(name, description, start, end) {
-    await driver.get('http://localhost:3000/new-project');
+    await driver.get('http://localhost:3000/');
+
+    await driver.findElement(By.css('body > div > button'))
+        .then(async element => {
+            await element.click();
+        });
 
     await driver.findElement(By.id('name'))
         .then(async element => {
@@ -42,7 +47,7 @@ async function saveProject(name, description, start, end) {
             await element.sendKeys(end);
         });
 
-    await driver.findElement(By.css('body > form > button'))
+    await driver.findElement(By.css('#new-project-form > button.btn.btn-success'))
         .then(async element => {
             await element.click();
         });
