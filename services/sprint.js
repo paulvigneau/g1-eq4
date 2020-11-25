@@ -87,7 +87,7 @@ function deleteSprint(projectId, sprintId){
                         for(let i = 0; i < listLength; i++){
                             let backlogLength = backlog.USList.length;
                             await userStoryService.transferUS(projectId, sprintId, null, sprint.USList[i]._id, backlogLength);
-                            await userStoryService.addLabelToUS(projectId, sprint.USList[i]._id);
+                            await userStoryService.addLabelToUS(projectId, sprint.USList[i]._id, 'Sprint supprimé');
                         }
                      })
                     .then(async () => {

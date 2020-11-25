@@ -142,7 +142,7 @@ function getUSById(projectId, sprintId, usId) {
     });
 }
 
-function addLabelToUS(projectId, usId){
+function addLabelToUS(projectId, usId, label) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -150,10 +150,11 @@ function addLabelToUS(projectId, usId){
                     return reject(new NotFoundError(`No project ${projectId} found.`));
 
                     let userStory = project.management.backlog.backlog.USList.id(usId);
+
                     if(!userStory)
                         return reject(new NotFoundError(`No user story ${usId} found.`));
 
-                    userStory.label = 'Issue d\'un sprint supprimé';
+                    userStory.label = label;
                     project.save()
                         .then(() => resolve(userStory))
                         .catch((err) => reject(err));
