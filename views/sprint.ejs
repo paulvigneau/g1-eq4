@@ -6,7 +6,7 @@
         <% } else { %>
             <span class="col-1" id="userStoryId">#<%= US.id %></span>
         <% } %>
-        <span class="description col" id="userStoryDescription"><%= US.description %></span>
+        <span class="description col" id="userStoryDescription" title="<%= US.description %>"><%= US.description %></span>
         <small class="text-muted col-auto"><%= US.label %></small>
         <span class="col-1 text-center"><span class="badge-pill badge-info" id="userStoryDifficulty"><%= US.difficulty %></span></span>
         <% if (US.status !== 'Frozen') { %>
