@@ -1,6 +1,7 @@
 const projectService = require('./project');
 const Sprint = require('../model/sprint');
 const userStoryService = require('./user-story');
+const { BadRequestError, NotFoundError } = require('../errors/Error');
 
 function checkDatePeriod(start, end, date){
     return date >= start && date <= end;
@@ -10,27 +11,26 @@ function addSprint(projectId, start, end) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
-                if (!project) {
-                    return reject(`No project ${projectId} found.`);
-                }
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 if(new Date(start) > new Date(end)){
-                    return reject('Les dates doivent être dans le bon ordre.');
+                    return reject(new BadRequestError('Les dates doivent être dans le bon ordre.'));
                 }
 
                 if(!checkDatePeriod(new Date(project.start), new Date(project.end), new Date(start))){
-                    return reject('La date de début doit se trouver dans l\'intervalle du projet.');
+                    return reject(new BadRequestError('La date de début doit se trouver dans l\'intervalle du projet.'));
                 }
 
                 if(!checkDatePeriod(new Date(project.start), new Date(project.end), new Date(end))){
-                    return reject('La date de fin doit se trouver dans l\'intervalle du projet.');
+                    return reject(new BadRequestError('La date de fin doit se trouver dans l\'intervalle du projet.'));
                 }
 
                 for(let i = 0; i < project.management.backlog.sprints.length; i++){
                     let curSprint = project.management.backlog.sprints[i];
                     if(checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.start)) ||
                         checkDatePeriod(new Date(start), new Date(end), new Date(curSprint.end))){
-                        return reject('Le nouveau sprint ne doit pas chevaucher un sprint existant.');
+                        return reject(new BadRequestError('Le nouveau sprint ne doit pas chevaucher un sprint existant.'));
                     }
                 }
 
@@ -55,8 +55,10 @@ function getSprintByID(projectId, sprintId) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
-                resolve(project.management
-                    .backlog.sprints.id(sprintId));
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+
+                resolve(project.management.backlog.sprints.id(sprintId));
             })
             .catch((err) => {
                 reject(err);
@@ -69,15 +71,15 @@ function deleteSprint(projectId, sprintId){
         projectService.getProjectByID(projectId)
             .then(async (project) => {
                 if (!project)
-                    return reject(`No project ${projectId} found.`);
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 await getSprintByID(projectId, sprintId)
                     .then(async (sprint) => {
                         if(!sprint)
-                            return reject(`No sprint ${sprintId} found.`);
+                            return reject(new NotFoundError(`No sprint ${sprintId} found.`));
 
                         if (new Date(sprint.end) < new Date()) {
-                            return reject('La date de fin du sprint ne doit pas être déjà passée.');
+                            return reject(new BadRequestError('La date de fin du sprint ne doit pas être déjà passée.'));
                         }
 
                         const listLength = sprint.USList.length;
@@ -92,7 +94,7 @@ function deleteSprint(projectId, sprintId){
                         // Get the project variable again after updating it in database
                         const project = await projectService.getProjectByID(projectId);
                         if (!project)
-                            return reject(`No project ${projectId} found.`);
+                            return reject(new NotFoundError(`No project ${projectId} found.`));
 
                         project.management.backlog.sprints.id(sprintId).remove();
                         project.save()

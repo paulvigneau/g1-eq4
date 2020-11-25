@@ -127,7 +127,7 @@ describe('Backlog unit tests', () => {
             expect(res.status).to.equal(200);
         });
 
-        it('should return code 400', async () => {
+        it('should return code 404', async () => {
             let res = await chai
                 .request(app)
                 .put('/projects/' + project._id + '/backlog/user-story')
@@ -139,7 +139,7 @@ describe('Backlog unit tests', () => {
                     index: 0
                 });
 
-            expect(res.status).to.equal(400);
+            expect(res.status).to.equal(404);
         });
 
         it('should delete user story', async () => {
@@ -272,6 +272,22 @@ describe('Backlog unit tests', () => {
                 .delete('/projects/' + p._id + '/backlog/sprints/' + sprint._id);
 
             expect(res.status).to.equal(400);
+        });
+
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/nonExistantId/backlog/sprints/' + sprint._id);
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because sprint does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + project._id +'/backlog/sprints/nonExistantId');
+
+            expect(res.status).to.equal(404);
         });
     });
 });

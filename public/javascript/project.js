@@ -18,7 +18,12 @@ memberForm.addEventListener('submit', (event) => {
 async function deleteMember(projectId, memberId) {
     await fetch(`/projects/${projectId}/members/${memberId}`, {
         method: 'DELETE'
-    });
-
-    document.location.reload();
+    })
+        .then((resp) => {
+            if (resp.status === 400 || resp.status === 404) {
+                resp.json().then(text => alert(text.message));
+            }
+            else
+                document.location.reload();
+        });
 }

@@ -1,5 +1,6 @@
 const projectService = require('./project');
 const UserStory = require('../model/user-story');
+const { BadRequestError, NotFoundError } = require('../errors/Error');
 
 function addUS(projectId, sprintId, description, difficulty, priority = -1) {
     const userStory = new UserStory({
@@ -17,7 +18,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject(`No project ${projectId} found.`);
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 if (isNew) {
                     let newIncr = project.incrUS + 1;
@@ -36,7 +37,7 @@ function addExistingUS(projectId, sprintId, userStory, priority, isNew = false) 
                 }
 
                 if (!USList)
-                    return reject(`No sprint ${sprintId} found.`);
+                    return reject(new NotFoundError(`No sprint ${sprintId} found.`));
 
                 const newPriority = (priority > -1) ? Math.min(priority, USList.length) : 0;
                 USList = shiftUSPriorityToAdd(USList, newPriority);
@@ -59,14 +60,14 @@ function getAllUS(projectId, sprintId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject(`No project ${projectId} found.`);
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 if (sprintId) {
                     const sprint = project.management.backlog.sprints.id(sprintId);
                     if (sprint)
                         resolve(sprint.USList);
                     else
-                        return reject(`No sprint ${sprintId} found.`);
+                        return reject(new NotFoundError(`No sprint ${sprintId} found.`));
                 }
                 else
                     resolve(project.management.backlog.backlog.USList);
@@ -83,7 +84,7 @@ function deleteUS(projectId, sprintId, usId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject(`No project ${projectId} found.`);
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let USList;
                 if (sprintId) {
@@ -91,7 +92,7 @@ function deleteUS(projectId, sprintId, usId) {
                     if (sprint)
                         USList = sprint.USList;
                     else
-                        return reject(`No sprint ${sprintId} found.`);
+                        return reject(new NotFoundError(`No sprint ${sprintId} found.`));
                 }
                 else {
                     USList = project.management.backlog.backlog.USList;
@@ -118,7 +119,7 @@ function getUSById(projectId, sprintId, usId) {
             getSprintByID(projectId, sprintId)
                 .then((sprint) => {
                     if (!sprint)
-                        return reject(`No sprint ${sprint} found.`);
+                        return reject(new NotFoundError(`No sprint ${sprint} found.`));
 
                     resolve(sprint.USList.id(usId));
                 })
@@ -130,7 +131,7 @@ function getUSById(projectId, sprintId, usId) {
             projectService.getProjectByID(projectId)
                 .then((project) => {
                     if (!project)
-                        return reject(`No project ${projectId} found.`);
+                        return reject(new NotFoundError(`No project ${projectId} found.`));
 
                     resolve(project.management.backlog.backlog.USList.id(usId));
                 })
@@ -146,11 +147,11 @@ function addLabelToUS(projectId, usId){
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if(!project)
-                    return reject(`No project ${projectId} found.`);
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                     let userStory = project.management.backlog.backlog.USList.id(usId);
                     if(!userStory)
-                        return reject(`No user story ${usId} found.`);
+                        return reject(new NotFoundError(`No user story ${usId} found.`));
 
                     userStory.label = 'Issue d\'un sprint supprimé';
                     project.save()
@@ -169,10 +170,10 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
         getUSById(projectId, firstSprintId, usId)
             .then((userStory) => {
                 if (!userStory)
-                    return reject(`No User Story ${usId} found.`);
+                    return reject(new NotFoundError(`No User Story ${usId} found.`));
 
                 if(userStory.status === 'Frozen')
-                    return reject(`User Story ${usId} is frozen.`);
+                    return reject(new BadRequestError(`User Story ${usId} is frozen.`));
 
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
@@ -227,18 +228,18 @@ function closeUS(projectId, sprintId, usId){
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if(!project)
-                return reject(`No project ${projectId} found.`);
+                return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let sprint = project.management.backlog.sprints.id(sprintId);
                 if(!sprint )
-                    return reject(`No sprint  ${sprintId} found.`);
+                    return reject(new NotFoundError(`No sprint  ${sprintId} found.`));
 
                 let userStory = sprint.USList.id(usId);
                 if(!userStory)
-                    return reject(`No user story ${usId} found.`);
+                    return reject(new NotFoundError(`No user story ${usId} found.`));
 
                 if(userStory.status === 'Frozen')
-                    return reject(`User story ${usId} is already frozen.`);
+                    return reject(new BadRequestError(`User story ${usId} is already frozen.`));
 
                 userStory.status = 'Frozen';
                 project.save()

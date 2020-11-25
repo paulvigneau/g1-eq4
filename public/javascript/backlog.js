@@ -8,7 +8,7 @@ usForm.addEventListener('submit', async (event) => {
     // eslint-disable-next-line no-undef
     await sendForm('backlog/new-user-story', data)
         .then((resp) => {
-            if (resp.status === 400) {
+            if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
             else
@@ -23,7 +23,7 @@ sprintForm.addEventListener('submit', async (event) => {
     // eslint-disable-next-line no-undef
     await sendForm('backlog/sprint', data)
         .then((resp) => {
-            if (resp.status === 400) {
+            if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
             else
@@ -35,7 +35,7 @@ async function deleteSprint(projectId, sprintId) {
     await fetch(`/projects/${projectId}/backlog/sprints/${sprintId}`, {
         method: 'DELETE'
     }).then((resp) => {
-        if (resp.status === 400) {
+        if (resp.status === 400 || resp.status === 404) {
             resp.json().then(text => alert(text.message));
         }
         else
@@ -48,7 +48,7 @@ function closeUS(projectId, sprintId, usId){
         method: 'PUT'
     })
         .then((resp) => {
-            if (resp.status === 400) {
+            if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
             else
