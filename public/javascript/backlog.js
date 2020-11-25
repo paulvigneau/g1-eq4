@@ -82,6 +82,7 @@ window.onclick = function(event) {
 };
 
 $('#backlog').sortable({
+    items: 'div.user-story:not(.unsortable)',
     connectWith: '.sprint',
     update: (event, ui) => {
         let to = null;
@@ -94,6 +95,7 @@ $('#backlog').sortable({
 }).disableSelection();
 
 $('.sprint').sortable({
+    items: 'div.user-story:not(.unsortable)',
     connectWith: '.sprint,#backlog',
     update: (event, ui) => {
         let to = $(event.target).context.dataset.sprintId;
