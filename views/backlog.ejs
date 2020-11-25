@@ -53,25 +53,26 @@
             <% backlog.backlog.USList.sort((s1, s2) => { return new Date(s2.priority) - new Date(s1.priority); }); %>
             <% backlog.backlog.USList.forEach(function(US) { %>
                 <div class="user-story border row m-0" data-us-id="<%= US._id %>">
-                    <% if(US.status === 'Frozen') { %>
-                        <span class="col-1 text-muted">#<%= US.id %></span>
-                        <span class="description col-9 text-muted"><%= US.description %></span>
-                        <span class="col-1 text-center"><span class="badge-pill badge-info" id="userStoryDifficulty"><%= US.difficulty %></span></span>
+                    <% if (US.status === 'Frozen') { %>
+                        <span class="col-1 text-muted" id="userStoryId">#<%= US.id %></span>
                     <% } else { %>
                         <span class="col-1" id="userStoryId">#<%= US.id %></span>
-                        <span class="description col-9" id="userStoryDescription"><%= US.description %></span>
+                    <% } %>
+                        <span class="description col" id="userStoryDescription"><%= US.description %></span>
+                        <small class="text-muted col-auto"><%= US.label %></small>
                         <span class="col-1 text-center"><span class="badge-pill badge-info" id="userStoryDifficulty"><%= US.difficulty %></span></span>
+                    <% if (US.status !== 'Frozen') { %>
                         <div class="dropdown">
-                            <span class="col-1 text-right us-more" onclick="showDropdown();"><i class="fas fa-ellipsis-v"></i></span>
-                            <div id="myDropdown" class="dropdown-content">
+                            <span class="us-more col" onclick="showDropdown('<%= US._id %>');"><i class="fas fa-ellipsis-v"></i></span>
+                            <div id="dropdown-<%= US._id %>" class="dropdown-content">
                                 <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
                             </div>
                         </div>
-                        <span><p class="text-muted"><%= US.label %></p></span>
-                        <div class="pop-up" id="edit-user-story<%=US.id%>">
+                        <div class="pop-up" id="edit-user-story<%= US.id %>">
                             <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
                         </div>
                     <% } %>
+
                 </div>
             <% }); %>
         </div>

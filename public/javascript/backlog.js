@@ -56,6 +56,31 @@ function closeUS(projectId, sprintId, usId){
             });
 }
 
+function showDropdown(USid) {
+    hideDropdowns();
+    if (!document.querySelector('#dropdown-' + USid).classList.contains('visible')) {
+        document.querySelector('#dropdown-' + USid).classList.add('visible');
+        console.log(document.querySelector('#dropdown-' + USid));
+        console.log('added');
+    }
+}
+
+function hideDropdowns() {
+    let dropdowns = document.querySelectorAll('.dropdown-content');
+    for (let i = 0; i < dropdowns.length; i++) {
+        let openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('visible')) {
+            openDropdown.classList.remove('visible');
+        }
+    }
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.fas.fa-ellipsis-v')) {
+        hideDropdowns();
+    }
+};
+
 $('#backlog').sortable({
     connectWith: '.sprint',
     update: (event, ui) => {
