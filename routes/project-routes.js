@@ -32,23 +32,23 @@ router.get('/new-member', function(req, res){
     );
 }); // TODO Update e2e tests and delete this route
 
-router.post('/member', function (req, res) {
+router.post('/member', function (req, res, next) {
     memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)
         .then(() => {
             memberService.sendEmailToMember(req.params.id, req.body.name, req.body.email, req.body.role);
             res.status(200).send();
         })
         .catch((err) => {
-            res.status(400).send(err);
+            next(err);
         });
 });
 
-router.delete('/members/:memberId', function(req, res){
+router.delete('/members/:memberId', function(req, res, next){
     memberService.deleteMember(req.params.id, req.params.memberId)
         .then(() =>
             res.status(200).send()
         ).catch((err) =>
-            res.status(404).send(err)
+            next(err)
     );
 });
 

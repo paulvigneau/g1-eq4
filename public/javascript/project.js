@@ -7,8 +7,8 @@ memberForm.addEventListener('submit', (event) => {
     // eslint-disable-next-line no-undef
     sendForm(window.location.href + '/member', data)
         .then((resp) => {
-            if (resp.status === 400) {
-                console.log(resp);
+            if (resp.status === 400 || resp.status === 404) {
+                resp.json().then(text => alert(text.message));
             }
             else
                 document.location.reload();

@@ -1,6 +1,7 @@
 const projectService = require('./project');
 const Member = require('../model/member');
 const nodeMailer = require('nodemailer');
+const { NotFoundError } = require('../errors/Error');
 
 function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
     const transporter = nodeMailer.createTransport({
@@ -49,7 +50,7 @@ function addMember(projectId, name, email, role) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject();
+                    return reject(new NotFoundError(`Project ${projectId} not found.`));
 
                 const randomColor = Math.floor(Math.random()*16777215).toString(16);
                 const member = new Member({
@@ -78,7 +79,7 @@ function getMemberById(projectId, memberId) {
                     resolve(project.members.id(memberId));
                 }
                 else
-                    reject();
+                    reject(new NotFoundError(`Project ${projectId} not found.`));
             })
             .catch((err) => {
                 reject(err);
@@ -91,7 +92,10 @@ function deleteMember(projectId, memberId) {
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if (!project)
-                    return reject();
+                    return reject(new NotFoundError(`Project ${projectId} not found.`));
+
+                if (!project.members.id(memberId))
+                    return reject(new NotFoundError(`Member ${memberId} not found.`));
 
                 project.members.id(memberId).remove();
                 project.save()

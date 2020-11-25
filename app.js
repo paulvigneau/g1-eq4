@@ -30,8 +30,15 @@ app.use((err, req, res, next) => {
         res.status(404).send({ message: err.message });
     else if (err instanceof BadRequestError)
         res.status(400).send({ message: err.message });
+    else if (err instanceof mongoose.Error) {
+        let message = '';
+        for (let field in err.errors) {
+            message += err.errors[field].message + '\n';
+        }
+        res.status(400).send({ message: message });
+    }
     else
-        res.sendStatus(500);
+        res.status(500).send({ message: err.message });
 });
 
 app.listen(3000, function () {
