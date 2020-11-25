@@ -119,6 +119,20 @@ describe('Project unit tests', () => {
             expect(res.status).to.equal(400);
         });
 
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/nonEcistantId/member')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    name: 'Bob',
+                    role: 'Développeur',
+                    email: 'bob@mail.com',
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
         it('should send an email', () => {
             return memberService.sendEmailToMember(
                 project._id,
@@ -170,7 +184,15 @@ describe('Project unit tests', () => {
             expect(res.status).to.equal(200);
         });
 
-        it('should return code 404', async () => {
+        it('should return code 404 because project does not exists', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/nonExistingId/members/' + member._id);
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because member does not exists', async () => {
             let res = await chai
                 .request(app)
                 .delete('/projects/' + project._id + '/members/nonExistingMemberId');

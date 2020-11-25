@@ -64,6 +64,19 @@ describe('Backlog unit tests', () => {
 
             expect(res.status).to.equal(400);
         });
+
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/nonExistingId/backlog/new-user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Bob',
+                    difficulty: '1'
+                });
+
+            expect(res.status).to.equal(404);
+        });
     });
 
     describe('Update User Story position', function () {
@@ -127,13 +140,28 @@ describe('Backlog unit tests', () => {
             expect(res.status).to.equal(200);
         });
 
-        it('should return code 404', async () => {
+        it('should return code 404 because sprint source does not exist', async () => {
             let res = await chai
                 .request(app)
                 .put('/projects/' + project._id + '/backlog/user-story')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     from: sprint._id.toString(),
+                    to: sprint._id.toString(),
+                    usId: userStory._id.toString(),
+                    index: 0
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/nonExistingId/backlog/user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    from: null,
                     to: sprint._id.toString(),
                     usId: userStory._id.toString(),
                     index: 0
@@ -197,6 +225,19 @@ describe('Backlog unit tests', () => {
                 });
 
             expect(res.status).to.equal(400);
+        });
+
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/nonExistantId/backlog/sprint')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    start: '2070-10-16',
+                    end: '2070-10-17'
+                });
+
+            expect(res.status).to.equal(404);
         });
     });
 
@@ -277,7 +318,7 @@ describe('Backlog unit tests', () => {
         it('should return code 404 because project does not exist', async () => {
             let res = await chai
                 .request(app)
-                .delete('/projects/nonExistantId/backlog/sprints/' + sprint._id);
+                .delete('/projects/nonExistingId/backlog/sprints/' + sprint._id);
 
             expect(res.status).to.equal(404);
         });
@@ -285,7 +326,7 @@ describe('Backlog unit tests', () => {
         it('should return code 404 because sprint does not exist', async () => {
             let res = await chai
                 .request(app)
-                .delete('/projects/' + project._id +'/backlog/sprints/nonExistantId');
+                .delete('/projects/' + project._id +'/backlog/sprints/nonExistingId');
 
             expect(res.status).to.equal(404);
         });
