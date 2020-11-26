@@ -173,8 +173,8 @@ function transferUS(projectId, firstSprintId, secondSprintId, usId, newPosition)
                 if (!userStory)
                     return reject(new NotFoundError(`No User Story ${usId} found.`));
 
-                if(userStory.status === 'Frozen')
-                    return reject(new BadRequestError(`User Story ${usId} is frozen.`));
+                if(userStory.status === 'Closed')
+                    return reject(new BadRequestError(`User Story ${usId} is Closed.`));
 
                 deleteUS(projectId, firstSprintId, userStory._id)
                     .then(() => {
@@ -239,10 +239,10 @@ function closeUS(projectId, sprintId, usId){
                 if(!userStory)
                     return reject(new NotFoundError(`No user story ${usId} found.`));
 
-                if(userStory.status === 'Frozen')
-                    return reject(new BadRequestError(`User story ${usId} is already frozen.`));
+                if(userStory.status === 'Closed')
+                    return reject(new BadRequestError(`User story ${usId} is already Closed.`));
 
-                userStory.status = 'Frozen';
+                userStory.status = 'Closed';
                 project.save()
                     .then(() => resolve(userStory))
                     .catch((err) => reject(err));

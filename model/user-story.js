@@ -7,7 +7,7 @@ let UserStorySchema = new Schema({
         description: { type: String, required: true },
         difficulty: { type: Number, required: true, enum: [ 1, 2, 3, 5 ] },
         priority: { type: Number, required: true, min: 0 },
-        status: { type: String, default: 'Normal', enum: ['Frozen', 'Normal']},
+        status: { type: String, default: 'Normal', enum: ['Frozen', 'Normal', 'Closed']},
         parent: { type: ObjectId, default: null },
         label: {type: String, default: null }
     }

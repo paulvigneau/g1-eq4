@@ -116,7 +116,7 @@ describe('Backlog unit tests', () => {
             await userStoryService.closeUS(project._id, sprint._id, userStory._id);
             let receivedUS = await userStoryService.getUSById(project._id, sprint._id, userStory._id);
 
-            assert(receivedUS.status === 'Frozen');
+            assert(receivedUS.status === 'Closed');
         });
 
         it('should return code 200', async () => {
