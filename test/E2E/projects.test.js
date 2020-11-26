@@ -24,33 +24,39 @@ async function saveProject(name, description, start, end) {
 
     await driver.findElement(By.css('body > div > button'))
         .then(async element => {
-            await element.click();
+            await element.click()
+                .then(async () => {
+                    await driver.findElement(By.id('name'))
+                        .then(async element => {
+                            await element.sendKeys(name)
+                                .then(async () => {
+                                    await driver.findElement(By.id('description'))
+                                        .then(async element => {
+                                            await element.sendKeys(description)
+                                                .then(async () => {
+                                                    await driver.findElement(By.id('start'))
+                                                        .then(async element => {
+                                                            await element.sendKeys(start)
+                                                                .then(async () => {
+                                                                    await driver.findElement(By.id('end'))
+                                                                        .then(async element => {
+                                                                            await element.sendKeys(end)
+                                                                                .then(async () => {
+                                                                                    await driver.findElements(By.className('btn btn-success'))
+                                                                                        .then(async element => {
+                                                                                            await element[1].click();
+                                                                                        });
+                                                                                });
+                                                                        });
+                                                                });
+                                                        });
+                                                });
+                                        });
+                                });
+                        });
+                });
         });
 
-    await driver.findElement(By.id('name'))
-        .then(async element => {
-            await element.sendKeys(name);
-        });
-
-    await driver.findElement(By.id('description'))
-        .then(async element => {
-            await element.sendKeys(description);
-        });
-
-    await driver.findElement(By.id('start'))
-        .then(async element => {
-            await element.sendKeys(start);
-        });
-
-    await driver.findElement(By.id('end'))
-        .then(async element => {
-            await element.sendKeys(end);
-        });
-
-    await driver.findElement(By.css('#new-project-form > button.btn.btn-success'))
-        .then(async element => {
-            await element.click();
-        });
 }
 
 describe('New project page', () => {
