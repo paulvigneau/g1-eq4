@@ -293,10 +293,19 @@ describe('Backlog unit tests', () => {
             assert(receivedSprint);
         });
 
-        it('should return code 200', async () => {
+        it('should return code 401 because no query param "force" found', async () => {
             let res = await chai
                 .request(app)
                 .delete('/projects/' + project._id + '/backlog/sprints/' + sprint._id);
+
+            expect(res.status).to.equal(401);
+        });
+
+        it('should return code 200 because query param "force" is present', async () => {
+            let res = await chai
+                .request(app)
+                .delete('/projects/' + project._id + '/backlog/sprints/' + sprint._id)
+                .query({ force: 'true' });
 
             expect(res.status).to.equal(200);
         });

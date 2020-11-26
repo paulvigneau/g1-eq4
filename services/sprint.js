@@ -66,6 +66,30 @@ function getSprintByID(projectId, sprintId) {
     });
 }
 
+function canDeleteSprint(projectId, sprintId) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then(async (project) => {
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+
+                await getSprintByID(projectId, sprintId)
+                    .then(async (sprint) => {
+                        if (!sprint)
+                            return reject(new NotFoundError(`No sprint ${sprintId} found.`));
+
+                        resolve(new Date(sprint.end) >= new Date());
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
 function deleteSprint(projectId, sprintId){
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
@@ -111,4 +135,4 @@ function deleteSprint(projectId, sprintId){
     });
 }
 
-module.exports = { addSprint, getSprintByID, deleteSprint };
+module.exports = { addSprint, getSprintByID, canDeleteSprint, deleteSprint };

@@ -42,13 +42,27 @@ router.post('/sprint', function (req, res, next) {
 
 router.delete('/sprints/:sprintId', function (req, res, next) {
     if (req.params.id && req.params.sprintId) {
-        sprintService.deleteSprint(req.params.id, req.params.sprintId)
-            .then(() =>
-                res.status(200).send()
-            )
-            .catch((err) =>
-                next(err)
-            );
+        if (req.query.force === 'true') {
+            sprintService.deleteSprint(req.params.id, req.params.sprintId)
+                .then(() =>
+                    res.status(200).send()
+                )
+                .catch((err) =>
+                    next(err)
+                );
+        }
+        else {
+            sprintService.canDeleteSprint(req.params.id, req.params.sprintId)
+                .then((possible) => {
+                    if (possible)
+                        res.status(401).send();
+                    else
+                        next(new BadRequestError('La date de fin du sprint ne doit pas être déjà passée.'));
+                })
+                .catch((err) =>
+                    next(err)
+                );
+        }
     }
     else {
         next(new BadRequestError('Un ou plusieurs champs sont manquants.'));

@@ -1,12 +1,12 @@
 const usForm = document.querySelector('#new-us-form');
 const sprintForm = document.querySelector('#new-sprint-form');
 
-usForm.addEventListener('submit', async (event) => {
+usForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(usForm));
     // eslint-disable-next-line no-undef
-    await sendForm('backlog/new-user-story', data)
+    sendForm('backlog/new-user-story', data)
         .then((resp) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
@@ -16,12 +16,12 @@ usForm.addEventListener('submit', async (event) => {
         });
 });
 
-sprintForm.addEventListener('submit', async (event) => {
+sprintForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(sprintForm));
     // eslint-disable-next-line no-undef
-    await sendForm('backlog/sprint', data)
+    sendForm('backlog/sprint', data)
         .then((resp) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
@@ -31,12 +31,22 @@ sprintForm.addEventListener('submit', async (event) => {
         });
 });
 
-async function deleteSprint(projectId, sprintId) {
-    await fetch(`/projects/${projectId}/backlog/sprints/${sprintId}`, {
+function deleteSprint(projectId, sprintId, force = false) {
+    let url = `/projects/${projectId}/backlog/sprints/${sprintId}`;
+    if (force)
+        url += '?force=true';
+
+    fetch(url, {
         method: 'DELETE'
     }).then((resp) => {
         if (resp.status === 400 || resp.status === 404) {
             resp.json().then(text => alert(text.message));
+        }
+        else if (resp.status === 401) {
+            let result = confirm('Êtes vous sûr de vouloir supprimer ce sprint ?');
+            if (result) {
+                deleteSprint(projectId, sprintId, true);
+            }
         }
         else
             document.location.reload();
