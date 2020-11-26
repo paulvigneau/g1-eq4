@@ -13,12 +13,67 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 let driver;
 
-before(function () {
-    driver = new Builder()
-        .forBrowser('chrome')
-        .build();
+describe('Add new project and display it in homepage', () => {
+    before(function () {
+        return driver = new Builder()
+            .forBrowser('chrome')
+            .build();
+    });
+
+    after(function(done) {
+        driver.quit();
+        mongoose.model('project').deleteMany({}, done);
+    });
+
+    it('should add a project and display it in homepage', async () => {
+        await driver.get('http://localhost:3000');
+
+        await driver.findElement(By.css('.btn.btn-success')).click();
+
+        let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+        expect(display).to.be.equal('block');
+
+        await driver.findElement(By.css('.pop-up-wrapper #name')).sendKeys('Projet 1');
+        await driver.findElement(By.css('.pop-up-wrapper #description')).sendKeys('Ceci est un magnifique projet');
+        await driver.findElement(By.css('.pop-up-wrapper #start')).sendKeys('01-01-2070');
+        await driver.findElement(By.css('.pop-up-wrapper #end')).sendKeys('01-02-2070');
+
+        await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+        await driver.wait(
+            async () => await driver.findElement(By.css('.pop-up-wrapper')),
+            10000
+        );
+
+        display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+        expect(display).to.be.equal('none');
+    }).timeout(15000);
+
+    it('should display the new project in homepage', async () => {
+        await driver.findElements(By.css('body > div > div.row.justify-content-start > div'))
+            .then(async projects => {
+                expect(projects.length).to.be.equal(1);
+            });
+
+        await driver.findElement(By.className('card-title')).getText()
+            .then(async text => {
+                expect(text).to.be.equal('Projet 1');
+            });
+    });
+
+    it('it should click on the project and be redirected to it\'s homepage', async () => {
+        let project = await projectService.getProjectByName('Projet 1');
+
+        await driver.findElement(By.className('card-body')).click();
+        driver.getCurrentUrl().then( url => {
+            expect(url).to.be.equal('/projects/' + project._id);
+        });
+    }).timeout(10000);
 });
 
+/**
+ * @deprecated Use service instead
+ */
 async function saveProject(name, description, start, end) {
     await driver.get('http://localhost:3000');
 
@@ -42,78 +97,5 @@ async function saveProject(name, description, start, end) {
     display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
     expect(display).to.be.equal('none');
 }
-
-describe('New project page', () => {
-    it('should be redirected to the creation page of projects', async () => {
-        await driver.get('http://localhost:3000');
-
-        await driver.findElements(By.className('btn btn-success'))
-            .then(async elements => {
-                await elements[0].click();
-
-                await driver.findElement(By.name('name'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
-
-                await driver.findElement(By.name('description'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
-
-                await driver.findElement(By.name('start'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
-
-                await driver.findElement(By.name('end'))
-                    .then(async (element) => {
-                        expect(element).to.be.not.undefined;
-                    });
-            });
-    }).timeout(15000);
-});
-
-describe('createProject & displayProjects', () => {
-    it('should add a project and display it in homepage', async () => {
-        await saveProject('Projet 1', 'Ceci est un magnifique projet', '12-11-2021', '20-11-2021');
-
-        await driver.get('http://localhost:3000/');
-
-        await driver.findElements(By.css('body > div > div.row.justify-content-start > div:nth-child(1)'))
-            .then(async projects => {
-                expect(projects.length).to.be.equal(1);
-            });
-
-        await driver.findElement(By.className('card-title')).getText()
-            .then(async text => {
-                expect(text).to.be.equal('Projet 1');
-            });
-
-    }).timeout(15000);
-});
-
-describe('Project redirection to homepage', () => {
-    it('This should add a project, and verify if we are redirected to it\'s homepage', async () => {
-        await driver.get('http://localhost:3000/');
-
-        await projectService.getProjectByName('Projet 1')
-            .then(async project => {
-                await driver.findElement(By.className('card-body'))
-                    .then(async element => {
-                        await element.click();
-
-                        driver.getCurrentUrl().then( url => {
-                            expect(url).to.be.equal('/projects/' + project._id);
-                        });
-                    });
-            });
-    }).timeout(10000);
-});
-
-after(function(done) {
-    driver.quit();
-    mongoose.model('project').deleteMany({}, done);
-});
 
 module.exports = { saveProject };
