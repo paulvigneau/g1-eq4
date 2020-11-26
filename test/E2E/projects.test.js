@@ -20,43 +20,27 @@ before(function () {
 });
 
 async function saveProject(name, description, start, end) {
-    await driver.get('http://localhost:3000/');
+    await driver.get('http://localhost:3000');
 
-    await driver.findElement(By.css('body > div > button'))
-        .then(async element => {
-            await element.click()
-                .then(async () => {
-                    await driver.findElement(By.id('name'))
-                        .then(async element => {
-                            await element.sendKeys(name)
-                                .then(async () => {
-                                    await driver.findElement(By.id('description'))
-                                        .then(async element => {
-                                            await element.sendKeys(description)
-                                                .then(async () => {
-                                                    await driver.findElement(By.id('start'))
-                                                        .then(async element => {
-                                                            await element.sendKeys(start)
-                                                                .then(async () => {
-                                                                    await driver.findElement(By.id('end'))
-                                                                        .then(async element => {
-                                                                            await element.sendKeys(end)
-                                                                                .then(async () => {
-                                                                                    await driver.findElements(By.className('btn btn-success'))
-                                                                                        .then(async element => {
-                                                                                            await element[1].click();
-                                                                                        });
-                                                                                });
-                                                                        });
-                                                                });
-                                                        });
-                                                });
-                                        });
-                                });
-                        });
-                });
-        });
+    await driver.findElement(By.css('.btn.btn-success')).click();
 
+    let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+    expect(display).to.be.equal('block');
+
+    await driver.findElement(By.css('.pop-up-wrapper #name')).sendKeys(name);
+    await driver.findElement(By.css('.pop-up-wrapper #description')).sendKeys(description);
+    await driver.findElement(By.css('.pop-up-wrapper #start')).sendKeys(start);
+    await driver.findElement(By.css('.pop-up-wrapper #end')).sendKeys(end);
+
+    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+    await driver.wait(
+        async () => await driver.findElement(By.css('.pop-up-wrapper')),
+        10000
+    );
+
+    display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+    expect(display).to.be.equal('none');
 }
 
 describe('New project page', () => {
