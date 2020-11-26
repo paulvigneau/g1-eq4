@@ -17,8 +17,8 @@
     <%- include('navigation.ejs') %>
 
     <div class="mt-3">
-        <button class="btn btn-primary" onclick="showPopup('#add-sprint')">Nouveau sprint</button>
-        <button class="btn btn-success" onclick="showPopup('#add-user-story')">Nouvelle US</button>
+        <button id="new-sprint-button" class="btn btn-primary" onclick="showPopup('#add-sprint')">Nouveau sprint</button>
+        <button id="new-us-button" class="btn btn-success" onclick="showPopup('#add-user-story')">Nouvelle US</button>
 
         <div class="pop-up-wrapper">
             <div class="pop-up" id="add-sprint">
@@ -36,10 +36,10 @@
         <% backlog.sprints.forEach(function(sprint) { %>
             <h2>Sprint <%- i-- %></h2>
             <% if(new Date(sprint.end) > new Date()) { %>
-                <button class="btn btn-danger float-right"
+                <button class="btn btn-danger float-right delete-sprint-button"
                     onclick="deleteSprint('<%= projectId %>', '<%= sprint._id %>')">Supprimer</button>
             <% } %>
-            <p class="text-muted" id="date"><%= moment(sprint.start).locale('fr').format('DD MMM YYYY') %> -
+            <p class="text-muted sprint-date"><%= moment(sprint.start).locale('fr').format('DD MMM YYYY') %> -
                 <%= moment(sprint.end).locale('fr').format('DD MMM YYYY') %></p>
 
             <div class="us-container sprint" data-sprint-id="<%= sprint._id %>" data-project-id="<%= projectId %>">

@@ -1,7 +1,5 @@
 process.env.NODE_ENV = 'test';
 
-const testProjects = require('./projects.test');
-const testUserStory = require('./user-story.test');
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
@@ -13,109 +11,62 @@ const { Builder, By } = require('selenium-webdriver');
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
-let driver;
 
+let driver;
 let project;
 
-before(function () {
-    driver = new Builder()
-        .forBrowser('chrome')
-        .build();
-});
+describe('Sprint End to End', () => {
+    before(async function () {
+        driver = await new Builder()
+            .forBrowser('chrome')
+            .build();
 
-async function saveSprint(projectId, start, end){
-    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog');
-
-    await driver.findElement(By.css('.btn.btn-primary')).click();
-
-    await driver.findElement(By.css('.pop-up-wrapper #start')).sendKeys(start);
-
-    await driver.findElement(By.css('.pop-up-wrapper #end')).sendKeys(end);
-
-    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
-
-    await driver.wait(
-        async () => await driver.findElement(By.css('.pop-up-wrapper')),
-        10000
-    );
-
-}
-
-async function checkTransferUs(from, to){
-    from.findElements(By.className('user-story border row m-0'))
-        .then(async userStories => {
-            expect(userStories.length).to.be.equal(1);
+        project = await projectService.addProject({
+            name: 'Projet',
+            description: 'Un magnifique project',
+            start: '2070-01-01',
+            end: '2070-02-01',
         });
-    from.findElement(By.className('user-story border row m-0'))
-        .then((userStory) => {
-            userStory.dragAndDrop(from, to);
-        });
-    from.findElements(By.className('user-story border row m-0'))
-        .then(async userStories => {
-            expect(userStories.length).to.be.equal(0);
-        });
-}
+    });
 
-describe('createSprint', () => {
-    it('this should create a sprint and display it in backlog', async () => {
-        await testProjects.saveProject('Projet 8', 'Magnifique projet', '22-11-2021', '25-11-2021');
-        await projectService.getProjectByName('Projet 8')
-            .then(async (project) => {
-                await saveSprint(project._id, '23-11-2021', '25-11-2021');
-                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
-                const divClass = await driver.findElement(By.className('mt-3'));
-                divClass.findElement(By.id('date')).getText()
-                    .then((text) => {
-                        expect(text).to.be.equal('23 nov. 2021 - 25 nov. 2021');
-                    });
-            });
+    after(function (done) {
+        driver.quit();
+        mongoose.model('project').deleteMany({}, done);
+    });
+
+    it('should create a sprint', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+        await driver.findElement(By.css('#new-sprint-button')).click();
+
+        await driver.findElement(By.css('#add-sprint #start')).sendKeys('01-01-2070');
+        await driver.findElement(By.css('#add-sprint #end')).sendKeys('02-01-2070');
+
+        await driver.findElement(By.css('#add-sprint button.btn[type=\'submit\']')).click();
+
+        await driver.wait(
+            async () => await driver.findElement(By.css('.pop-up-wrapper')),
+            10000
+        );
     }).timeout(20000);
-});
 
-describe('drag and drop', () => {
-    it('this should drag an us from a sprint to the backlog section', async () => {
-        await testProjects.saveProject('Projet 9', 'Magnifique projet', '22-11-2025', '25-12-2031');
-        await projectService.getProjectByName('Projet 9')
-            .then(async (project) => {
-                await saveSprint(project._id, '23-11-2026', '25-11-2026');
-                await saveSprint(project._id, '23-11-2027', '25-11-2027');
-                await testUserStory.saveUserStory(project._id, 'En tant que..., je souhaite pouvoir..., afin de...', 1);
-                
-                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
-                
-                // const sprint1 = await driver.findElement(By.className('us-container sprint'));
-                const allSprints = await driver.findElements(By.className('us-container sprint'));
-                const sprint1 = await allSprints[0];
-                const sprint2 = await allSprints[1];
+    it('should display the sprint', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-                const backlog = await driver.findElement(By.id('backlog'));
-
-                checkTransferUs(backlog, sprint1);
-                checkTransferUs(sprint1, sprint2);
-                checkTransferUs(sprint2, backlog);
+        await driver.findElement(By.css('.mt-3 .sprint-date')).getText()
+            .then((text) => {
+                expect(text).to.be.equal('01 janv. 2070 - 02 janv. 2070');
             });
-    }).timeout(10000);
-});
+    });
 
-describe('deleteSprint success', () => {
-    it('this should delete a sprint', async () => {
-        await testProjects.saveProject('Projet 9', 'Magnifique projet', '22-11-2021', '25-11-2021');
-        await projectService.getProjectByName('Projet 9')
-            .then(async project => {
-                await saveSprint(project._id, '23-11-2021', '25-11-2021');
-                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
-                const divClass = await driver.findElement(By.className('mt-3'));
+    it('should delete a sprint', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-                await divClass.findElement(By.className('btn btn-danger float-right'))
-                    .then(async element => {
-                        await element.click();
-                    });
+        await driver.findElement(By.css('.delete-sprint-button')).click();
 
-                await divClass.findElements(By.id('us-container sprint'))
-                    .then(async (elements) => {
-                        expect(elements.length).to.be.equal(0);
-                    });
-
+        await driver.findElements(By.id('us-container sprint'))
+            .then(async (elements) => {
+                expect(elements.length).to.be.equal(0);
             });
     }).timeout(20000);
 });
@@ -141,8 +92,3 @@ describe('deleteSprint success', () => {
 //             });
 //     }).timeout(10000);
 // });
-
-after(function(done) {
-    driver.quit();
-    mongoose.model('project').deleteMany({}, done);
-});
