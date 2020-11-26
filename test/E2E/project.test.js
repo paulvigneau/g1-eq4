@@ -1,6 +1,5 @@
 process.env.NODE_ENV = 'test';
 
-const testProjects = require('./projects.test');
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
@@ -8,7 +7,6 @@ const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
 const { Builder, By } = require('selenium-webdriver');
-
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -79,6 +77,7 @@ describe('Project End to End', () => {
 
         it('should delete the member', async () => {
             await driver.findElement(By.css('table td > .btn.btn-danger')).click();
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
             await driver.wait(
                 async () => await driver.findElement(By.css('.container')),
