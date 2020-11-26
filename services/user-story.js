@@ -232,8 +232,8 @@ function closeUS(projectId, sprintId, usId){
                 return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let sprint = project.management.backlog.sprints.id(sprintId);
-                if(!sprint )
-                    return reject(new NotFoundError(`No sprint  ${sprintId} found.`));
+                if (!sprint)
+                    return reject(new NotFoundError(`No sprint ${sprintId} found.`));
 
                 let userStory = sprint.USList.id(usId);
                 if(!userStory)

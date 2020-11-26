@@ -115,8 +115,6 @@ router.put('/:sprintId/:usId/close', function(req, res, next) {
     if (req.params.id && req.params.sprintId && req.params.usId) {
         userStoryService.closeUS(req.params.id, req.params.sprintId, req.params.usId)
             .then(() => {
-                console.log('SprintID ' + req.params.sprintId);
-                console.log('usID ' + req.params.usId);
                 res.status(200).send();
             })
             .catch((err) =>

@@ -79,6 +79,79 @@ describe('Backlog unit tests', () => {
         });
     });
 
+    describe('Close User Story', () => {
+        let project;
+        let sprint;
+        let userStory;
+
+        before(async function() {
+            project = await projectService.addProject({
+                name: 'Super Projet',
+                description: 'Une description intéressante',
+                start: '2070-10-10',
+                end: '2070-10-20'
+            });
+
+            sprint = await sprintService.addSprint(
+                project._id,
+                '2070-10-11',
+                '2070-10-12'
+            );
+        });
+
+        beforeEach(async function () {
+            userStory = await userStoryService.addUS(
+                project._id,
+                sprint._id,
+                'Super User Story',
+                1
+            );
+        });
+
+        after(function(done) {
+            mongoose.model('project').deleteMany({}, done);
+        });
+
+        it('should close the user story', async () => {
+            await userStoryService.closeUS(project._id, sprint._id, userStory._id);
+            let receivedUS = await userStoryService.getUSById(project._id, sprint._id, userStory._id);
+
+            assert(receivedUS.status === 'Frozen');
+        });
+
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/' + sprint._id + '/' + userStory._id + '/close');
+
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 404 because project does not exit', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/nonExistingId/backlog/' + sprint._id + '/' + userStory._id + '/close');
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because sprint does not exit', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/nonExistingId/' + userStory._id + '/close');
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because user story does not exit', async () => {
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/' + sprint._id + '/nonExistingId/close');
+
+            expect(res.status).to.equal(404);
+        });
+    });
+
     describe('Update User Story position', function () {
         let project;
         let sprint;
@@ -138,6 +211,24 @@ describe('Backlog unit tests', () => {
                 });
 
             expect(res.status).to.equal(200);
+        });
+
+        it('should return 400 when trying to move a closed user story', async () => {
+            userStory = await userStoryService.addUS(project._id, sprint._id, 'Super User Story', 1);
+            await userStoryService.closeUS(project._id, sprint._id, userStory._id);
+
+            let res = await chai
+                .request(app)
+                .put('/projects/' + project._id + '/backlog/user-story')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    from: sprint._id.toString(),
+                    to: null,
+                    usId: userStory._id.toString(),
+                    index: 0
+                });
+
+            expect(res.status).to.equal(400);
         });
 
         it('should return code 404 because sprint source does not exist', async () => {
