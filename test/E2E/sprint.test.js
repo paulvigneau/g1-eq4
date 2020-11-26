@@ -24,22 +24,21 @@ before(function () {
 });
 
 async function saveSprint(projectId, start, end){
-    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog/new-sprint');
+    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog');
 
-    await driver.findElement(By.id('start'))
-        .then(async element => {
-            await element.sendKeys(start);
-        });
+    await driver.findElement(By.css('.btn.btn-primary')).click();
 
-    await driver.findElement(By.id('end'))
-        .then(async element => {
-            await element.sendKeys(end);
-        });
+    await driver.findElement(By.css('.pop-up-wrapper #start')).sendKeys(start);
 
-    await driver.findElement(By.className('btn btn-success'))
-        .then(async element => {
-            await element.click();
-        });
+    await driver.findElement(By.css('.pop-up-wrapper #end')).sendKeys(end);
+
+    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+    await driver.wait(
+        async () => await driver.findElement(By.css('.pop-up-wrapper')),
+        10000
+    );
+
 }
 
 async function checkTransferUs(from, to){

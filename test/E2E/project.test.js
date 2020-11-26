@@ -23,17 +23,15 @@ before(function () {
 
 
 async function saveMember(projectId, name, email, role) {
-    await driver.get('http://localhost:3000/projects/' + projectId + '/new-member');
+    await driver.get('http://localhost:3000/projects/' + projectId);
 
-    await driver.findElement(By.id('name'))
-        .then(async element => {
-            await element.sendKeys(name);
-        });
+    await driver.findElement(By.css('.btn.btn-primary')).click();
 
-    await driver.findElement(By.id('email'))
-        .then(async element => {
-            await element.sendKeys(email);
-        });
+    let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+    expect(display).to.be.equal('block');
+
+    await driver.findElement(By.css('.pop-up-wrapper #name')).sendKeys(name);
+    await driver.findElement(By.css('.pop-up-wrapper #email')).sendKeys(email);
 
     if(role === 'Développeur'){
         await driver.findElement(By.xpath('.//*[@id="role"]/option[1]')).click();
@@ -48,10 +46,12 @@ async function saveMember(projectId, name, email, role) {
         await driver.findElement(By.xpath('.//*[@id="role"]/option[4]')).click();
     }
 
-    await driver.findElements(By.className('btn btn-success'))
-        .then(async elements => {
-            await elements[0].click();
-        });
+    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+    await driver.wait(
+        async () => await driver.findElement(By.css('.pop-up-wrapper')),
+        10000
+    );
 }
 
 describe('addMember', () => {

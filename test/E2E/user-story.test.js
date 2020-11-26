@@ -21,12 +21,11 @@ before(function () {
 });
 
 async function saveUserStory(projectId, description, difficulty){
-    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog/new-user-story');
+    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog');
 
-    await driver.findElement(By.id('description'))
-        .then(async element => {
-            await element.sendKeys(description);
-        });
+    await driver.findElement(By.css('.btn.btn-success')).click();
+
+    await driver.findElement(By.css('.pop-up-wrapper #description')).sendKeys(description);
 
     if(difficulty == 1){
         await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[1]')).click();
@@ -41,10 +40,9 @@ async function saveUserStory(projectId, description, difficulty){
         await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[4]')).click();
     }
 
-    await driver.findElement(By.className('btn btn-success'))
-        .then(async element => {
-            await element.click();
-        });
+    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+
 }
 
 describe('New userStory page', () => {
