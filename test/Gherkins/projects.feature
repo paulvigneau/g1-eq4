@@ -1,11 +1,11 @@
-Feature : Fonctionnalité de la page d'accueil
+Feature : Fonctionnalités de la page d'accueil
     cf(US)
-    Fonctionnalités diverses et variées de la page d'acceuil de l'application.
+    Fonctionnalités diverses et variées de la page d'accueil de l'application.
 
     #displayProjects
     Scenario : L'utilisateur arrive sur la page d'accueil et voit tous les projets créés
         Given Un certain nombre de projets ont été créés (un ou plus)
-        When Un utilisateur va sur la page d'acceuil de l'application
+        When Un utilisateur va sur la page d'accueil de l'application
         Then Il doit pouvoir visualiser tous les projets créés au préalable
         And Il doit y avoir autant de projets sur la page que de projet stockés en base de données
 

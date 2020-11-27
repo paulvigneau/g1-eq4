@@ -1,159 +1,183 @@
 process.env.NODE_ENV = 'test';
 
-const testProjects = require('./projects.test');
+require('../../app');
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
+
 let driver;
+let project;
 
-before(function () {
-    driver = new Builder()
-        .forBrowser('chrome')
-        .build();
-});
+describe('Project End to End', () => {
+    before(async function () {
+        driver = await new Builder()
+            .forBrowser('chrome')
+            .build();
 
-async function saveMember(projectId, name, email, role) {
-    await driver.get('http://localhost:3000/projects/' + projectId + '/new-member');
+        project = await projectService.addProject({
+            name: 'Projet',
+            description: 'Un magnifique project',
+            start: '01-01-2070',
+            end: '01-02-2070',
+        });
+    });
 
-    await driver.findElement(By.id('name'))
-        .then(async element => {
-            await element.sendKeys(name);
+    after(async function() {
+        await driver.quit();
+        await mongoose.model('project').deleteMany({});
+    });
+
+    describe('Add member to project, display his information and delete this member', () => {
+        it('should add a member', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id);
+
+            await driver.findElement(By.css('.btn.btn-primary')).click();
+
+            let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+            expect(display).to.be.equal('block');
+
+            await driver.findElement(By.css('.pop-up-wrapper #name')).sendKeys('Bob');
+            await driver.findElement(By.css('.pop-up-wrapper #email')).sendKeys('bob@mail.com');
+            await driver.findElement(By.xpath('.//*[@id="role"]/option[2]')).click();
+
+            await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+
+            await driver.wait(
+                async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
+                10000
+            );
+        }).timeout(20000);
+
+        it('should display member\'s information', async () => {
+            const member = await driver.findElement(By.xpath('.//table[@class="table"]//tbody//tr'));
+            const rows = await member.findElements(By.css('td'));
+            const name = await member.findElement(By.id('name'));
+
+            await name.getText()
+                .then(async text => {
+                    expect(text).to.be.equal('Bob');
+                });
+            await rows[0].getText()
+                .then(async text => {
+                    expect(text).to.be.equal('Testeur');
+                });
+            await rows[1].getText()
+                .then(async text => {
+                    expect(text).to.be.equal('bob@mail.com');
+
+                });
         });
 
-    await driver.findElement(By.id('email'))
-        .then(async element => {
-            await element.sendKeys(email);
-        });
+        it('should delete the member', async () => {
+            await driver.findElement(By.css('table td > .btn.btn-danger')).click();
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-    if(role === 'Développeur'){
-        await driver.findElement(By.xpath('.//*[@id="role"]/option[1]')).click();
-    }
-    if(role === 'Testeur'){
-        await driver.findElement(By.xpath('.//*[@id="role"]/option[2]')).click();
-    }
-    if(role === 'Product Owner'){
-        await driver.findElement(By.xpath('.//*[@id="role"]/option[3]')).click();
-    }
+            await driver.wait(
+                async () => await until.elementIsVisible(await driver.findElement(By.css('.container'))),
+                10000
+            );
 
-    await driver.findElements(By.className('btn-success'))
-        .then(async elements => {
-            await elements[0].click();
-        });
-}
+            await driver.findElements(By.css('.table > tbody > tr'))
+                .then(members => {
+                    expect(members.length).to.be.equal(0); // Sometimes it will be to fast and fail
+                });
+        }).timeout(20000);
+    });
 
-describe('Project redirection to homepage', () => {
-    it('This should add a project, and verify if we are redirected to it\'s homepage', async () => {
-        await testProjects.saveProject('Projet 2', 'Projet magnifique', '12-11-2020', '20-11-2020');
-        await driver.get('http://localhost:3000/');
+    describe('Display project information', () => {
+        it('should display project\'s information are in the homepage', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-        await projectService.getAllProjects()
-            .then(async projects => {
-                 for(let i = 0; i < projects.length; i++){
-                    let project = projects[i];
-                    if(project.name === 'Projet 2'){
-                        await driver.findElements(By.className('btn btn-primary stretched-link'))
-                            .then(async elements => {
-                                await elements[i].click();
+            await driver.findElement(By.className('projName')).getText()
+                .then(async text => {
+                    expect(text).to.be.equal(project.name);
+                });
+            await driver.findElement(By.className('projDescription')).getText()
+                .then(async text => {
+                    expect(text).to.be.equal(project.description);
+                });
+        }).timeout(20000);
+    });
 
-                                driver.getCurrentUrl().then( url => {
-                                    expect(url.includes('/projects/' + project._id)).true;
-                                });
-                            });
-                    }
-                }
-            });
+    describe('Click on every element from the navigation bar', () => {
+        it('should test if we are redirected to the good pages', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-    }).timeout(10000);
-});
+            await driver.findElement(By.linkText('Accueil'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/');
+                    });
+                });
 
-describe('addMember', () => {
-    it('This should add a member', async () => {
-        await testProjects.saveProject('Projet 3', 'Encore un magnifique projet', '12-11-2020', '20-11-2020');
-        await projectService.getAllProjects()
-            .then(async projects => {
-                for(let i = 0; i < projects.length; i++) {
-                    let project = projects[i];
-                    if (project.name === 'Projet 3') {
-                        await saveMember(project._id, 'Bob', 'John@Doe.com', 'Testeur');
-                        await driver.get('http://localhost:3000/projects/' + project._id);
-                        await driver.findElement(By.name('name')).getText()
-                            .then(async text => {
-                                expect(text).to.be.equal('Nom : Bob');
-                            });
-                        await driver.findElement(By.name('role')).getText()
-                            .then(async text => {
-                                expect(text).to.be.equal('Rôle : Testeur');
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-                            });
-                        await driver.findElement(By.name('email')).getText()
-                            .then(async text => {
-                                expect(text).to.be.equal('Email : John@Doe.com');
-                            });
-                    }
-                }
-            });
-    }).timeout(10000);
-});
+            await driver.findElement(By.linkText('Projet'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id);
+                    });
+                });
 
-describe('displayProject', () => {
-    it('This should add a project, and verify that it\'s information are in the homepage', async () => {
-        await testProjects.saveProject('Projet 4', 'Projet magnifique', '12-11-2020', '20-11-2020');
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-        await projectService.getAllProjects()
-            .then(async projects => {
-                for(let i = 0; i < projects.length; i++){
-                    let project = projects[i];
-                    if(project.name === 'Projet 4'){
-                        await driver.get('http://localhost:3000/projects/' + project._id);
-                        await driver.findElement(By.className('projName')).getText()
-                            .then(async text => {
-                                expect(text).to.be.equal('Nom du projet : ' + 'Projet 4');
-                            });
-                        await driver.findElement(By.className('projDescription')).getText()
-                            .then(async text => {
-                                expect(text).to.be.equal('Description : ' + 'Projet magnifique');
-                            });
-                    }
-                }
-            });
+            await driver.findElement(By.linkText('Backlog'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/backlog');
+                    });
+                });
 
-    }).timeout(10000);
-});
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-describe('Redirection to new-member page', () => {
-    it('Add a project, redirect to it\'s homepage, and clic on button to redirect to new-member page', async () => {
-        await testProjects.saveProject('Projet 5', 'Projet magnifique', '12-11-2020', '20-11-2020');
+            await driver.findElement(By.linkText('Tâches'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/tasks');
+                    });
+                });
 
-        await projectService.getAllProjects()
-            .then(async projects => {
-                for(let i = 0; i < projects.length; i++){
-                    let project = projects[i];
-                    if(project.name === 'Projet 5'){
-                        await driver.get('http://localhost:3000/projects/' + project._id);
-                        await driver.findElement(By.className('btn btn-primary'))
-                            .then(async element => {
-                                await element.click();
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-                                driver.getCurrentUrl().then( url => {
-                                    expect(url.includes('/projects/' + project._id + '/new-member')).true;
-                                });
-                            });
-                    }
-                }
-            });
+            await driver.findElement(By.linkText('Tests'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/tests');
+                    });
+                });
 
-    }).timeout(10000);
-});
+            await driver.get('http://localhost:3000/projects/' + project._id);
 
-after(function(done) {
-    driver.quit();
-    mongoose.model('project').deleteMany({}, done);
+            await driver.findElement(By.linkText('Documentation'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/documentations');
+                    });
+                });
+
+            await driver.get('http://localhost:3000/projects/' + project._id);
+
+            await driver.findElement(By.linkText('Release'))
+                .then(async navLinkElement => {
+                    await navLinkElement.click();
+                    await driver.getCurrentUrl().then(url => {
+                        expect(url).to.be.equal('http://localhost:3000/projects/' + project._id + '/releases');
+                    });
+                });
+        }).timeout(20000);
+    });
 });

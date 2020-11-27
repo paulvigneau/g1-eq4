@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <%- include('head.ejs') %>
+    <script src="/javascript/project.js" type="text/javascript" defer></script>
 </head>
 <body>
 
 <%
-
 function getCurrentSprint(sprints) {
     let today = new Date();
     for (let sprint of sprints) {
@@ -15,42 +15,59 @@ function getCurrentSprint(sprints) {
     }
     return "Aucun"
 }
-
 %>
 
 <div class="container">
-    
+
     <%- include('navigation.ejs') %>
 
     <div class="jumbotron">
-        <span class="projName"><h1>Nom du projet : <%= project.name %></h1></span>
-        <span class="projDescription"><p>Description : <%= project.description %></p></span>
+        <h1 class="projName"><%= project.name %></h1>
+        <p class="projDescription"><%= project.description %></p>
     </div>
 
-    <div>
-        <p>Membres <a href="/projects/<%= project._id %>/new-member" class="btn btn-primary">Nouveau membre</a></p>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <% project.members.forEach(function(member) { %>
-                        <div class="col">
-                            <span name="name"><p>Nom : <%= member.name %></p></span>
-                            <span name="role"><p>Rôle : <%= member.role %></p></span>
-                            <span name="email"><p>Email : <%= member.email %></p></span>
-                            <span name="color"><p>Couleur : <i class="fa fa-square" style="color: #<%= member.color%>"></i></p></span>
-                            <form action="/projects/<%= project._id %>/members/<%= member._id %>" method="post">
-                                <button type="submit" class="btn btn-success btn-danger">Supprimer le membre</button>
-                            </form>
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
+    <p>Date de début : <%= moment(project.start).locale('fr').format('DD MMMM YYYY') %></p>
+    <p>Date de fin : <%= moment(project.end).locale('fr').format('DD MMMM YYYY') %></p>
+
+    <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
+
+    <h3>Membres</h3>
+    <button class="btn btn-primary" onclick="showPopup()">Nouveau membre</button>
+
+    <div class="pop-up-wrapper">
+        <div class="pop-up">
+            <%- include('new-member.ejs', { projectId: project._id }); %>
         </div>
-        <p>Date de début : <%= new Date(project.start).toLocaleDateString() %></p>
-        <p>Date de fin : <%= new Date(project.end).toLocaleDateString() %></p>
-
-        <p>Sprint en cours : <%= getCurrentSprint(project.management.backlog.sprints) %></p>
     </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Rôle</th>
+                <th scope="col">Email</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        <% project.members.forEach(function(member) { %>
+            <tr>
+                <th id="name" scope="row">
+                    <i class="fa fa-square color" style="color: #<%= member.color %>"></i>
+                    <%= member.name %>
+                </th>
+                <td id="role"><%= member.role %></td>
+                <td id="email"><%= member.email %></td>
+                <td>
+                    <button class="btn btn-danger float-right"
+                            onclick="deleteMember('<%= project._id %>', '<%= member._id %>')">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
 </div>
 
 <footer>

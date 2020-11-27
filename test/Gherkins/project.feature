@@ -18,7 +18,7 @@ Feature : Fonctionnalité de la page project
                 son rôle
                 son email
                 sa couleur
-    
+
     #createProject
     Scenario : L'utilisateur crée un nouveau projet
         Given L'utilisateur est sur la page d'accueil de l'application
@@ -26,7 +26,12 @@ Feature : Fonctionnalité de la page project
         And Un formulaire apparaît
         And L'utilisateur remplit tous les champs
         And Il clique sur le bouton "Créer"
-        Then Il y a une redirection vers la page d'acceuil
+        Then Il y a une redirection vers la page d'accueil
         And Le nouveau projet est visible sur la page d'accueil
         And Ses informations correspondent a celles entrées par l'utilisateur plus tôt
-    
+
+    #navigationBar
+    Scenario : L'utilisateur navigue entre les différentes pages d'un projet
+        Given L'utilisateur est sur la page de gestion d'un projet
+        When Il clique sur un des les liens de la barre de navigation
+        Then Il est redirigé vers la page correspondant au lien cliqué.

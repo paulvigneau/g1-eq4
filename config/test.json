@@ -1,1 +1,5 @@
-{ "DBHost": "mongodb://localhost:27017/scrumProjectTest" }
+{
+  "DBHost": "scrumProjectTest",
+  "DBPort" : "27017",
+  "DBUrl" : "mongodb"
+}

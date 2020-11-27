@@ -2,29 +2,41 @@
 <html lang="en">
 <head>
     <%- include('head.ejs') %>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/projects.css">
+    <script src="/javascript/projects.js" type="text/javascript" defer></script>
 </head>
-<body class="container">
+<body>
 
-<div class="jumbotron">
-    <h1>Projet CDP</h1>
-    <p>Liste des projets créés</p>
-</div>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Projet CDP</h1>
+        <p>Liste des projets créés</p>
+    </div>
 
-<a type="button" href="/new-project" class="btn btn-success btn-danger">Créer un nouveau projet</a>
+    <button class="btn btn-success" onclick="showPopup()">Nouveau projet</button>
 
-
-<ul class="list-unstyled">
-    <% projects.forEach(function(project) { %>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">Projet: <%= project.name %> </h5>
-            <p class="card-text">Date de début : <%= project.start %> -
-                Date de fin : <%= project.end %></p>
-            <a href="/projects/<%= project._id %>" class="btn btn-primary stretched-link"><%= project.name %></a>
+    <div class="pop-up-wrapper">
+        <div class="pop-up">
+            <%- include('new-project.ejs'); %>
         </div>
     </div>
-    <% }); %>
-</ul>
+
+    <div class="row justify-content-start">
+        <% projects.forEach(function(project) { %>
+        <div class="col-12 col-sm-6 col-md-4 p-3">
+            <div class="card col-12 h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><%= project.name %> </h5>
+                    <p class="card-subtitle text-muted"><%= moment(project.start).locale('fr').format('DD MMM YYYY') %> -
+                        <%= moment(project.end).locale('fr').format('DD MMM YYYY') %></p>
+                    <p class="description"><%= project.description %></p>
+                    <a href="/projects/<%= project._id %>" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>
 
 <footer>
     <%- include('footer.ejs') %>

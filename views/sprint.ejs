@@ -1,10 +1,26 @@
-<% sprint.USList.forEach(function(US) { %>
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">ID: #<%= US.id %> </h5>
-            <p class="card-text">Description : <%= US.description %> -
-                Difficulté : <%= US.difficulty %></p>
-            <a href="#" class="btn btn-primary stretched-link">Détails</a>
-        </div>
+<% USList.sort((s1, s2) => { return new Date(s2.priority) - new Date(s1.priority); }); %>
+<% USList.forEach(function(US) { %>
+    <div class="user-story border row m-0 <% if (US.status === 'Closed') { %> unsortable text-muted <% } %>"
+         data-us-id="<%= US._id %>">
+        <span class="col-1" id="userStoryId">#<%= US.id %></span>
+        <span class="description col" id="userStoryDescription" title="<%= US.description %>"><%= US.description %></span>
+        <small class="text-muted col-auto"><%= US.label %></small>
+        <span class="col-1 text-center"><span class="badge-pill badge-info" id="userStoryDifficulty"><%= US.difficulty %></span></span>
+        <% if (US.status !== 'Closed') { %>
+            <div class="dropdown">
+                <span class="us-more col" onclick="showDropdown('<%= US._id %>');"><i class="fas fa-ellipsis-v"></i></span>
+                <div id="dropdown-<%= US._id %>" class="dropdown-content">
+                    <% if (sprintId) { %>
+                    <a class="close-us-button" onclick="closeUS('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>')">Fermer l'US</a>
+                    <% } %>
+                    <a class="edit-us-button" onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
+                </div>
+            </div>
+            <div class="pop-up" id="edit-user-story<%= US.id %>">
+                <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
+            </div>
+        <% } else { %>
+            <div><div class="col"><i class="fas fa-ellipsis-v" style="opacity: 0"></i></div></div>
+        <% } %>
     </div>
 <% }); %>
