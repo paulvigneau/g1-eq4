@@ -66,7 +66,7 @@ describe('Sprint End to End', () => {
                 .then((text) => {
                     expect(text).to.be.equal('01 janv. 2070 - 02 janv. 2070');
                 });
-        });
+        }).timeout(20000);
     });
 
     describe('Delete a sprint containing a user story', () => {
@@ -105,6 +105,16 @@ describe('Sprint End to End', () => {
                     });    
 
         }).timeout(20000);
+
+        it('should add a label to user story from a deleted sprint', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+            await driver.findElement(By.css('#backlog > div > small')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('Sprint supprimé');
+                });
+
+        }).timeout(20000);
     });
 
     describe('Drag & drop user story from sprint to another sprint', () => {
@@ -128,7 +138,7 @@ describe('Sprint End to End', () => {
             const sprint2Element = await allSprints[0];
 
             await checkTransferUs(sprint1Element, sprint2Element);
-        });
+        }).timeout(20000);
 
         it('should drag the user story from sprint2 and drop it in backlog', async () => {
             await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
@@ -137,7 +147,7 @@ describe('Sprint End to End', () => {
             const backlogElement = await driver.findElement(By.id('backlog'));
 
             await checkTransferUs(sprint2Element, backlogElement);
-        });
+        }).timeout(20000);
     });
 
     describe('Display sprints on backlog page', () => {
@@ -168,7 +178,7 @@ describe('Sprint End to End', () => {
                 .then((text) => {
                     expect(text).to.be.equal('10 janv. 2070 - 11 janv. 2070');
                 });
-        });
+        }).timeout(20000);
     });
 });
 
