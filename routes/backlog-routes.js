@@ -69,12 +69,6 @@ router.delete('/sprints/:sprintId', function (req, res, next) {
     }
 });
 
-router.get('/new-sprint', function(req, res){
-    res.render('new-sprint', {
-        projectId: req.params.id
-    });
-}); // TODO Update e2e tests and delete this route
-
 router.post('/new-user-story', function (req, res, next) {
     if (req.params.id && req.body.description && req.body.difficulty) {
         userStoryService.addUS(req.params.id, null, req.body.description, req.body.difficulty)
@@ -89,12 +83,6 @@ router.post('/new-user-story', function (req, res, next) {
         next(new BadRequestError('Un ou plusieurs champs sont manquants.'));
     }
 });
-
-router.get('/new-user-story', function(req, res){
-    res.render('new-user-story', {
-        projectId: req.params.id
-    });
-}); // TODO Update e2e tests and delete this route
 
 router.put('/user-story', function(req, res, next){
     if (req.params.id && req.body.usId && req.body.index) {

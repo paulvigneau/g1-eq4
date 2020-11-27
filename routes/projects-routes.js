@@ -18,10 +18,6 @@ router.get('/', function (req, res, next) {
     );
 });
 
-router.get('/new-project', function (req, res) {
-    res.render('new-project');
-}); // TODO Update e2e tests and delete this route
-
 router.post('/project', function (req, res, next) {
     if (req.body.name && req.body.description && req.body.start && req.body.end) {
         projectService.addProject(req.body)
