@@ -25,19 +25,6 @@ router.get('/', function (req, res, next) {
     }
 });
 
-router.get('/new-member', function(req, res){
-    projetService.getProjectByID(req.params.id)
-        .then(() => {
-            res.render('new-member', {
-                projectId: req.params.id
-            });
-        })
-        .catch(() => {
-            res.redirect('/404');
-        }
-    );
-}); // TODO Update e2e tests and delete this route
-
 router.post('/member', function (req, res, next) {
     if (req.params.id && req.body.name && req.body.email && req.body.role) {
         memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)
