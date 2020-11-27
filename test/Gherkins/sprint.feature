@@ -26,3 +26,13 @@ Feature : Fonctionnalités liées aux sprints
         Given L'utilisateur est sur la page backlog d'un projet
         When Des sprints sont créés
         Then Les sprints doivent être triés par date de début, de la plus proche à la plus lointaine
+
+    #createSprint
+    Scenario : L'utilisateur crée un nouveau sprint
+        Given L'utilisateur est sur la page backlog d'un projet
+        When Des il clique sur le bouton "Ajouter un sprint"
+        And Une fenêtre de saisie s'affiche
+        And Il rempli les champs avec des dates valides
+        And Il clique sur "Valider"
+        Then Un nouveau sprint s'affiche sur la page backlog
+        And Les dates de ce sprint correspondent à celles entrées par l'utilisateur dans le formulaire
