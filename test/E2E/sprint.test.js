@@ -112,6 +112,37 @@ describe('Sprint End to End', () => {
             await checkTransferUs(sprint2Element, backlogElement);
         });
     });
+
+    describe('Display sprints on backlog page', () => {
+        after(async function () {
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints = [];
+            return p.save();
+        });
+
+        before(async function () {
+            await sprintService.addSprint(project._id, '2070-01-10', '2070-01-11');
+            await sprintService.addSprint(project._id, '2070-01-14', '2070-01-15');
+            await sprintService.addSprint(project._id, '2070-01-12', '2070-01-13');
+        });
+
+        it('should display sprints in the order of arrival', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+            await driver.findElement(By.xpath('/html/body/div/div/p[1]')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('14 janv. 2070 - 15 janv. 2070');
+                });
+            await driver.findElement(By.xpath('/html/body/div/div/p[2]')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('12 janv. 2070 - 13 janv. 2070');
+                });
+            await driver.findElement(By.xpath('/html/body/div/div/p[3]')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('10 janv. 2070 - 11 janv. 2070');
+                });
+        });
+    });
 });
 
 async function checkTransferUs(from, to){
