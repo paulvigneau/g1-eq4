@@ -70,37 +70,35 @@ describe('Sprint End to End', () => {
         }).timeout(20000);
     });
 
-    describe('Delete a sprint containing a user story', () => {
-        after(async function () {
-            const p = await projectService.getProjectByID(project._id);
-            p.management.backlog.sprints = [];
-            return p.save();
-        });
-
+    describe('Delete a sprint containing a user story and put it in a new sprint', () => {
         before(async function () {
             const sprint1 = await sprintService.addSprint(project._id, '2070-01-10', '2070-01-11');
             await userStoryService.addUS(project._id, sprint1._id, 'En tant que..., je souhaite pouvoir..., afin de...', 1);
         });
 
+        after(async function () {
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints = [];
+            p.management.backlog.backlog.USList = [];
+            return p.save();
+        });
+
         it('should delete the sprint and transfer all its us in the backlog section', async () => {
             await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-            const supressionButton = await driver.findElement(By.css('.delete-sprint-button'));
-            await supressionButton.click();
+            const deleteButton = await driver.findElement(By.css('.delete-sprint-button'));
+            await deleteButton.click();
 
             await driver.wait(until.alertIsPresent());
-
             await driver.switchTo().alert().accept();
+            await driver.wait(until.stalenessOf(deleteButton));
 
-            await driver.wait(until.stalenessOf(supressionButton));
-
-            await driver.findElements(By.className('us-container sprint'))
+            await driver.findElements(By.css('.us-container.sprint'))
                 .then((sprints) => {
                     expect(sprints.length).to.be.equal(0);
                 });
 
-            await driver.findElement(By.id('backlog'))
-                .findElements(By.className('user-story border row m-0'))
+            await driver.findElements(By.css('#backlog .user-story'))
                     .then((userStories) => {
                         expect(userStories.length).to.be.equal(1);
                     });
@@ -114,37 +112,29 @@ describe('Sprint End to End', () => {
                 .then((text) => {
                     expect(text).to.be.equal('Sprint supprimé');
                 });
-
         }).timeout(20000);
-    });
 
-    describe('drag and drop a user story with a label', () => {
-        after(async function () {
-            const p = await projectService.getProjectByID(project._id);
-            p.management.backlog.sprints = [];
-            p.management.backlog.backlog = [];
-            return p.save();
-        });
-
-        before(async function () {
+        it('should remove label of the moved user story', async () => {
             await sprintService.addSprint(project._id, '2070-01-10', '2070-01-11');
-        });
+            await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-        it('should remove label to user story moved', async () => {
-            // await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+            let userStory = await driver.findElement(By.css('#backlog .user-story'));
+            const sprint = await driver.findElement(By.css('.us-container.sprint'));
 
-            // const userStory = await driver.findElement(By.css('#backlog > div'));
-            // const sprint = await driver.findElement(By.className('us-container sprint'));
-            // const label = await userStory.findElement(By.css('small'));
-            
-            // await driver.actions().dragAndDrop(userStory, sprint).perform();
+            await userStory.findElement(By.css('small')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('Sprint supprimé');
+                });
 
-            // await driver.wait(until.stalenessOf(label));
+            await driver.actions().dragAndDrop(userStory, sprint).perform();
 
-            // await userStory.findElement(By.css('small')).getText()
-            //     .then((text) => {
-            //         expect(text).to.be.equal('bruu');
-            //     });
+            await driver.wait(until.stalenessOf(userStory));
+
+            userStory = await driver.findElement(By.css('.us-container.sprint .user-story'));
+            await userStory.findElement(By.css('small')).getText()
+                .then((text) => {
+                    expect(text).to.be.empty;
+                });
 
         }).timeout(20000);
     });
@@ -228,25 +218,3 @@ async function checkTransferUs(from, to){
             expect(userStories.length).to.be.equal(0);
         });
 }
-
-// describe('labelAfterSprintDeletion', () => {
-//     it('this should delete a sprint and display its user stories in backlog', async () => {
-//         await projectService.getProjectByName('Projet 9')
-//             .then(async project => {
-//                 await saveSprint(project._id, '23-11-2020', '25-11-2020');
-//
-//                 await driver.get('http://localhost:3000/projects/' + project._id);
-//
-//                 await driver.findElement(By.className('btn btn-danger float-right'))
-//                     .then(async element => {
-//                         await element.click();
-//
-//                         const divClass = await driver.findElement(By.className('mt-3'));
-//                         divClass.findElement(By.id('date'))
-//                             .then((elements) => {
-//                                 expect(elements.length).to.be.equal(0);
-//                             });
-//                     });
-//             });
-//     }).timeout(10000);
-// });
