@@ -118,6 +118,37 @@ describe('Sprint End to End', () => {
         }).timeout(20000);
     });
 
+    describe('drag and drop a user story with a label', () => {
+        after(async function () {
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints = [];
+            p.management.backlog.backlog = [];
+            return p.save();
+        });
+
+        before(async function () {
+            await sprintService.addSprint(project._id, '2070-01-10', '2070-01-11');
+        });
+
+        it('should remove label to user story moved', async () => {
+            // await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+            // const userStory = await driver.findElement(By.css('#backlog > div'));
+            // const sprint = await driver.findElement(By.className('us-container sprint'));
+            // const label = await userStory.findElement(By.css('small'));
+            
+            // await driver.actions().dragAndDrop(userStory, sprint).perform();
+
+            // await driver.wait(until.stalenessOf(label));
+
+            // await userStory.findElement(By.css('small')).getText()
+            //     .then((text) => {
+            //         expect(text).to.be.equal('bruu');
+            //     });
+
+        }).timeout(20000);
+    });
+
     describe('Drag & drop user story from sprint to another sprint', () => {
         after(async function () {
             const p = await projectService.getProjectByID(project._id);
