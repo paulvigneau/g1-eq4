@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -36,7 +36,7 @@ describe('Sprint End to End', () => {
         mongoose.model('project').deleteMany({}, done);
     });
 
-    describe('Create and delete new sprint', () => {
+    describe('Create and new sprint', () => {
         after(async function () {
             const p = await projectService.getProjectByID(project._id);
             p.management.backlog.sprints = [];
@@ -66,17 +66,54 @@ describe('Sprint End to End', () => {
                 .then((text) => {
                     expect(text).to.be.equal('01 janv. 2070 - 02 janv. 2070');
                 });
+        }).timeout(20000);
+    });
+
+    describe('Delete a sprint containing a user story', () => {
+        after(async function () {
+            const p = await projectService.getProjectByID(project._id);
+            p.management.backlog.sprints = [];
+            return p.save();
         });
 
-        it('should delete a sprint // TODO', async () => {
-            // await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
-            //
-            // await driver.findElement(By.css('.delete-sprint-button')).click();
-            //
-            // await driver.findElements(By.id('us-container sprint'))
-            //     .then(async (elements) => {
-            //         expect(elements.length).to.be.equal(0);
-            //     });
+        before(async function () {
+            const sprint1 = await sprintService.addSprint(project._id, '2070-01-10', '2070-01-11');
+            await userStoryService.addUS(project._id, sprint1._id, 'En tant que..., je souhaite pouvoir..., afin de...', 1);
+        });
+
+        it('should delete the sprint and transfer all its us in the backlog section', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+            const supressionButton = await driver.findElement(By.css('.delete-sprint-button'));
+            await supressionButton.click();
+
+            await driver.wait(until.alertIsPresent());
+
+            await driver.switchTo().alert().accept();
+
+            await driver.wait(until.stalenessOf(supressionButton));
+
+            await driver.findElements(By.className('us-container sprint'))
+                .then((sprints) => {
+                    expect(sprints.length).to.be.equal(0);
+                });
+            
+            await driver.findElement(By.id('backlog'))
+                .findElements(By.className('user-story border row m-0'))
+                    .then((userStories) => {
+                        expect(userStories.length).to.be.equal(1);
+                    });    
+
+        }).timeout(20000);
+
+        it('should add a label to user story from a deleted sprint', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+            await driver.findElement(By.css('#backlog > div > small')).getText()
+                .then((text) => {
+                    expect(text).to.be.equal('Sprint supprimé');
+                });
+
         }).timeout(20000);
     });
 
@@ -101,7 +138,7 @@ describe('Sprint End to End', () => {
             const sprint2Element = await allSprints[0];
 
             await checkTransferUs(sprint1Element, sprint2Element);
-        });
+        }).timeout(20000);
 
         it('should drag the user story from sprint2 and drop it in backlog', async () => {
             await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
@@ -110,7 +147,7 @@ describe('Sprint End to End', () => {
             const backlogElement = await driver.findElement(By.id('backlog'));
 
             await checkTransferUs(sprint2Element, backlogElement);
-        });
+        }).timeout(20000);
     });
 
     describe('Display sprints on backlog page', () => {
@@ -141,7 +178,7 @@ describe('Sprint End to End', () => {
                 .then((text) => {
                     expect(text).to.be.equal('10 janv. 2070 - 11 janv. 2070');
                 });
-        });
+        }).timeout(20000);
     });
 });
 
