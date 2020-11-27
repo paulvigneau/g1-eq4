@@ -11,9 +11,9 @@
                 <span class="us-more col" onclick="showDropdown('<%= US._id %>');"><i class="fas fa-ellipsis-v"></i></span>
                 <div id="dropdown-<%= US._id %>" class="dropdown-content">
                     <% if (sprintId) { %>
-                    <a onclick="closeUS('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>')">Fermer l'US</a>
+                    <a class="close-us-button" onclick="closeUS('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>')">Fermer l'US</a>
                     <% } %>
-                    <a onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
+                    <a class="edit-us-button" onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
                 </div>
             </div>
             <div class="pop-up" id="edit-user-story<%= US.id %>">

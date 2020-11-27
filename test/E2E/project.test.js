@@ -3,10 +3,11 @@ process.env.NODE_ENV = 'test';
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -14,6 +15,10 @@ chai.use(dirtyChai);
 
 let driver;
 let project;
+
+before('connect', () => {
+    return dbConfig.connectToDB();
+});
 
 describe('Project End to End', () => {
     before(async function () {
@@ -50,7 +55,7 @@ describe('Project End to End', () => {
             await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
 
             await driver.wait(
-                async () => await driver.findElement(By.css('.pop-up-wrapper')),
+                async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
                 10000
             );
         }).timeout(20000);
@@ -80,7 +85,7 @@ describe('Project End to End', () => {
             await driver.get('http://localhost:3000/projects/' + project._id);
 
             await driver.wait(
-                async () => await driver.findElement(By.css('.container')),
+                async () => await until.elementIsVisible(await driver.findElement(By.css('.container'))),
                 10000
             );
 

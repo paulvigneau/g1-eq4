@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const assert = require('assert');
 const chai = require('chai');
 const { describe, it } = require('mocha');
@@ -16,6 +17,10 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 
 describe('Backlog unit tests', () => {
+    before('connect', async () => {
+        await dbConfig.connectToDB();
+    });
+
     describe('Add User Story', function () {
         let project;
 

@@ -1,16 +1,12 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const dbConfig = require('./config/db');
 const path = require('path');
 const bodyParser = require('body-parser');
-const config = require('config');
 const { BadRequestError, NotFoundError } = require('./errors/Error');
 
-mongoose.connect(config.DBHost);
-let db = mongoose.connection;
-db.once('open', () => {
-    console.log('Connexion à la base OK');
-});
+dbConfig.connectToDB();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');

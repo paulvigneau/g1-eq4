@@ -3,19 +3,24 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const projectService = require('../../services/project');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
 let driver;
 
+before('connect', () => {
+    return dbConfig.connectToDB();
+});
+
 describe('Add new project and display it in homepage', () => {
-    before(function () {
-        return driver = new Builder()
+    before(async function () {
+        driver = await new Builder()
             .forBrowser('chrome')
             .build();
     });
@@ -41,7 +46,7 @@ describe('Add new project and display it in homepage', () => {
         await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
 
         await driver.wait(
-            async () => await driver.findElement(By.css('.pop-up-wrapper')),
+            async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
             10000
         );
 
@@ -71,31 +76,3 @@ describe('Add new project and display it in homepage', () => {
     }).timeout(10000);
 });
 
-/**
- * @deprecated Use service instead
- */
-async function saveProject(name, description, start, end) {
-    await driver.get('http://localhost:3000');
-
-    await driver.findElement(By.css('.btn.btn-success')).click();
-
-    let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
-    expect(display).to.be.equal('block');
-
-    await driver.findElement(By.css('.pop-up-wrapper #name')).sendKeys(name);
-    await driver.findElement(By.css('.pop-up-wrapper #description')).sendKeys(description);
-    await driver.findElement(By.css('.pop-up-wrapper #start')).sendKeys(start);
-    await driver.findElement(By.css('.pop-up-wrapper #end')).sendKeys(end);
-
-    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
-
-    await driver.wait(
-        async () => await driver.findElement(By.css('.pop-up-wrapper')),
-        10000
-    );
-
-    display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
-    expect(display).to.be.equal('none');
-}
-
-module.exports = { saveProject };

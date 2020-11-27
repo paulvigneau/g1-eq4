@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const assert = require('assert');
 const projectService = require('../../services/project');
 const memberService = require('../../services/member');
@@ -15,6 +16,9 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 
 describe('Project unit tests', () => {
+    before('connect', async () => {
+        await dbConfig.connectToDB();
+    });
 
     describe('Project informations', () => {
         let project;

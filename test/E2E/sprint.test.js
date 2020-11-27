@@ -5,6 +5,7 @@ const sprintService = require('../../services/sprint');
 const userStoryService = require('../../services/user-story');
 const chai = require('chai');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -16,6 +17,10 @@ chai.use(dirtyChai);
 
 let driver;
 let project;
+
+before('connect', () => {
+    return dbConfig.connectToDB();
+});
 
 describe('Sprint End to End', () => {
     before(async function () {
@@ -54,7 +59,7 @@ describe('Sprint End to End', () => {
             await driver.findElement(By.css('#add-sprint button.btn[type=\'submit\']')).click();
 
             await driver.wait(
-                async () => await driver.findElement(By.css('.pop-up-wrapper')),
+                async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
                 10000
             );
         }).timeout(20000);
@@ -97,12 +102,12 @@ describe('Sprint End to End', () => {
                 .then((sprints) => {
                     expect(sprints.length).to.be.equal(0);
                 });
-            
+
             await driver.findElement(By.id('backlog'))
                 .findElements(By.className('user-story border row m-0'))
                     .then((userStories) => {
                         expect(userStories.length).to.be.equal(1);
-                    });    
+                    });
 
         }).timeout(20000);
 
@@ -143,7 +148,7 @@ describe('Sprint End to End', () => {
         it('should drag the user story from sprint2 and drop it in backlog', async () => {
             await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-            const sprint2Element = (await driver.findElements(By.className('us-container sprint')))[0];
+            const sprint2Element = await (await driver.findElements(By.css('div.us-container.sprint')))[0];
             const backlogElement = await driver.findElement(By.id('backlog'));
 
             await checkTransferUs(sprint2Element, backlogElement);
@@ -183,16 +188,16 @@ describe('Sprint End to End', () => {
 });
 
 async function checkTransferUs(from, to){
-    await from.findElements(By.className('user-story border row m-0'))
-        .then(async userStories => {
+    await from.findElements(By.css('.user-story'))
+        .then(userStories => {
             expect(userStories.length).to.be.equal(1);
         });
-    await from.findElement(By.className('user-story border row m-0'))
+    await from.findElement(By.css('.user-story'))
         .then(async (userStory) => {
             await driver.actions().dragAndDrop(userStory, to).perform();
         });
-    await from.findElements(By.className('user-story border row m-0'))
-        .then(async userStories => {
+    await from.findElements(By.css('.user-story'))
+        .then(userStories => {
             expect(userStories.length).to.be.equal(0);
         });
 }

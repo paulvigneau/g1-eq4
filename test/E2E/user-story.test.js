@@ -1,106 +1,125 @@
 process.env.NODE_ENV = 'test';
 
-const testProjects = require('./projects.test');
 const projectService = require('../../services/project');
+const sprintService = require('../../services/sprint');
 const chai = require('chai');
 const mongoose = require('mongoose');
+const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-const { Builder, By } = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
+
 let driver;
+let project;
 
-before(function () {
-    driver = new Builder()
-        .forBrowser('chrome')
-        .build();
+before('connect', () => {
+    return dbConfig.connectToDB();
 });
 
-async function saveUserStory(projectId, description, difficulty){
-    await driver.get('http://localhost:3000/projects/' + projectId + '/backlog');
+describe('Add a new User Story, drag it in a sprint and close it', () => {
+    before(async function () {
+        driver = await new Builder()
+            .forBrowser('chrome')
+            .build();
 
-    await driver.findElement(By.css('.btn.btn-success')).click();
+        project = await projectService.addProject({
+            name: 'Projet',
+            description: 'Un magnifique project',
+            start: '2070-01-01',
+            end: '2070-02-01',
+        });
 
-    await driver.findElement(By.css('.pop-up-wrapper #description')).sendKeys(description);
+        await sprintService.addSprint(project._id, '2070-01-12', '2070-01-13');
+    });
 
-    if(difficulty == 1){
+    after(function (done) {
+        driver.quit();
+        mongoose.model('project').deleteMany({}, done);
+    });
+
+    it('should create a new user story', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+        await driver.findElement(By.css('#new-us-button')).click();
+
+        let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
+        expect(display).to.be.equal('block');
+
+        await driver.findElement(By.css('#add-user-story #description')).sendKeys('Description de l\'us');
         await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[1]')).click();
-    }
-    if(difficulty == 2){
-        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[2]')).click();
-    }
-    if(difficulty == 3){
-        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[3]')).click();
-    }
-    if(difficulty == 5){
-        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[4]')).click();
-    }
 
-    await driver.findElement(By.css('.pop-up-wrapper button.btn[type=\'submit\']')).click();
+        await driver.findElement(By.css('#add-user-story button.btn[type=\'submit\']')).click();
 
-
-}
-
-describe('New userStory page', () => {
-    it('should be redirected to the creation page of user stories', async () => {
-        await driver.get('http://localhost:3000');
-
-        await driver.findElements(By.className('btn btn-success'))
-            .then(async elements => {
-                await elements[0].click();
-            });
-
-        await driver.findElement(By.id('description'))
-            .then(async (element) => {
-                expect(element).to.be.not.undefined;
-            });
-
-        //TODO
-        // await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[1]'))
-        //     .then(async (element) => {
-        //         expect(element).to.be.not.undefined;
-        //     });
-
+        await driver.wait(
+            async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
+            10000
+        );
     }).timeout(10000);
-});
 
-describe('addUserStory & displayUS', () => {
-    it('this should create an user story and display it in backlog', async () => {
-        await testProjects.saveProject('Projet 10', 'Magnifique projet', '22-11-2021', '25-11-2021');
-        await projectService.getProjectByName('Projet 10')
-            .then(async (project) => {
-                await saveUserStory(project._id, 'En tant que..., je souhaite pouvoir..., afin de...', 3);
-                await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+    it('should display the user story in backlog', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
 
-                await driver.findElements(By.className('us-container'))
-                    .then(async userStories => {
-                        expect(userStories.length).to.be.equal(1);
-                    });
+        await driver.findElements(By.css('#backlog .user-story'))
+            .then(async userStories => {
+                expect(userStories.length).to.be.equal(1);
+            });
 
-                const userStoryRows = await driver.findElement(By.className('user-story border row m-0'));
-                userStoryRows.findElement(By.id('userStoryId')).getText()
-                    .then((text) => {
-                        expect(text).to.be.equal('1');
-                    });
-                userStoryRows.findElement(By.id('userStoryDescription')).getText()
-                    .then((text) => {
-                        expect(text).to.be.equal('En tant que..., je souhaite pouvoir..., afin de...');
-                    });
-                userStoryRows.findElement(By.id('userStoryDifficulty')).getText()
-                    .then((text) => {
-                        expect(text).to.be.equal('3');
-                    });
+        await driver.findElement(By.css('.user-story #userStoryId')).getText()
+            .then((text) => {
+                expect(text).to.be.equal('#1');
+            });
+        await driver.findElement(By.css('.user-story #userStoryDescription')).getText()
+            .then((text) => {
+                expect(text).to.be.equal('Description de l\'us');
+            });
+        await driver.findElement(By.css('.user-story #userStoryDifficulty')).getText()
+            .then((text) => {
+                expect(text).to.be.equal('1');
             });
     }).timeout(10000);
-});
 
-after(function(done) {
-    driver.quit();
-    mongoose.model('project').deleteMany({}, done);
-});
+    it('should drag and drop the user story in a sprint', async () => {
+        const sprint = await (await driver.findElements(By.css('.sprint')))[0];
 
-module.exports = { saveUserStory };
+        await driver.findElements(By.css('#backlog .user-story'))
+            .then(async userStories => {
+                expect(userStories.length).to.be.equal(1);
+            });
+
+        await driver.findElement(By.css('#backlog .user-story'))
+            .then(async (userStory) => {
+                await driver.actions().dragAndDrop(userStory, sprint).perform();
+            });
+
+        await driver.findElements(By.css('#backlog .user-story'))
+            .then(async userStories => {
+                expect(userStories.length).to.be.equal(0);
+            });
+
+        await sprint.findElements(By.css('.user-story'))
+            .then(async userStories => {
+                expect(userStories.length).to.be.equal(1);
+            });
+    });
+
+    it('should close the user story', async () => {
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+        let sprint = await (await driver.findElements(By.css('.sprint')))[0];
+        let userStory = await (await sprint.findElements(By.css('.user-story')))[0];
+
+        await userStory.findElement(By.css('.us-more')).click();
+        await userStory.findElement(By.css('.close-us-button')).click();
+
+        await driver.get('http://localhost:3000/projects/' + project._id + '/backlog');
+
+        let usClasses = await (await driver.findElements(By.css('.user-story')))[0].getAttribute('class');
+        console.log('classes:' + usClasses);
+        expect(usClasses).to.contain('unsortable text-muted');
+    });
+});
