@@ -1,9 +1,9 @@
 process.env.NODE_ENV = 'test';
 
+require('../../app');
 const projectService = require('../../services/project');
 const chai = require('chai');
 const mongoose = require('mongoose');
-const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -15,10 +15,6 @@ chai.use(dirtyChai);
 
 let driver;
 let project;
-
-before('connect', () => {
-    return dbConfig.connectToDB();
-});
 
 describe('Project End to End', () => {
     before(async function () {
@@ -34,9 +30,9 @@ describe('Project End to End', () => {
         });
     });
 
-    after(function (done) {
-        driver.quit();
-        mongoose.model('project').deleteMany({}, done);
+    after(async function() {
+        await driver.quit();
+        await mongoose.model('project').deleteMany({});
     });
 
     describe('Add member to project, display his information and delete this member', () => {

@@ -1,9 +1,9 @@
 process.env.NODE_ENV = 'test';
 
+require('../../app');
 const chai = require('chai');
 const projectService = require('../../services/project');
 const mongoose = require('mongoose');
-const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -14,10 +14,6 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 let driver;
 
-before('connect', () => {
-    return dbConfig.connectToDB();
-});
-
 describe('Add new project and display it in homepage', () => {
     before(async function () {
         driver = await new Builder()
@@ -25,9 +21,9 @@ describe('Add new project and display it in homepage', () => {
             .build();
     });
 
-    after(function(done) {
-        driver.quit();
-        mongoose.model('project').deleteMany({}, done);
+    after(async function() {
+        await driver.quit();
+        await mongoose.model('project').deleteMany({});
     });
 
     it('should add a project and display it in homepage', async () => {

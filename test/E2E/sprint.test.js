@@ -1,11 +1,11 @@
 process.env.NODE_ENV = 'test';
 
+require('../../app');
 const projectService = require('../../services/project');
 const sprintService = require('../../services/sprint');
 const userStoryService = require('../../services/user-story');
 const chai = require('chai');
 const mongoose = require('mongoose');
-const dbConfig = require('../../config/db');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
@@ -17,10 +17,6 @@ chai.use(dirtyChai);
 
 let driver;
 let project;
-
-before('connect', () => {
-    return dbConfig.connectToDB();
-});
 
 describe('Sprint End to End', () => {
     before(async function () {
@@ -36,9 +32,9 @@ describe('Sprint End to End', () => {
         });
     });
 
-    after(function (done) {
-        driver.quit();
-        mongoose.model('project').deleteMany({}, done);
+    after(async function() {
+        await driver.quit();
+        await mongoose.model('project').deleteMany({});
     });
 
     describe('Create and new sprint', () => {
