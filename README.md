@@ -1,5 +1,9 @@
 # BACKLOG
 
+Ce tableau présente la liste des User Stories du projet. Fonctionnant en agile, ce tableau est amené à évoluer (pour ajouter des US par exemple).
+
+Cependant, afin de garder un historique de la planification originelle, la case `Planification` n'est pas modifiée. Les attentes de chaque sprint se situent dans les fichiers SprintX.md, où X correspond au numéro du sprint.
+
 | ID | Description | Importance | Difficulté | Planification |
 |-|-|-|-|-|
 | #1 | En tant qu’utilisateur, je souhaite pouvoir visualiser - depuis la page d’accueil de l’application - mes projets sous forme de bloc avec leur nom afin de pouvoir accéder à la page de gestion d’un projet spécifique en cliquant sur son bloc. | Elevé | 1 | Sprint 1 |
