@@ -16,11 +16,11 @@
                     <a class="edit-us-button" onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
                 </div>
             </div>
-            <div class="pop-up" id="edit-user-story<%= US.id %>">
-                <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
-            </div>
         <% } else { %>
             <div><div class="col"><i class="fas fa-ellipsis-v" style="opacity: 0"></i></div></div>
         <% } %>
+    </div>
+    <div class="pop-up" id="edit-user-story<%= US.id %>">
+        <%- include('edit-user-story.ejs', { projectId: projectId, sprintId: sprintId, US: US }); %>
     </div>
 <% }); %>

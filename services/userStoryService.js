@@ -253,4 +253,34 @@ function closeUS(projectId, sprintId, usId){
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS };
+function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficulty){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+
+                let sprint = project.management.backlog.sprints.id(sprintId);
+                let userStory = null;
+                if(!sprint){
+                    let backlog = project.management.backlog.backlog;
+                    userStory = backlog.USList.id(usId);
+                }else {
+                    userStory = sprint.USList.id(usId);
+                }
+
+                if(!userStory)
+                    return reject(new NotFoundError(`No user story ${usId} found.`));
+
+                if(userStory.status === 'Closed')
+                    return reject(new BadRequestError(`User story ${usId} is already Closed.`));
+
+                userStory.description = newDescription;
+                userStory.difficulty = newDifficulty;
+
+                project.save()
+                    .then(() => resolve(userStory))
+                    .catch((err) => reject(err));
+            });
+    });
+}
+
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS, modifyUserStory };
