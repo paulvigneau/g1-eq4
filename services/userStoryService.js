@@ -263,7 +263,6 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
                 if(!sprint){
                     let backlog = project.management.backlog.backlog;
                     userStory = backlog.USList.id(usId);
-                    sprintId = null;
                 }else {
                     userStory = sprint.USList.id(usId);
                 }
