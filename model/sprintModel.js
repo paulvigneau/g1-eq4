@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserStory = require('./user-story');
+const UserStory = require('./userStoryModel');
 const Schema = mongoose.Schema;
 
 let SprintSchema = new Schema({

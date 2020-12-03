@@ -1,5 +1,5 @@
-const projectService = require('./project');
-const Member = require('../model/member');
+const projectService = require('./projectService');
+const Member = require('../model/memberModel');
 const nodeMailer = require('nodemailer');
 const { NotFoundError } = require('../errors/Error');
 

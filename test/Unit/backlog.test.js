@@ -8,9 +8,9 @@ const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-let projectService = require('../../services/project');
-let userStoryService = require('../../services/user-story');
-let sprintService = require('../../services/sprint');
+let projectService = require('../../services/projectService');
+let userStoryService = require('../../services/userStoryService');
+let sprintService = require('../../services/sprintService');
 
 const expect = chai.expect;
 chai.use(chaiHttp);

@@ -1,5 +1,5 @@
-const projectService = require('./project');
-const UserStory = require('../model/user-story');
+const projectService = require('./projectService');
+const UserStory = require('../model/userStoryModel');
 const { BadRequestError, NotFoundError } = require('../errors/Error');
 
 function addUS(projectId, sprintId, description, difficulty, priority = -1) {

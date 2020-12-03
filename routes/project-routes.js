@@ -1,8 +1,8 @@
 const express = require('express');
 const moment = require('moment');
 const router = express.Router({ mergeParams: true });
-const projetService = require('../services/project');
-const memberService = require('../services/member');
+const projetService = require('../services/projectService');
+const memberService = require('../services/memberService');
 const { BadRequestError } = require('../errors/Error');
 
 router.get('/', function (req, res, next) {

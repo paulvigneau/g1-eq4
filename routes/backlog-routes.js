@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const backlogService = require('../services/backlog.js');
-const sprintService = require('../services/sprint.js');
-const userStoryService = require('../services/user-story.js');
+const backlogService = require('../services/backlogService.js');
+const sprintService = require('../services/sprintService.js');
+const userStoryService = require('../services/userStoryService.js');
 const moment = require('moment');
 const { BadRequestError } = require('../errors/Error');
 

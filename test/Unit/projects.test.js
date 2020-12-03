@@ -8,7 +8,7 @@ const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
-let projectService = require('../../services/project');
+let projectService = require('../../services/projectService');
 
 const expect = chai.expect;
 chai.use(chaiHttp);

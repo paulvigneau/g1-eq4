@@ -1,4 +1,4 @@
-const projectService = require('../services/project');
+const projectService = require('./projectService');
 
 function getAllSprints(id) {
     return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const UserStory = require('./user-story');
-const Sprint = require('./sprint');
+const UserStory = require('./userStoryModel');
+const Sprint = require('./sprintModel');
 const Schema = mongoose.Schema;
 
 let BacklogSchema = new Schema({

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Member = require('./member');
-const Backlog = require('./backlog');
-const Dod = require('./dod');
+const Member = require('./memberModel');
+const Backlog = require('./backlogModel');
+const Dod = require('./dodModel');
 const Schema = mongoose.Schema;
 
 let ProjectSchema = new Schema({

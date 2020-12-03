@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test';
 
 require('../../app');
 const chai = require('chai');
-const projectService = require('../../services/project');
+const projectService = require('../../services/projectService');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
