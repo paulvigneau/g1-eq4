@@ -66,6 +66,33 @@ function closeUS(projectId, sprintId, usId){
             });
 }
 
+function getNewDescription(usId){
+    return document.querySelector(`input[id="newDescription${usId}"]`).value;
+}
+
+function getNewDifficulty(usId){
+    return document.querySelector(`select[id="newDifficulty${usId}"]`).value;
+}
+
+function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficulty){
+    fetch(`/projects/${projectId}/backlog/${usId}/user-story`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            newDescription: newDescription,
+            newDifficulty: newDifficulty,
+            sprintId: sprintId
+        })
+    })
+        .then((resp) => {
+            if (resp.status === 400 || resp.status === 404) {
+                resp.json().then(text => alert(text.message));
+            }
+            else
+                document.location.reload();
+        });
+}
+
 function showDropdown(USid) {
     hideDropdowns();
     if (!document.querySelector('#dropdown-' + USid).classList.contains('visible')) {

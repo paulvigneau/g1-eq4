@@ -1,13 +1,13 @@
-<!-- <form action="/projects/<%= projectId %>/backlog/edit-user-story" method="post"> -->
     <div class="form-group">
-        <label for="description">Description de l'US</label>
-        <input type="text" name="description" class="form-control" id="description"
+        <label for="newDescription">Description de l'US</label>
+        <input type="text" name="newDescription" class="form-control" id="newDescription<%= US._id %>"
                placeholder="La description de l'US" required value="<%= US.description %>">
     </div>
 
     <div class="form-group">
         <label for="inputState">Difficulté</label>
-        <select id="difficulty" name="difficulty" class="form-control" value="<%= US.difficulty %>">
+        <select name="newDifficulty" class="form-control" id="newDifficulty<%= US._id %>"
+                value="<%= US.difficulty %>">
             <option>1</option>
             <option>2</option>
             <option>3</option>
@@ -15,6 +15,7 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-success">Appliquer les modifications</button>
+    <button type="submit" class="btn btn-success"
+            onclick="modifyUserStory('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>',
+                    getNewDescription('<%= US._id %>'), getNewDifficulty('<%= US._id %>'))">Appliquer les modifications</button>
     <button  class="btn btn-danger" onclick="closePopup()">Retour</button>
-<!--</form>-->
