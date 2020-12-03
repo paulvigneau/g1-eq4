@@ -78,11 +78,11 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
     fetch(`/projects/${projectId}/backlog/${usId}/user-story`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        body: {
             newDescription: newDescription,
             newDifficulty: newDifficulty,
             sprintId: sprintId
-        })
+        }
     })
         .then((resp) => {
             if (resp.status === 400 || resp.status === 404) {
