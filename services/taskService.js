@@ -133,4 +133,4 @@ function updateTask(projectId, taskId, memberId, description, type, cost, USList
     });
 }
 
-
+module.exports = { addTask, getTaskById, deleteTask, updateTask };
