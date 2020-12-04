@@ -47,7 +47,7 @@ describe('Backlog unit tests', () => {
         it('should return code 200', async () => {
             let res = await chai
                 .request(app)
-                .post('/projects/' + project._id + '/backlog/new-user-story')
+                .post('/projects/' + project._id + '/backlog/user-story')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     description: 'Bob',
@@ -60,7 +60,7 @@ describe('Backlog unit tests', () => {
         it('should return code 400', async () => {
             let res = await chai
                 .request(app)
-                .post('/projects/' + project._id + '/backlog/new-user-story')
+                .post('/projects/' + project._id + '/backlog/user-story')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     description: 'Bob',
@@ -73,7 +73,7 @@ describe('Backlog unit tests', () => {
         it('should return code 404 because project does not exist', async () => {
             let res = await chai
                 .request(app)
-                .post('/projects/nonExistingId/backlog/new-user-story')
+                .post('/projects/nonExistingId/backlog/user-story')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     description: 'Bob',

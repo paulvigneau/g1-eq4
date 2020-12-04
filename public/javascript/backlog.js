@@ -11,7 +11,7 @@ editUsForm.addEventListener('submit', (event) => {
         method = 'PUT';
 
     // eslint-disable-next-line no-undef
-    fetch('backlog/new-user-story', {
+    fetch('backlog/user-story', {
         method: method,
         body: data
     })
