@@ -22,10 +22,13 @@
 
         <div class="pop-up-wrapper">
             <div class="pop-up" id="add-sprint">
-                <%- include('new-sprint.ejs', { projectId: projectId }); %>
+                <%- include('new-sprint.ejs'); %>
             </div>
             <div class="pop-up" id="add-user-story">
-                <%- include('new-user-story.ejs', { projectId: projectId }); %>
+                <%- include('new-user-story.ejs'); %>
+            </div>
+            <div class="pop-up" id="edit-user-story">
+                <%- include('edit-user-story.ejs'); %>
             </div>
         </div>
 

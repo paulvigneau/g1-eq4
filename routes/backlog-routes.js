@@ -114,9 +114,9 @@ router.put('/:sprintId/:usId/close', function(req, res, next) {
     }
 });
 
-router.put('/:usId/user-story', function(req, res, next) {
-    if (req.params.id && req.params.usId && req.body.newDescription && req.body.newDifficulty) {
-        userStoryService.modifyUserStory(req.params.id, req.body.sprintId, req.params.usId, req.body.newDescription, req.body.newDifficulty)
+router.put('/edit-user-story', function(req, res, next) {
+    if (req.params.id && req.body.usId && req.body.description && req.body.difficulty) {
+        userStoryService.modifyUserStory(req.params.id, req.body.sprintId, req.body.usId, req.body.description, req.body.difficulty)
             .then(() => {
                 res.status(200).send();
             })
