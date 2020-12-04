@@ -1,0 +1,44 @@
+<head>
+    <script type="text/javascript" src="/javascript/task.js" defer></script>
+</head>
+
+<form id="edit-task-form" method="post">
+    <input type="hidden" name="taskId" id="edit-taskId">
+
+    <div class="form-group">
+        <label for="edit-description">Description de la tâche</label>
+        <input type="text" name="description" class="form-control" id="edit-description"
+               placeholder="La description de la tâche" required>
+    </div>
+
+    <div class="form-group row">
+        <label for="example-number-input" class="col-2 col-form-label">Number</label>
+        <div class="col-10">
+            <input class="form-control" type="number" value="0" id="example-number-input">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="edit-type">Type de la tâche</label>
+        <select id="edit-type" name="type" class="form-control">
+            <option>GEN</option>
+            <option>DEV</option>
+            <option>TEST</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="edit-member">Membre assigné</label>
+        <select id="edit-member" name="member" class="form-control">
+            <option></option>
+            <% filterMembersByRole(project.members, task).forEach(function(member) { %>
+                <option><%= member.name %></option>
+            <% }) %>
+        </select>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-success">Ajouter</button>
+    <button type="button" class="btn btn-danger" onclick="closePopup()">Retour</button>
+</form>
