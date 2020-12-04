@@ -229,7 +229,7 @@ function closeUS(projectId, sprintId, usId){
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if(!project)
-                return reject(new NotFoundError(`No project ${projectId} found.`));
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let sprint = project.management.backlog.sprints.id(sprintId);
                 if (!sprint)
@@ -257,6 +257,8 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
+                if(!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let sprint = project.management.backlog.sprints.id(sprintId);
                 let userStory = null;
