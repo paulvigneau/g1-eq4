@@ -1,18 +1,28 @@
-const usForm = document.querySelector('#new-us-form');
+const editUsForm = document.querySelector('#edit-us-form');
 const sprintForm = document.querySelector('#new-sprint-form');
 
-usForm.addEventListener('submit', (event) => {
+editUsForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const data = new URLSearchParams(new FormData(usForm));
+    const data = new URLSearchParams(new FormData(editUsForm));
+
+    let method = 'POST';
+    if (data.get('usId'))
+        method = 'PUT';
+
     // eslint-disable-next-line no-undef
-    sendForm('backlog/new-user-story', data)
+    fetch('backlog/new-user-story', {
+        method: method,
+        body: data
+    })
         .then((resp) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
-            else
+            else {
+                editUsForm.reset();
                 document.location.reload();
+            }
         });
 });
 
@@ -26,8 +36,10 @@ sprintForm.addEventListener('submit', (event) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
-            else
+            else {
+                sprintForm.reset();
                 document.location.reload();
+            }
         });
 });
 
@@ -66,39 +78,20 @@ function closeUS(projectId, sprintId, usId){
             });
 }
 
-function getNewDescription(usId){
-    return document.querySelector(`input[id="newDescription${usId}"]`).value;
-}
+function showEditUSPopup(sprintId, usId, description, difficulty) {
+    document.querySelector('#edit-user-story #edit-sprintId').value = sprintId === 'null' ? null : sprintId;
+    document.querySelector('#edit-user-story #edit-usId').value = usId;
+    document.querySelector('#edit-user-story #edit-description').value = description;
+    document.querySelector('#edit-user-story #edit-difficulty').value = difficulty;
 
-function getNewDifficulty(usId){
-    return document.querySelector(`select[id="newDifficulty${usId}"]`).value;
-}
-
-function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficulty){
-    fetch(`/projects/${projectId}/backlog/${usId}/user-story`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            newDescription: newDescription,
-            newDifficulty: newDifficulty,
-            sprintId: sprintId
-        })
-    })
-        .then((resp) => {
-            if (resp.status === 400 || resp.status === 404) {
-                resp.json().then(text => alert(text.message));
-            }
-            else
-                document.location.reload();
-        });
+    // eslint-disable-next-line no-undef
+    showPopup('#edit-user-story');
 }
 
 function showDropdown(USid) {
     hideDropdowns();
     if (!document.querySelector('#dropdown-' + USid).classList.contains('visible')) {
         document.querySelector('#dropdown-' + USid).classList.add('visible');
-        console.log(document.querySelector('#dropdown-' + USid));
-        console.log('added');
     }
 }
 

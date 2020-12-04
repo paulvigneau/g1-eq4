@@ -12,9 +12,9 @@ function closePopup() {
     popups.forEach(p => p.style.display = 'none');
 }
 
-function sendForm(url, data) {
+function sendForm(url, data, method = 'POST') {
     return fetch(url, {
-        method: 'POST',
+        method: method,
         body: data
     });
 }
