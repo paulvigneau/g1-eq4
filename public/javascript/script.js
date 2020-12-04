@@ -8,8 +8,10 @@ function showPopup(id = null) {
 function closePopup() {
     const wrapper = document.querySelector('.pop-up-wrapper');
     const popups = document.querySelectorAll('.pop-up');
+    const forms = document.querySelectorAll('.pop-up form');
     wrapper.style.display = 'none';
     popups.forEach(p => p.style.display = 'none');
+    forms.forEach(f => f.reset());
 }
 
 function sendForm(url, data, method = 'POST') {

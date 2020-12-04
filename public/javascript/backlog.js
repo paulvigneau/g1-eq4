@@ -21,6 +21,7 @@ editUsForm.addEventListener('submit', (event) => {
             }
             else {
                 editUsForm.reset();
+                editUsForm.querySelector('button[type=submit]').textContent = 'Ajouter';
                 document.location.reload();
             }
         });
@@ -83,6 +84,7 @@ function showEditUSPopup(sprintId, usId, description, difficulty) {
     document.querySelector('#edit-user-story #edit-usId').value = usId;
     document.querySelector('#edit-user-story #edit-description').value = description;
     document.querySelector('#edit-user-story #edit-difficulty').value = difficulty;
+    document.querySelector('#edit-user-story button[type=submit]').textContent = 'Modifier';
 
     // eslint-disable-next-line no-undef
     showPopup('#edit-user-story');
