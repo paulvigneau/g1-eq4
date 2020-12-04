@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 
 async function connectToDB() {
-    const url = config.DBUrl + '://' +
-        (process.env.DATABASE_URL || `localhost:${config.DBPort}`) +
-        '/' + config.DBHost;
+    const url = config.DBUrl;
 
     await mongoose.connect(url, {
         useNewUrlParser: true,
