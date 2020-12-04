@@ -206,7 +206,7 @@ describe('Backlog unit tests', () => {
         it('should return code 200', async () => {
             let res = await chai
                 .request(app)
-                .put('/projects/' + project._id + '/backlog/user-story')
+                .put('/projects/' + project._id + '/backlog/user-story/move')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     from: null,
@@ -224,7 +224,7 @@ describe('Backlog unit tests', () => {
 
             let res = await chai
                 .request(app)
-                .put('/projects/' + project._id + '/backlog/user-story')
+                .put('/projects/' + project._id + '/backlog/user-story/move')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     from: sprint._id.toString(),
@@ -239,7 +239,7 @@ describe('Backlog unit tests', () => {
         it('should return code 404 because sprint source does not exist', async () => {
             let res = await chai
                 .request(app)
-                .put('/projects/' + project._id + '/backlog/user-story')
+                .put('/projects/' + project._id + '/backlog/user-story/move')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     from: sprint._id.toString(),
@@ -254,7 +254,7 @@ describe('Backlog unit tests', () => {
         it('should return code 404 because project does not exist', async () => {
             let res = await chai
                 .request(app)
-                .put('/projects/nonExistingId/backlog/user-story')
+                .put('/projects/nonExistingId/backlog/user-story/move')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     from: null,

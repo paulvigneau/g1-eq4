@@ -84,7 +84,7 @@ router.post('/new-user-story', function (req, res, next) {
     }
 });
 
-router.put('/user-story', function(req, res, next){
+router.put('/user-story/move', function(req, res, next){
     if (req.params.id && req.body.usId && req.body.index) {
         userStoryService.transferUS(req.params.id, req.body.from, req.body.to, req.body.usId, req.body.index)
             .then(() => {

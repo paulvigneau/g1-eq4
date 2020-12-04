@@ -155,7 +155,7 @@ function update(event, ui, from, to) {
 
     $.ajax({
         type: 'PUT',
-        url: '/projects/' + projectId + '/backlog/user-story',
+        url: '/projects/' + projectId + '/backlog/user-story/move',
         dataType: 'json',
         data: {
             'from': from,
