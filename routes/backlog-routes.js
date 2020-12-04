@@ -114,7 +114,8 @@ router.put('/:sprintId/:usId/close', function(req, res, next) {
     }
 });
 
-router.put('/edit-user-story', function(req, res, next) {
+// TODO change this route name
+router.put('/new-user-story', function(req, res, next) {
     if (req.params.id && req.body.usId && req.body.description && req.body.difficulty) {
         userStoryService.modifyUserStory(req.params.id, req.body.sprintId, req.body.usId, req.body.description, req.body.difficulty)
             .then(() => {

@@ -1,38 +1,28 @@
-const usForm = document.querySelector('#new-us-form');
 const editUsForm = document.querySelector('#edit-us-form');
 const sprintForm = document.querySelector('#new-sprint-form');
-
-usForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const data = new URLSearchParams(new FormData(usForm));
-    // eslint-disable-next-line no-undef
-    sendForm('backlog/new-user-story', data)
-        .then((resp) => {
-            if (resp.status === 400 || resp.status === 404) {
-                resp.json().then(text => alert(text.message));
-            }
-            else
-                document.location.reload();
-        });
-});
 
 editUsForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(editUsForm));
-    console.log(data.toString());
+
+    let method = 'POST';
+    if (data.get('usId'))
+        method = 'PUT';
+
     // eslint-disable-next-line no-undef
-    fetch('backlog/edit-user-story', {
-        method: 'PUT',
+    fetch('backlog/new-user-story', {
+        method: method,
         body: data
     })
         .then((resp) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
-            else
+            else {
+                editUsForm.reset();
                 document.location.reload();
+            }
         });
 });
 
@@ -46,8 +36,10 @@ sprintForm.addEventListener('submit', (event) => {
             if (resp.status === 400 || resp.status === 404) {
                 resp.json().then(text => alert(text.message));
             }
-            else
+            else {
+                sprintForm.reset();
                 document.location.reload();
+            }
         });
 });
 
