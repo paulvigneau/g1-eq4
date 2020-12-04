@@ -15,7 +15,11 @@ let ProjectSchema = new Schema({
         dod: { type: Dod.schema, default: new Dod() },
         management: {
             backlog: { type: Backlog.schema, default: new Backlog() },
-            tasks: { type: [Task.schema]}
+            tasks: {
+                todo: {type: [Task.schema] },
+                wip: {type: [Task.schema] },
+                done: {type: [Task.schema] }
+            }
         }
     }
 );
