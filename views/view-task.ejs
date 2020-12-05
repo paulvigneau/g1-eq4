@@ -1,7 +1,3 @@
-<head>
-    <script type="text/javascript" src="/javascript/tasks.js" defer></script>
-</head>
-
 <form id="edit-task-form" method="post">
     <input type="hidden" name="taskId" id="edit-taskId">
 
@@ -20,7 +16,7 @@
 
     <div class="form-group">
         <label for="edit-type">Type de la tâche</label>
-        <select id="edit-type" name="type" class="form-control">
+        <select id="edit-type" name="type" class="form-control" onchange="renderMembers(<%= projectMembers %>);">
             <option>GEN</option>
             <option>DEV</option>
             <option>TEST</option>
@@ -28,12 +24,9 @@
     </div>
 
     <div class="form-group">
-        <label for="edit-member">Membre assigné</label>
-        <select id="edit-member" name="member" class="form-control">
-            <option></option>
-            <% filterMembersByRole(project.members, task).forEach(function(member) { %>
-                <option><%= member.name %></option>
-            <% }) %>
+        <label for="edit-members">Membre assigné</label>
+        <select id="edit-members" name="member" class="form-control">
+
         </select>
     </div>
 

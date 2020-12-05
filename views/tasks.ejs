@@ -3,8 +3,16 @@
 <head>
     <%- include('head.ejs') %>
     <link rel="stylesheet" type="text/css" href="/stylesheets/tasks.css">
+    <script type="text/javascript" src="/javascript/tasks.js" defer></script>
 </head>
 <body>
+
+<div class="pop-up-wrapper">
+    <div class="pop-up" id="add-task">
+        <%- include('view-task.ejs'); %>
+    </div>
+</div>
+
 
 <div class="container">
     <%- include('navigation.ejs') %>
@@ -13,13 +21,13 @@
 
     <div class="row">
         <div class="col-12 col-lg-6 col-xl-3">
-            <%- include('kanban-panel.ejs', { title: 'TODO', tasks: [] }) %>
+            <%- include('kanban-panel.ejs', { title: 'TODO', tasksList: tasksList }) %>
         </div>
         <div class="col-12 col-lg-6 col-xl-3">
-            <%- include('kanban-panel.ejs', { title: 'Work In Progress', tasks: [] }) %>
+            <%- include('kanban-panel.ejs', { title: 'WIP', tasksList: tasksList  }) %>
         </div>
         <div class="col-12 col-lg-6 col-xl-3">
-            <%- include('kanban-panel.ejs', { title: 'DONE', tasks: [] }) %>
+            <%- include('kanban-panel.ejs', { title: 'DONE', tasksList: tasksList  }) %>
         </div>
     </div>
 
