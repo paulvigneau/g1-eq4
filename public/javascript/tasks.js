@@ -11,3 +11,7 @@ function checkMemberRoleTaskType(memberRole, taskType){
 function filterMembersByRole(projectMembers, task){
     return projectMembers.filter(member => checkMemberRoleTaskType(member.role, task.type));
 }
+
+function filterTasksByPhase(taskList, progressPhase){
+    return taskList.filter(task => task.status === progressPhase);
+}

@@ -102,6 +102,7 @@ function deleteTask(projectId, taskId) {
     });
 }
 
+//TODO STILL IN WORK
 function updateTask(projectId, taskId, memberId, description, type, cost, USList, dependencies){
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
@@ -133,4 +134,20 @@ function updateTask(projectId, taskId, memberId, description, type, cost, USList
     });
 }
 
-module.exports = { addTask, getTaskById, deleteTask, updateTask };
+function getAllTasks(projectId) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+
+                resolve(project.tasks);
+
+            })
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+}
+
+module.exports = { addTask, getTaskById, deleteTask, updateTask, getAllTasks };
