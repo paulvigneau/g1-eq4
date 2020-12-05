@@ -1,13 +1,13 @@
 const express = require('express');
 const moment = require('moment');
 const router = express.Router({ mergeParams: true });
-const projetService = require('../services/projectService');
+const projectService = require('../services/projectService');
 const memberService = require('../services/memberService');
 const { BadRequestError } = require('../errors/Error');
 
 router.get('/', function (req, res, next) {
     if (req.params.id) {
-        projetService.getProjectByID(req.params.id)
+        projectService.getProjectByID(req.params.id)
             .then((project) => {
                 res.render('project', {
                     project: project,

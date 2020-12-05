@@ -117,11 +117,23 @@ function updateTask(projectId, taskId, memberId, description, type, cost, USList
                 if (status !== 'TODO')
                     return reject(new BadRequestError(`Status of ${taskId} is different from TODO.`));
 
-                const member = project.members.id(memberId);
-                if(!member)
-                    return reject(new NotFoundError(`No member ${memberId} found.`));
+                if(task.description !== description)
+                    task.description = description;
 
-                task.member = memberId;
+                if(task.cost !== cost)
+                    task.cost = cost;
+
+                if(task.type !== type) {
+                    let checklistLength = getLengthDodByType(project, type);
+                    task.checklist = new Array(checklistLength).fill(false);
+                }
+
+                const member = project.members.id(memberId);
+                if(member && task.member !== member)
+                    task.member = memberId;
+
+                task.USList = USList;
+                task.dependencies = dependencies;
 
                 project.save()
                     .then(() => resolve(task))
