@@ -155,7 +155,7 @@ function getAllTasks(projectId) {
                 if (!project)
                     return reject(new NotFoundError(`No project ${projectId} found.`));
 
-                resolve(project.tasks);
+                resolve(project.management.tasks);
 
             })
             .catch((err) => {
