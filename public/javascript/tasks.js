@@ -1,5 +1,9 @@
 const taskForm = document.querySelector('#edit-task-form');
 
+(function () {
+    taskForm.querySelector('#edit-type').onchange();
+})();
+
 taskForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
