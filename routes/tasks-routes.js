@@ -50,4 +50,14 @@ router.put('/', function (req, res, next) {
     }
 });
 
+router.get('/json', function (req, res, next) {
+    taskService.getAllTasks(req.params.id)
+        .then((tasks) => {
+            res.status(200).json({ tasks: tasks });
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 module.exports = router;
