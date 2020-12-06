@@ -9,7 +9,7 @@ taskForm.addEventListener('submit', (event) => {
 
     const data = new URLSearchParams(new FormData(taskForm));
     // eslint-disable-next-line no-undef
-    sendForm('/tasks', data)
+    sendForm('tasks', data)
         .then((resp) => {
             if (resp.status === 400) {
                 resp.json().then(text => alert(text.message));

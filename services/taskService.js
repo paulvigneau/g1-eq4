@@ -45,6 +45,8 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                     dependencies: dependencies
                 });
 
+                project.management.tasks.push(task);
+
                 project.save()
                     .then(() => resolve(task))
                     .catch((err) => reject(err));

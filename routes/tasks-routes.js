@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
         });
 });
 
-router.post('/tasks', function (req, res, next) {
+router.post('/', function (req, res, next) {
     if (req.params.id && req.body.description && req.body.type && req.body.cost) {
         taskService.addTask(req.params.id, req.body.description, req.body.type, req.body.cost,
             req.body.memberId, req.body.USList, req.body.dependencies)
@@ -34,7 +34,7 @@ router.post('/tasks', function (req, res, next) {
     }
 });
 
-router.put('/tasks', function (req, res, next) {
+router.put('/', function (req, res, next) {
     if (req.body.name && req.body.description && req.body.start && req.body.end) {
         taskService.updateTask(req.params.id, req.body.description, req.body.type, req.body.cost,
             req.body.memberId, req.body.USList, req.body.dependencies)
