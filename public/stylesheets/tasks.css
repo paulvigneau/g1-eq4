@@ -2,6 +2,33 @@ body {
     max-height: 100%;
 }
 
+.pop-up {
+    padding: 30px;
+    width: 60%;
+    min-height: 65%;
+    height: auto;
+    max-height: 80%;
+}
+
+.pop-up .close {
+    position: absolute;
+    top: 0;
+    right: 5px;
+}
+
+.definition-of-done {
+    font-size: 14px;
+}
+
+.dependency-task {
+    margin-bottom: 3px;
+    border-radius: 3px;
+    background-color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .card .card-body .member-avatar {
     width: 32px;
     height: 32px;
