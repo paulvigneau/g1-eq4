@@ -1,7 +1,12 @@
 const taskForm = document.querySelector('#edit-task-form');
 
+let selectedDependencies = [];
+let dependencies = [];
+let tasks = [];
+
 (function () {
     taskForm.querySelector('#edit-type').onchange();
+    getTasks().then((t) => tasks = t);
 })();
 
 taskForm.addEventListener('submit', (event) => {
@@ -19,26 +24,78 @@ taskForm.addEventListener('submit', (event) => {
         });
 });
 
+function getTasks() {
+    return fetch('tasks/json')
+        .then((res) => res.json())
+        .then(json => {
+            tasks = json.tasks;
+            return tasks;
+        });
+}
+
+function displayTasks() {
+    let div = document.querySelector('#taskList');
+    div.innerHTML = '';
+
+    for (let task of tasks) {
+        let classes = 'border mb-2 p-2 dependency-task';
+        if (dependencies.find(d => task._id === d))
+            classes += ' selected';
+        const t =
+            `<div class="${classes}" 
+                  onclick="toggleSelectDependency('${task._id}')"
+                  id="task-${task._id}">
+                ${task.description}
+            </div>`;
+        div.insertAdjacentHTML('beforeend', t);
+    }
+}
+
+function displayDependencies() {
+    let div = document.querySelector('#dependencies');
+    div.innerHTML = '';
+
+    for (let d of dependencies) {
+        let task = tasks.find(t => d === t._id);
+        const t =
+            `<div class="dependency-task border">
+                ${task.description}
+            </div>`;
+        div.insertAdjacentHTML('beforeend', t);
+    }
+}
+
 function showDependencies() {
+    selectedDependencies = dependencies;
+    displayTasks();
+
     const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-dependencies');
     wrapper.style.display = 'block';
     popup.style.display = 'block';
 }
 
-function closeDependencies() {
+function closeDependencies(save = false) {
     const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-dependencies');
     wrapper.style.display = 'none';
     popup.style.display = 'none';
+
+    if (save) {
+        dependencies = selectedDependencies;
+        displayDependencies();
+    }
 }
 
 function toggleSelectDependency(id) {
     if (document.querySelector(`#task-${id}`).classList.contains('selected')) {
         document.querySelector(`#task-${id}`).classList.remove('selected');
+        let i = selectedDependencies.findIndex(t => t === id);
+        selectedDependencies.splice(i, 1);
     }
     else {
         document.querySelector(`#task-${id}`).classList.add('selected');
+        selectedDependencies.push(id);
     }
 }
 
