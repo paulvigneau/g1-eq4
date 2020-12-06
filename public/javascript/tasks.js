@@ -19,6 +19,29 @@ taskForm.addEventListener('submit', (event) => {
         });
 });
 
+function showDependencies() {
+    const wrapper = document.querySelector('.pop-up-wrapper2');
+    const popup = document.querySelector('#pop-up-dependencies');
+    wrapper.style.display = 'block';
+    popup.style.display = 'block';
+}
+
+function closeDependencies() {
+    const wrapper = document.querySelector('.pop-up-wrapper2');
+    const popup = document.querySelector('#pop-up-dependencies');
+    wrapper.style.display = 'none';
+    popup.style.display = 'none';
+}
+
+function toggleSelectDependency(id) {
+    if (document.querySelector(`#task-${id}`).classList.contains('selected')) {
+        document.querySelector(`#task-${id}`).classList.remove('selected');
+    }
+    else {
+        document.querySelector(`#task-${id}`).classList.add('selected');
+    }
+}
+
 function cleanMembersOptions(){
     let select = document.querySelector('select[id="edit-members"]');
     let length = select.options.length - 1;
