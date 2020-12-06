@@ -7,6 +7,12 @@
 </head>
 <body>
 
+<%
+function filterTasksByPhase(taskList, progressPhase){
+    return taskList.filter(task => task.status === progressPhase);
+}
+%>
+
 <div class="pop-up-wrapper">
     <div class="pop-up" id="add-task">
         <%- include('view-task.ejs'); %>
@@ -26,9 +32,9 @@
     <h2>Tâches</h2>
 
     <div class="row flex-grow-1 my-3" style="height: 0">
-        <%- include('kanban-panel.ejs', { title: 'TODO', tasksList: tasksList }) %>
-        <%- include('kanban-panel.ejs', { title: 'WIP' , tasksList: tasksList }) %>
-        <%- include('kanban-panel.ejs', { title: 'DONE', tasksList: tasksList }) %>
+        <%- include('kanban-panel.ejs', { title: 'TODO', tasks: filterTasksByPhase(tasksList, 'TODO') }) %>
+        <%- include('kanban-panel.ejs', { title: 'WIP' , tasks: filterTasksByPhase(tasksList, 'WIP')  }) %>
+        <%- include('kanban-panel.ejs', { title: 'DONE', tasks: filterTasksByPhase(tasksList, 'DONE') }) %>
     </div>
 
 </div>

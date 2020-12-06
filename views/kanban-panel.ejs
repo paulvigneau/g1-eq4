@@ -1,11 +1,3 @@
-<%
-
-function filterTasksByPhase(taskList, progressPhase){
-    return taskList.filter(task => task.status === progressPhase);
-}
-
-%>
-
 <div class="col-12 col-md-4 h-100">
     <div class="card h-100">
         <div class="card-header text-center bg-white">
@@ -13,19 +5,21 @@ function filterTasksByPhase(taskList, progressPhase){
         </div>
 
         <div class="card-body p-2 overflow-auto">
-            <% filterTasksByPhase(tasksList, title).forEach(function(task) { %>
+            <% if(title === 'TODO') { %>
+                <button id="new-task-button" class="btn btn-primary btn-block mb-3" onclick="showPopup('#add-task')">Ajouter</button>
+            <% } %>
+            <% tasks.forEach(function(task) { %>
             <div class="card mb-3 bg-light">
                 <div class="card-body p-2">
                     <p><%= task.description %></p>
+                    <% if (task.member) { %>
                     <div class="float-right mt-n3">
                         <div class="rounded-circle bg-success member-avatar text-center">P</div>
                     </div>
+                    <% } %>
                 </div>
             </div>
             <% }) %>
-            <% if(title === 'TODO') { %>
-                <button id="new-task-button" class="btn btn-primary btn-block" onclick="showPopup('#add-task')">Ajouter</button>
-            <% } %>
         </div>
     </div>
 </div>
