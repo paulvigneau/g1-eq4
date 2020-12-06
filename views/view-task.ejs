@@ -16,7 +16,7 @@
 
     <div class="form-group">
         <label for="edit-type">Type de la tâche</label>
-        <select id="edit-type" name="type" class="form-control" onchange="renderMembers(<%= projectMembers %>);">
+        <select id="edit-type" name="type" class="form-control" onchange="renderMembers(<%= JSON.stringify(projectMembers) %>);">
             <option>GEN</option>
             <option>DEV</option>
             <option>TEST</option>

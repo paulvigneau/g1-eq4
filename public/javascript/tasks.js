@@ -24,22 +24,18 @@ function cleanMembersOptions(){
 }
 
 function createMemberOption(member){
-    let option = document.createElement('option');
+    const option = document.createElement('option');
     option.text = member.name;
-    let select = document.querySelector('select[id="edit-members"]');
+    const select = document.querySelector('select[id="edit-members"]');
     select.appendChild(option);
 }
 
 function renderMembers(projectMembers){
-    return function(event) {
-        console.log('test');
-        console.log(projectMembers)
-        cleanMembersOptions();
-        let type = getCurrentType();
-        let membersList = filterMembersByRole(projectMembers, type);
-        for (let i = 0; i < membersList.length; i++) {
-            createMemberOption(membersList[i]);
-        }
+    cleanMembersOptions();
+    const type = getCurrentType();
+    const membersList = filterMembersByRole(projectMembers, type);
+    for (let i = 0; i < membersList.length; i++) {
+        createMemberOption(membersList[i]);
     }
 }
 
@@ -48,13 +44,9 @@ function getCurrentType(){
 }
 
 function checkMemberRoleTaskType(memberRole, taskType){
-    if(memberRole === 'Développeur' && taskType === 'DEV'){
-        return true;
-    }
-    if(memberRole === 'Testeur' && taskType === 'TEST'){
-        return true;
-    }
-    return false;
+    return (memberRole === 'Testeur' && taskType === 'TEST')
+        || (memberRole === 'Développeur' && taskType === 'DEV')
+        || (taskType === 'GEN');
 }
 
 function filterMembersByRole(projectMembers, type){
