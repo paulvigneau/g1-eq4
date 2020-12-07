@@ -15,9 +15,6 @@ function getLengthDodByType(project, type){
 }
 
 function addTask(projectId, description, type, cost, memberId, USList, dependencies) {
-    USList = USList ? USList : [];
-    dependencies = dependencies ? dependencies : [];
-
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -108,9 +105,6 @@ function deleteTask(projectId, taskId) {
 }
 
 function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies) {
-    USList = USList ? USList : [];
-    dependencies = dependencies ? dependencies : [];
-
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {

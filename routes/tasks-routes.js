@@ -21,8 +21,8 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res, next) {
     if (req.params.id && req.body.description && req.body.type && req.body.cost) {
-        let usList = req.body.USList ? req.body.USList.split(',') : null;
-        let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : null;
+        let usList = req.body.USList ? req.body.USList.split(',') : [];
+        let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : [];
 
         taskService.addTask(req.params.id, req.body.description, req.body.type, req.body.cost,
             req.body.member, usList, dependencies)
