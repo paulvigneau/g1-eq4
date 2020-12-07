@@ -20,8 +20,11 @@ router.get('/', function (req, res) {
 
 router.post('/', function (req, res, next) {
     if (req.params.id && req.body.description && req.body.type && req.body.cost) {
+        let usList = req.body.USList ? req.body.USList.split(',') : null;
+        let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : null;
+
         taskService.addTask(req.params.id, req.body.description, req.body.type, req.body.cost,
-            req.body.memberId, req.body.USList, req.body.dependencies)
+            req.body.memberId, usList, dependencies)
             .then(() =>
                 res.status(200).send()
             )
