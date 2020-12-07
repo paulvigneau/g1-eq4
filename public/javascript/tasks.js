@@ -130,6 +130,9 @@ function renderMembers(projectMembers){
     for (let i = 0; i < membersList.length; i++) {
         createMemberOption(membersList[i]);
     }
+
+    document.querySelector('select[id="edit-members"]')
+        .insertAdjacentHTML('afterbegin', '<option value="" selected>Non assignée</option>');
 }
 
 function getCurrentType(){
