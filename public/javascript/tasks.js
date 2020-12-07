@@ -14,7 +14,7 @@ taskForm.addEventListener('submit', (event) => {
 
     const data = new URLSearchParams(new FormData(taskForm));
     data.set('dependencies', dependencies);
-    data.set('DODValues', getDodValues().toString());
+    data.set('dodValues', getDodValues().toString());
 
     let method = 'POST';
     if (data.get('taskId'))
