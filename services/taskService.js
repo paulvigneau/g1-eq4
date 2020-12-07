@@ -121,12 +121,6 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
                     if (member && task.status === 'TODO')
                         task.status = 'WIP';
-
-                    if (task.checklist.length !== dodValues.length)
-                        return reject(new BadRequestError('Erreur durant la mise à jour de la DOD'));
-
-                    task.checklist = dodValues;
-                    console.log(task.checklist);
                 }
 
                 if (task.status === 'TODO') {
@@ -160,6 +154,13 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                                 dependencies.find((d2) => d1.toString() === d2.toString()))))
 
                         return reject(new BadRequestError('La tâche ne peut pas être modifiée car elle est en cours.'));
+
+                    if (task.checklist.length !== dodValues.length)
+                        return reject(new BadRequestError('Erreur durant la mise à jour de la DOD'));
+
+                    task.checklist = dodValues;
+                    if (task.checklist.every(c => c))
+                        task.status = 'DONE';
                 }
                 else {
                     return reject(new BadRequestError('La tâche ne peut pas être modifiée car elle est terminée.'));
