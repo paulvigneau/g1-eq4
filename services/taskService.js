@@ -132,8 +132,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 }
 
                 const member = project.members.id(memberId);
-                if (member && task.member !== member)
+                if (member && task.member !== member) {
                     task.member = memberId;
+
+                    if (task.status === 'TODO')
+                        task.status = 'WIP';
+                }
 
                 task.USList = USList;
                 task.dependencies = dependencies;
