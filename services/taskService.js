@@ -104,8 +104,8 @@ function deleteTask(projectId, taskId) {
     });
 }
 
-//TODO STILL IN WORK
-function updateTask(projectId, taskId, memberId, description, type, cost, USList, dependencies){
+// TODO STILL IN WORK
+function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -113,29 +113,32 @@ function updateTask(projectId, taskId, memberId, description, type, cost, USList
                     return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 const task = project.management.tasks.id(taskId);
-                if(!task)
+                if (!task)
                     return reject(new NotFoundError(`No task ${taskId} found.`));
 
-                if (status !== 'TODO')
+                if (task.status !== 'TODO')
                     return reject(new BadRequestError(`Status of ${taskId} is different from TODO.`));
 
-                if(task.description !== description)
+                if (task.description !== description)
                     task.description = description;
 
-                if(task.cost !== cost)
+                if (task.cost !== cost)
                     task.cost = cost;
 
-                if(task.type !== type) {
+                if (task.type !== type) {
                     let checklistLength = getLengthDodByType(project, type);
                     task.checklist = new Array(checklistLength).fill(false);
+                    task.type = type;
                 }
 
                 const member = project.members.id(memberId);
-                if(member && task.member !== member)
+                if (member && task.member !== member)
                     task.member = memberId;
 
                 task.USList = USList;
                 task.dependencies = dependencies;
+
+                console.log(task);
 
                 project.save()
                     .then(() => resolve(task))
