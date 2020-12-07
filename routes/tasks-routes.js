@@ -40,8 +40,9 @@ router.post('/', function (req, res, next) {
 
 router.put('/', function (req, res, next) {
     if (req.params.id && req.body.taskId && req.body.description && req.body.type && req.body.cost) {
-        let usList = req.body.USList ? req.body.USList.split(',') : null;
-        let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : null;
+        let usList = req.body.USList ? req.body.USList.split(',') : [];
+        let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : [];
+        let dodValues = req.body.dodValues ? req.body.dodValues.split(',') : [];
 
         taskService.updateTask(req.params.id, req.body.taskId, req.body.description, req.body.type, req.body.cost,
             req.body.member, usList, dependencies)
