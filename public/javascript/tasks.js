@@ -163,7 +163,7 @@ function getCurrentNbDod(divDod){
      return divDod.childElementCount;
 }
 
-function createDod(dodLine){
+function createDod(dodLine, checked){
     let divDod = document.querySelector('.definition-of-done');
     let iDiv = document.createElement('div');
     iDiv.className = 'custom-control custom-checkbox';
@@ -171,6 +171,7 @@ function createDod(dodLine){
     let input = document.createElement('input');
     input.type = 'checkbox';
     input.className = 'custom-control-input';
+    input.checked = checked;
     const checkId = 'check' + (getCurrentNbDod(divDod) + 1);
     input.id = checkId;
 
@@ -204,12 +205,15 @@ function cleanDod(){
 }
 
 function renderDod(projectDod){
+    const id = document.querySelector('#edit-taskId').value;
+    const task = id ? tasks.find(t => t._id === id) : null;
+
     cleanDod();
     const taskType = getCurrentType();
     const currentDod = getChecklistDodByType(projectDod, taskType);
     for(let i = 0; i < currentDod.length; i++){
         const dodLine = currentDod[i];
-        createDod(dodLine);
+        createDod(dodLine, task ? task.checklist[i] : false);
     }
 
 }
