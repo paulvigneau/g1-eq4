@@ -13,6 +13,7 @@ taskForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
     const data = new URLSearchParams(new FormData(taskForm));
+    data.set('dependencies', dependencies);
     // eslint-disable-next-line no-undef
     sendForm('tasks', data)
         .then((resp) => {
