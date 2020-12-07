@@ -14,14 +14,21 @@ taskForm.addEventListener('submit', (event) => {
 
     const data = new URLSearchParams(new FormData(taskForm));
     data.set('dependencies', dependencies);
+
+    let method = 'POST';
+    if (data.get('taskId'))
+        method = 'PUT';
+
     // eslint-disable-next-line no-undef
-    sendForm('tasks', data)
+    sendForm('tasks', data, method)
         .then((resp) => {
             if (resp.status === 400) {
                 resp.json().then(text => alert(text.message));
             }
-            else
+            else {
+                taskForm.reset();
                 document.location.reload();
+            }
         });
 });
 
@@ -203,7 +210,7 @@ function showEditTaskPopup(task) {
     document.querySelector('#edit-members').value = task.member;
     // TODO Manage if no member is assigned
 
-    dependencies = task.dependencies;
+    dependencies = task.dependencies ? task.dependencies : [];
     displayDependencies();
 
     // TODO Display USList
