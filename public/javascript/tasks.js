@@ -14,6 +14,7 @@ taskForm.addEventListener('submit', (event) => {
 
     const data = new URLSearchParams(new FormData(taskForm));
     data.set('dependencies', dependencies);
+    data.set('DODValues', getDodValues().toString());
 
     let method = 'POST';
     if (data.get('taskId'))
@@ -149,6 +150,15 @@ function filterMembersByRole(projectMembers, type){
     return projectMembers.filter(member => checkMemberRoleTaskType(member.role, type));
 }
 
+function getDodValues() {
+    const values = [];
+    let checkboxes = document.querySelectorAll('.definition-of-done input[type=checkbox]');
+    for (let c of checkboxes)
+        values.push(c.checked);
+
+    return values;
+}
+
 function getCurrentNbDod(divDod){
      return divDod.childElementCount;
 }
@@ -223,7 +233,6 @@ function showEditTaskPopup(task) {
     document.querySelector('#edit-type').value = task.type;
     document.querySelector('#edit-type').onchange();
     document.querySelector('#edit-members').value = task.member ? task.member : '';
-    // TODO Manage if no member is assigned
 
     dependencies = task.dependencies ? task.dependencies : [];
     displayDependencies();
