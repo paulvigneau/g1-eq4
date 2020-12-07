@@ -125,7 +125,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                     const member = project.members.id(memberId);
                     task.member = member ? member._id : null;
 
-                    if (task.status === 'TODO')
+                    if (member && task.status === 'TODO')
                         task.status = 'WIP';
                 }
 
