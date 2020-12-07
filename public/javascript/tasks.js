@@ -204,21 +204,31 @@ function renderDod(projectDod){
 
 }
 
+function showTaskPopup() {
+    document.querySelector('#edit-type').onchange();
+    document.querySelector('#edit-members').value = '';
+
+    dependencies = [];
+    displayDependencies();
+
+    // eslint-disable-next-line no-undef
+    showPopup('#add-task');
+}
+
 function showEditTaskPopup(task) {
     document.querySelector('#edit-taskId').value = task._id;
     document.querySelector('#edit-description').value = task.description;
     document.querySelector('#edit-cost').value = task.cost;
 
     document.querySelector('#edit-type').value = task.type;
-    document.querySelector('#edit-members').value = task.member;
+    document.querySelector('#edit-type').onchange();
+    document.querySelector('#edit-members').value = task.member ? task.member : '';
     // TODO Manage if no member is assigned
 
     dependencies = task.dependencies ? task.dependencies : [];
     displayDependencies();
 
     // TODO Display USList
-
-    document.querySelector('#edit-type').onchange();
 
     // eslint-disable-next-line no-undef
     showPopup('#add-task');
