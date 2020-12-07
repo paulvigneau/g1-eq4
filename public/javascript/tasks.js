@@ -218,7 +218,7 @@ function showEditTaskPopup(task) {
 
     // TODO Display USList
 
-    // TODO Display DOD
+    document.querySelector('#edit-type').onchange();
 
     // eslint-disable-next-line no-undef
     showPopup('#add-task');
