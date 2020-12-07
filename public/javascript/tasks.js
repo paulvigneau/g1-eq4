@@ -139,6 +139,61 @@ function filterMembersByRole(projectMembers, type){
     return projectMembers.filter(member => checkMemberRoleTaskType(member.role, type));
 }
 
+function getCurrentNbDod(divDod){
+     return divDod.childElementCount;
+}
+
+function createDod(dodLine){
+    let divDod = document.querySelector('.definition-of-done');
+    let iDiv = document.createElement('div');
+    iDiv.className = 'custom-control custom-checkbox';
+
+    let input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'custom-control-input';
+    const checkId = 'check' + (getCurrentNbDod(divDod) + 1);
+    input.id = checkId;
+
+    iDiv.appendChild(input);
+
+    let label = document.createElement('label');
+    label.className = 'custom-control-label';
+    label.htmlFor = checkId;
+    label.innerText = dodLine;
+
+    iDiv.appendChild(label);
+
+    divDod.appendChild(iDiv);
+}
+
+function getChecklistDodByType(projectDod, taskType){
+    if(taskType === 'GEN'){
+        return projectDod.gen.checklist;
+    }
+    if(taskType === 'DEV'){
+        return projectDod.dev.checklist;
+    }
+    if(taskType === 'TEST'){
+        return projectDod.test.checklist;
+    }
+    return null;
+}
+
+function cleanDod(){
+    document.querySelector('.definition-of-done').innerHTML = '';
+}
+
+function renderDod(projectDod){
+    cleanDod();
+    const taskType = getCurrentType();
+    const currentDod = getChecklistDodByType(projectDod, taskType);
+    for(let i = 0; i < currentDod.length; i++){
+        const dodLine = currentDod[i];
+        createDod(dodLine);
+    }
+
+}
+
 function showEditTaskPopup(task) {
     document.querySelector('#edit-taskId').value = task._id;
     document.querySelector('#edit-description').value = task.description;

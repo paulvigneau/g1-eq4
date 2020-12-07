@@ -9,6 +9,7 @@ router.get('/', function (req, res) {
         .then((project) => {
             res.render('tasks', {
                 projectId: req.params.id,
+                projectDod: project.dod,
                 projectMembers: project.members,
                 tasksList: project.management.tasks
             });
