@@ -25,7 +25,7 @@ router.post('/', function (req, res, next) {
         let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : null;
 
         taskService.addTask(req.params.id, req.body.description, req.body.type, req.body.cost,
-            req.body.memberId, usList, dependencies)
+            req.body.member, usList, dependencies)
             .then(() =>
                 res.status(200).send()
             )
@@ -44,7 +44,7 @@ router.put('/', function (req, res, next) {
         let dependencies = req.body.dependencies ? req.body.dependencies.split(',') : null;
 
         taskService.updateTask(req.params.id, req.body.taskId, req.body.description, req.body.type, req.body.cost,
-            req.body.memberId, usList, dependencies)
+            req.body.member, usList, dependencies)
             .then(() =>
                 res.status(200).send()
             )

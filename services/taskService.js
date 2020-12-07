@@ -138,8 +138,6 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 task.USList = USList;
                 task.dependencies = dependencies;
 
-                console.log(task);
-
                 project.save()
                     .then(() => resolve(task))
                     .catch((err) => reject(err));
