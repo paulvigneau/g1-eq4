@@ -14,7 +14,10 @@ function getLengthDodByType(project, type){
     }
 }
 
-function addTask(projectId, description, type, cost, memberId, USList, dependencies){
+function addTask(projectId, description, type, cost, memberId, USList, dependencies) {
+    USList = USList ? USList : [];
+    dependencies = dependencies ? dependencies : [];
+
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -104,8 +107,10 @@ function deleteTask(projectId, taskId) {
     });
 }
 
-// TODO STILL IN WORK
 function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies) {
+    USList = USList ? USList : [];
+    dependencies = dependencies ? dependencies : [];
+
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -116,31 +121,49 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 if (!task)
                     return reject(new NotFoundError(`No task ${taskId} found.`));
 
-                if (task.status !== 'TODO')
-                    return reject(new BadRequestError(`Status of ${taskId} is different from TODO.`));
-
-                if (task.description !== description)
-                    task.description = description;
-
-                if (task.cost !== cost)
-                    task.cost = cost;
-
-                if (task.type !== type) {
-                    let checklistLength = getLengthDodByType(project, type);
-                    task.checklist = new Array(checklistLength).fill(false);
-                    task.type = type;
-                }
-
-                const member = project.members.id(memberId);
-                if (member && task.member !== member) {
-                    task.member = memberId;
+                if (task.status === 'TODO' || task.status === 'WIP') {
+                    const member = project.members.id(memberId);
+                    task.member = member ? member._id : null;
 
                     if (task.status === 'TODO')
                         task.status = 'WIP';
                 }
 
-                task.USList = USList;
-                task.dependencies = dependencies;
+                if (task.status === 'TODO') {
+                    if (task.description !== description)
+                        task.description = description;
+
+                    if (task.cost !== cost)
+                        task.cost = cost;
+
+                    if (task.type !== type) {
+                        let checklistLength = getLengthDodByType(project, type);
+                        task.checklist = new Array(checklistLength).fill(false);
+                        task.type = type;
+                    }
+
+                    task.USList = USList;
+                    task.dependencies = dependencies;
+                }
+                else if (task.status === 'WIP') {
+                    task.USList = task.USList ? task.USList : [];
+                    task.dependencies = task.dependencies ? task.dependencies : [];
+
+                    if (task.description !== description
+                        || task.cost.toString() !== cost.toString()
+                        || task.type !== type
+                        || !(task.USList.length === USList.length
+                            && task.USList.every((us1) =>
+                                USList.find((us2) => us1.toString() === us2.toString())))
+                        || !(task.dependencies.length === dependencies.length
+                            && task.dependencies.every((d1) =>
+                                dependencies.find((d2) => d1.toString() === d2.toString()))))
+
+                        return reject(new BadRequestError('La tâche ne peut pas être modifiée car elle est en cours.'));
+                }
+                else {
+                    return reject(new BadRequestError('La tâche ne peut pas être modifiée car elle est terminée.'));
+                }
 
                 project.save()
                     .then(() => resolve(task))
