@@ -111,6 +111,7 @@ function cleanMembersOptions(){
 function createMemberOption(member){
     const option = document.createElement('option');
     option.text = member.name;
+    option.value = member._id;
     const select = document.querySelector('select[id="edit-members"]');
     select.appendChild(option);
 }
@@ -136,4 +137,24 @@ function checkMemberRoleTaskType(memberRole, taskType){
 
 function filterMembersByRole(projectMembers, type){
     return projectMembers.filter(member => checkMemberRoleTaskType(member.role, type));
+}
+
+function showEditTaskPopup(task) {
+    document.querySelector('#edit-taskId').value = task._id;
+    document.querySelector('#edit-description').value = task.description;
+    document.querySelector('#edit-cost').value = task.cost;
+
+    document.querySelector('#edit-type').value = task.type;
+    document.querySelector('#edit-members').value = task.member;
+    // TODO Manage if no member is assigned
+
+    dependencies = task.dependencies;
+    displayDependencies();
+
+    // TODO Display USList
+
+    // TODO Display DOD
+
+    // eslint-disable-next-line no-undef
+    showPopup('#add-task');
 }
