@@ -104,7 +104,7 @@ function deleteTask(projectId, taskId) {
     });
 }
 
-function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies) {
+function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies, dodValues) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
             .then((project) => {
@@ -121,6 +121,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
                     if (member && task.status === 'TODO')
                         task.status = 'WIP';
+
+                    if (task.checklist.length !== dodValues.length)
+                        return reject(new BadRequestError('Erreur durant la mise à jour de la DOD'));
+
+                    task.checklist = dodValues;
+                    console.log(task.checklist);
                 }
 
                 if (task.status === 'TODO') {

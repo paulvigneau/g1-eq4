@@ -45,7 +45,7 @@ router.put('/', function (req, res, next) {
         let dodValues = req.body.dodValues ? req.body.dodValues.split(',') : [];
 
         taskService.updateTask(req.params.id, req.body.taskId, req.body.description, req.body.type, req.body.cost,
-            req.body.member, usList, dependencies)
+            req.body.member, usList, dependencies, dodValues)
             .then(() =>
                 res.status(200).send()
             )
