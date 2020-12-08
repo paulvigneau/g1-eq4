@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const taskService = require('../services/taskService');
+const userStoryService = require('../services/userStoryService');
 const projectService = require('../services/projectService');
 const { BadRequestError } = require('../errors/Error');
 
@@ -62,6 +63,16 @@ router.get('/json', function (req, res, next) {
     taskService.getAllTasks(req.params.id)
         .then((tasks) => {
             res.status(200).json({ tasks: tasks });
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
+router.get('/user-stories', function (req, res, next) {
+    userStoryService.getAllUsInProject(req.params.id)
+        .then((usList) => {
+            res.status(200).json({ usList: usList });
         })
         .catch((err) => {
             next(err);

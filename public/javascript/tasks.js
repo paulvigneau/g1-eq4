@@ -2,11 +2,15 @@ const taskForm = document.querySelector('#edit-task-form');
 
 let selectedDependencies = [];
 let dependencies = [];
+let selectedLinkedUserStories = [];
+let linkedUserStories = [];
 let tasks = [];
+let userStories = [];
 
 (function () {
     taskForm.querySelector('#edit-type').onchange();
     getTasks().then((t) => tasks = t);
+    getUserStories().then((us) => userStories = us);
 })();
 
 taskForm.addEventListener('submit', (event) => {
@@ -15,6 +19,7 @@ taskForm.addEventListener('submit', (event) => {
     const data = new URLSearchParams(new FormData(taskForm));
     data.set('dependencies', dependencies);
     data.set('dodValues', getDodValues().toString());
+    data.set('USList', linkedUserStories);
 
     let method = 'POST';
     if (data.get('taskId'))
@@ -42,6 +47,15 @@ function getTasks() {
         });
 }
 
+function getUserStories() {
+    return fetch('tasks/user-stories')
+        .then((res) => res.json())
+        .then(json => {
+            userStories = json.usList;
+            return userStories;
+        });
+}
+
 function displayTasks() {
     let div = document.querySelector('#taskList');
     div.innerHTML = '';
@@ -60,6 +74,24 @@ function displayTasks() {
     }
 }
 
+function displayUserStories() {
+    let div = document.querySelector('#usList');
+    div.innerHTML = '';
+
+    for (let userStory of userStories) {
+        let classes = 'border mb-2 p-2 user-story-linked';
+        if (linkedUserStories.find(d => userStory._id === d))
+            classes += ' selected';
+        const us =
+            `<div class="${classes}" 
+                  onclick="toggleSelectLinkedUserStories('${userStory._id}')"
+                  id="linked-user-story-${userStory._id}">
+                ${userStory.description}
+            </div>`;
+        div.insertAdjacentHTML('beforeend', us);
+    }
+}
+
 function displayDependencies() {
     let div = document.querySelector('#dependencies');
     div.innerHTML = '';
@@ -74,12 +106,37 @@ function displayDependencies() {
     }
 }
 
+function displayLinkedUserStories() {
+    let div = document.querySelector('#linked-user-stories');
+    div.innerHTML = '';
+
+    for (let linkedUs of linkedUserStories) {
+        let userStory = userStories.find( us => linkedUs === us._id);
+        const us =
+            `<div class="user-story-linked border">
+                <span>${userStory.id}</span>
+                <span>${userStory.description}</span>
+            </div>`;
+        div.insertAdjacentHTML('beforeend', us);
+    }
+}
+
 function showDependencies() {
     selectedDependencies = dependencies;
     displayTasks();
 
     const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-dependencies');
+    wrapper.style.display = 'block';
+    popup.style.display = 'block';
+}
+
+function showLinkedUserStories() {
+    selectedLinkedUserStories = linkedUserStories;
+    displayUserStories();
+
+    const wrapper = document.querySelector('.pop-up-wrapper3');
+    const popup = document.querySelector('#pop-up-linked-user-stories');
     wrapper.style.display = 'block';
     popup.style.display = 'block';
 }
@@ -96,6 +153,18 @@ function closeDependencies(save = false) {
     }
 }
 
+function closeLinkedUserStories(save = false) {
+    const wrapper = document.querySelector('.pop-up-wrapper3');
+    const popup = document.querySelector('#pop-up-linked-user-stories');
+    wrapper.style.display = 'none';
+    popup.style.display = 'none';
+
+    if (save) {
+        linkedUserStories = selectedLinkedUserStories;
+        displayLinkedUserStories();
+    }
+}
+
 function toggleSelectDependency(id) {
     if (document.querySelector(`#task-${id}`).classList.contains('selected')) {
         document.querySelector(`#task-${id}`).classList.remove('selected');
@@ -105,6 +174,18 @@ function toggleSelectDependency(id) {
     else {
         document.querySelector(`#task-${id}`).classList.add('selected');
         selectedDependencies.push(id);
+    }
+}
+
+function toggleSelectLinkedUserStories(id) {
+    if (document.querySelector(`#linked-user-story-${id}`).classList.contains('selected')) {
+        document.querySelector(`#linked-user-story-${id}`).classList.remove('selected');
+        let i = selectedLinkedUserStories.findIndex(t => t === id);
+        selectedLinkedUserStories.splice(i, 1);
+    }
+    else {
+        document.querySelector(`#linked-user-story-${id}`).classList.add('selected');
+        selectedLinkedUserStories.push(id);
     }
 }
 
@@ -243,7 +324,8 @@ function showEditTaskPopup(task) {
     dependencies = task.dependencies ? task.dependencies : [];
     displayDependencies();
 
-    // TODO Display USList
+    linkedUserStories = task.USList ? task.USList : [];
+    displayLinkedUserStories();
 
     // eslint-disable-next-line no-undef
     showPopup('#add-task');

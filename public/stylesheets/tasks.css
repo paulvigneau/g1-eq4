@@ -56,6 +56,17 @@ body {
     font-weight: bold;
 }
 
+#pop-up-linked-user-stories .user-story-linked {
+    cursor: pointer;
+    white-space: normal;
+    font-size: 14px;
+}
+
+#pop-up-linked-user-stories .user-story-linked.selected {
+    background-color: rgba(255, 145, 0, 0.562);
+    font-weight: bold;
+}
+
 .card .card-body .member-avatar {
     width: 32px;
     height: 32px;

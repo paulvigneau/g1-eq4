@@ -285,4 +285,34 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS, modifyUserStory };
+function getAllUsInProject(projectId){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+                
+                let usList = [];
+
+                for(const userStory of project.management.backlog.backlog.USList){
+                    usList.push(userStory);
+                }
+
+                for(const sprint of project.management.backlog.sprints){
+                    for(const userStory of sprint.USList){
+                        usList.push(userStory);
+                    }
+                }
+
+                // usList.sort((us1, us2) => us1.id - us2.id );
+
+                return resolve(usList);
+
+            })
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+}
+
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS, modifyUserStory, getAllUsInProject };
