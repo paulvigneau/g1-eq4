@@ -2,7 +2,8 @@ process.env.NODE_ENV = 'test';
 
 require('../../app');
 const projectService = require('../../services/projectService');
-const projectService = require('../../services/projectService');
+const userStoryService = require('../../services/userStoryService');
+const memberService = require('../../services/memberService');
 const chai = require('chai');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
@@ -39,7 +40,9 @@ describe('Task End to End', () => {
     describe('Add task to project, display his information', () => {
         it('should add a task', async () => {
             await driver.get('http://localhost:3000/projects/' + project._id + '/tasks');
-            await user
+
+            await userStoryService.addUS(project._id, null, 'En tant que... Je souhaite... Afin de...', 1, 1);
+            await memberService.addMember(project._id, 'Billy', 'Billy@bestdev.com', "Développeur");
 
             await driver.findElement(By.css('.btn.btn-primary.btn-block.mb-3')).click();
 
@@ -48,8 +51,8 @@ describe('Task End to End', () => {
 
             await driver.findElement(By.css('.pop-up-wrapper #edit-description')).sendKeys('La beauté incarnée en terme de tâche...');
             await driver.findElement(By.css('.pop-up-wrapper #edit-cost')).sendKeys(50);
-            await driver.findElement(By.xpath('.//*[@id="edit-type"]/option[2]')).click();
-            await driver.findElement(By.xpath('.//*[@id="edit-member"]/option[1]')).click();
+            await driver.findElement(By.css('.//*[@id="edit-type"]/option[1]')).click();
+            await driver.findElement(By.css('.//*[@id="edit-members"]/option[1]')).click();
 
             const dependencies = await driver.findElements(By.css('.pop-up-wrapper fas.fa-pencil-alt.text-primary'));
             await dependencies[1].click();
