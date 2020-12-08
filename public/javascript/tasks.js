@@ -302,6 +302,7 @@ function renderDod(projectDod){
 }
 
 function showTaskPopup() {
+    document.querySelector('#edit-taskId').value = '';
     document.querySelector('#edit-type').onchange();
     document.querySelector('#edit-members').value = '';
 
