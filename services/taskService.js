@@ -1,5 +1,6 @@
 const Task = require('../model/taskModel');
 const projectService = require('./projectService');
+const userStoryService = require('./userStoryService');
 const { NotFoundError, BadRequestError } = require('../errors/Error');
 
 function getLengthDodByType(project, type){
@@ -138,8 +139,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                         task.type = type;
                     }
 
-                    task.USList = USList;
-                    task.dependencies = dependencies;
+                    if (await checkIfUsExist(project, USList) && await checkIfTasksExist(project, dependencies)) {
+                        task.USList = USList;
+                        task.dependencies = dependencies;
+                    }
+                    else
+                        return reject(new BadRequestError('Les tâches ou US assignées à la tâche n\'existent pas'));
                 }
                 else if (oldStatus === 'WIP') {
                     task.USList = task.USList ? task.USList : [];
@@ -181,6 +186,16 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 return reject(err);
             });
     });
+}
+
+async function checkIfUsExist(project, usListIds) {
+    const allUS = await userStoryService.getAllUsInProject(project._id);
+    return usListIds.every(us1 => allUS.find(us2 => us1.toString() === us2._id.toString()));
+}
+
+async function checkIfTasksExist(project, tasksIds) {
+    const allTasks = project.management.tasks;
+    return tasksIds.every(t1 => allTasks.find(t2 => t1.toString() === t2._id.toString()));
 }
 
 async function checkIfDependenciesAreDone(projectId, task) {
