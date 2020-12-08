@@ -78,7 +78,7 @@ function displayUserStories() {
     let div = document.querySelector('#usList');
     div.innerHTML = '';
 
-    for (let userStory of userStories) {
+    for (let userStory of userStories.filter(us => us.status === 'Normal')) {
         let classes = 'border mb-2 p-2 user-story-linked';
         if (linkedUserStories.find(d => userStory._id === d))
             classes += ' selected';
