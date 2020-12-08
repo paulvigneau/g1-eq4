@@ -242,6 +242,14 @@ function closeUS(projectId, sprintId, usId){
                 if(userStory.status === 'Closed')
                     return reject(new BadRequestError(`User story ${usId} is already Closed.`));
 
+                const taskList = project.management.tasks;
+                for(let i = 0; taskList.length; i++){
+                    const task = taskList[i];
+                    if((task.USList.indexOf(usId) != -1) && (task.status !== 'DONE')){
+                        return reject(new BadRequestError(`It seems that ${task._id} is not in DONE yet. You can't close this user story.`));
+                    }
+                }
+
                 userStory.status = 'Closed';
                 project.save()
                     .then(() => resolve(userStory))
@@ -274,6 +282,14 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
 
                 if(userStory.status === 'Closed')
                     return reject(new BadRequestError(`User story ${usId} is already Closed.`));
+
+                const taskList = project.management.tasks;
+                for(let i = 0; taskList.length; i++){
+                    const task = taskList[i];
+                    if((task.USList.indexOf(usId) != -1)){
+                        return reject(new BadRequestError(`It seems that at least one task is linked to ${usId}. No update possible.`));
+                    }
+                }
 
                 userStory.description = newDescription;
                 userStory.difficulty = newDifficulty;
