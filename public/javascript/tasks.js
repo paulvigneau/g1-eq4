@@ -135,7 +135,7 @@ function showLinkedUserStories() {
     selectedLinkedUserStories = linkedUserStories;
     displayUserStories();
 
-    const wrapper = document.querySelector('.pop-up-wrapper3');
+    const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-linked-user-stories');
     wrapper.style.display = 'block';
     popup.style.display = 'block';
@@ -154,7 +154,7 @@ function closeDependencies(save = false) {
 }
 
 function closeLinkedUserStories(save = false) {
-    const wrapper = document.querySelector('.pop-up-wrapper3');
+    const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-linked-user-stories');
     wrapper.style.display = 'none';
     popup.style.display = 'none';
