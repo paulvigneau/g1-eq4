@@ -164,7 +164,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                     if (task.checklist.every(c => c)) {
                         if (await checkIfDependenciesAreDone(projectId, task)) {
                             task.status = 'DONE';
-                            updateDependentTasksOf(projectId, task);
+                            await updateDependentTasksOf(project, task);
                         }
                     }
                 }
@@ -192,8 +192,17 @@ async function checkIfDependenciesAreDone(projectId, task) {
     return Promise.resolve(true);
 }
 
-function updateDependentTasksOf(projectId, task) {
-
+async function updateDependentTasksOf(project, task) {
+    let tasks = project.management.tasks.filter(t =>
+        t.status === 'WIP'
+        && t.dependencies.find(d => d.toString() === task._id.toString())
+        && t.checklist.every(c => c)
+    );
+    for (let t of tasks) {
+        t.status = 'DONE';
+        await updateDependentTasksOf(project, t);
+    }
+    return Promise.resolve();
 }
 
 function getAllTasks(projectId) {
