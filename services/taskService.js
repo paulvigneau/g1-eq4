@@ -107,7 +107,7 @@ function deleteTask(projectId, taskId) {
 function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies, dodValues) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
-            .then((project) => {
+            .then(async (project) => {
                 if (!project)
                     return reject(new NotFoundError(`No project ${projectId} found.`));
 
@@ -115,15 +115,17 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 if (!task)
                     return reject(new NotFoundError(`No task ${taskId} found.`));
 
-                if (task.status === 'TODO' || task.status === 'WIP') {
+                const oldStatus = task.status;
+
+                if (oldStatus === 'TODO' || oldStatus === 'WIP') {
                     const member = project.members.id(memberId);
                     task.member = member ? member._id : null;
 
-                    if (member && task.status === 'TODO')
+                    if (member && oldStatus === 'TODO')
                         task.status = 'WIP';
                 }
 
-                if (task.status === 'TODO') {
+                if (oldStatus === 'TODO') {
                     if (task.description !== description)
                         task.description = description;
 
@@ -139,7 +141,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                     task.USList = USList;
                     task.dependencies = dependencies;
                 }
-                else if (task.status === 'WIP') {
+                else if (oldStatus === 'WIP') {
                     task.USList = task.USList ? task.USList : [];
                     task.dependencies = task.dependencies ? task.dependencies : [];
 
@@ -159,8 +161,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                         return reject(new BadRequestError('Erreur durant la mise à jour de la DOD'));
 
                     task.checklist = dodValues;
-                    if (task.checklist.every(c => c))
-                        task.status = 'DONE';
+                    if (task.checklist.every(c => c)) {
+                        if (await checkIfDependenciesAreDone(projectId, task)) {
+                            task.status = 'DONE';
+                            updateDependentTasksOf(projectId, task);
+                        }
+                    }
                 }
                 else {
                     return reject(new BadRequestError('La tâche ne peut pas être modifiée car elle est terminée.'));
@@ -175,6 +181,19 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 return reject(err);
             });
     });
+}
+
+async function checkIfDependenciesAreDone(projectId, task) {
+    for (let depId of task.dependencies) {
+        const dep = await getTaskById(projectId, depId);
+        if (dep.status !== 'DONE')
+            return Promise.resolve(false);
+    }
+    return Promise.resolve(true);
+}
+
+function updateDependentTasksOf(projectId, task) {
+
 }
 
 function getAllTasks(projectId) {
