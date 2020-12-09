@@ -9,7 +9,17 @@ let userStories = [];
 
 (function () {
     taskForm.querySelector('#edit-type').onchange();
-    getTasks().then((t) => tasks = t);
+    getTasks().then((t) => {
+        tasks = t;
+        tasks.map(t => {
+            if (t.member)
+                displayProgressBar(
+                    document.querySelector(`.card#task-${t._id} .progress-bar`),
+                    getProgressBarValue(t)
+                );
+            }
+        );
+    });
     getUserStories().then((us) => userStories = us);
 })();
 
@@ -330,6 +340,23 @@ function showEditTaskPopup(task) {
     linkedUserStories = task.USList ? task.USList : [];
     displayLinkedUserStories();
 
+    displayProgressBar(
+        document.querySelector('#edit-task-form .progress-bar'),
+        getProgressBarValue(task),
+        true
+    );
+
     // eslint-disable-next-line no-undef
     showPopup('#add-task');
+}
+
+function displayProgressBar(element, value, displayPercentage = false) {
+    element.style.width = value + '%';
+    element.setAttribute('aria-valuenow', value);
+    if (displayPercentage)
+        element.innerText = Math.trunc(value) + '%';
+}
+
+function getProgressBarValue(task) {
+    return (task.checklist.filter(c => c).length / task.checklist.length) * 100;
 }
