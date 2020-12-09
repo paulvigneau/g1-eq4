@@ -128,4 +128,14 @@ router.put('/:sprintId/:usId/close', function(req, res, next) {
     }
 });
 
+router.get('/user-stories/json', function (req, res, next) {
+    userStoryService.getAllUsInProject(req.params.id)
+        .then((usList) => {
+            res.status(200).json({ usList: usList });
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 module.exports = router;

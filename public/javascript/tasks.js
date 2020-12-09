@@ -58,7 +58,7 @@ function getTasks() {
 }
 
 function getUserStories() {
-    return fetch('tasks/user-stories')
+    return fetch('backlog/user-stories/json')
         .then((res) => res.json())
         .then(json => {
             userStories = json.usList;
