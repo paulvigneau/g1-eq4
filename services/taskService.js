@@ -84,33 +84,6 @@ function getTaskById(projectId, taskId){
     });
 }
 
-function deleteTask(projectId, taskId) {
-    return new Promise((resolve, reject) => {
-        projectService.getProjectByID(projectId)
-            .then((project) => {
-                if (!project)
-                    return reject(new NotFoundError(`No project ${projectId} found.`));
-
-                const task = project.management.tasks.id(taskId);
-                if(!task)
-                    return reject(new NotFoundError(`No task ${taskId} found.`));
-
-                if(task.status !== 'TODO')
-                    return reject(new BadRequestError(`Status of ${taskId} is different from TODO.`));
-
-                task.remove();
-
-                project.save()
-                    .then(() => resolve())
-                    .catch((err) => reject(err));
-
-            })
-            .catch((err) => {
-                return reject(err);
-            });
-    });
-}
-
 function updateTask(projectId, taskId, description, type, cost, memberId, USList, dependencies, dodValues) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
@@ -249,4 +222,4 @@ function getAllTasks(projectId) {
     });
 }
 
-module.exports = { addTask, getTaskById, deleteTask, updateTask, getAllTasks };
+module.exports = { addTask, getTaskById, updateTask, getAllTasks };
