@@ -35,6 +35,12 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                 if(project.members.id(memberId))
                     status = 'WIP';
 
+                if (memberId) {
+                    if (!project.members.id(memberId))
+                        return reject(new NotFoundError('Le membre assigné à la tâche ajoutée n\'existe pas'));
+                    status = 'WIP';
+                }
+
                 const task = new Task({
                     description: description,
                     type: type,
