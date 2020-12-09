@@ -119,11 +119,18 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 const oldStatus = task.status;
 
                 if (oldStatus === 'TODO' || oldStatus === 'WIP') {
-                    const member = project.members.id(memberId);
-                    task.member = member ? member._id : null;
+                    if (memberId) {
+                        if (!project.members.id(memberId))
+                            return reject(new NotFoundError(`Le membre assigné à la tâche ${taskId} n'existe pas`));
 
-                    if (member && oldStatus === 'TODO')
-                        task.status = 'WIP';
+                        task.member = memberId;
+
+                        if (oldStatus === 'TODO')
+                            task.status = 'WIP';
+                    }
+                    else {
+                        task.member = null;
+                    }
                 }
 
                 if (oldStatus === 'TODO') {
@@ -144,7 +151,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                         task.dependencies = dependencies;
                     }
                     else
-                        return reject(new BadRequestError('Les tâches ou US assignées à la tâche n\'existent pas'));
+                        return reject(new NotFoundError('Les tâches ou US assignées à la tâche n\'existent pas'));
                 }
                 else if (oldStatus === 'WIP') {
                     task.USList = task.USList ? task.USList : [];
