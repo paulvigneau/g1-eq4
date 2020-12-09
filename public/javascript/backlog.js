@@ -58,6 +58,7 @@ function deleteSprint(projectId, sprintId, force = false) {
         else if (resp.status === 401) {
             let result = confirm('Êtes vous sûr de vouloir supprimer ce sprint ?');
             if (result) {
+                // eslint-disable-next-line no-unused-vars
                 deleteSprint(projectId, sprintId, true);
             }
         }
@@ -66,6 +67,7 @@ function deleteSprint(projectId, sprintId, force = false) {
     });
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeUS(projectId, sprintId, usId){
     fetch(`/projects/${projectId}/backlog/${sprintId}/${usId}/close`, {
         method: 'PUT'
@@ -79,6 +81,7 @@ function closeUS(projectId, sprintId, usId){
             });
 }
 
+// eslint-disable-next-line no-unused-vars
 function showEditUSPopup(sprintId, usId, description, difficulty) {
     document.querySelector('#edit-user-story #edit-sprintId').value = sprintId === 'null' ? null : sprintId;
     document.querySelector('#edit-user-story #edit-usId').value = usId;
@@ -90,6 +93,7 @@ function showEditUSPopup(sprintId, usId, description, difficulty) {
     showPopup('#edit-user-story');
 }
 
+// eslint-disable-next-line no-unused-vars
 function showDropdown(USid) {
     hideDropdowns();
     if (!document.querySelector('#dropdown-' + USid).classList.contains('visible')) {
@@ -166,7 +170,7 @@ function update(event, ui, from, to) {
         error: (res, status, err) => {
             console.log('Response status', status, err);
         },
-        complete: (res, status) => {
+        complete: () => {
             location.reload();
         }
     });

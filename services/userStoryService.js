@@ -245,7 +245,7 @@ function closeUS(projectId, sprintId, usId){
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
-                    if((task.USList.indexOf(usId) != -1) && (task.status !== 'DONE')){
+                    if((task.USList.indexOf(usId) !== -1) && (task.status !== 'DONE')){
                         return reject(new BadRequestError(`It seems that ${task._id} is not in DONE yet. You can't close this user story.`));
                     }
                 }
@@ -286,7 +286,7 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
-                    if((task.USList.indexOf(usId) != -1)){
+                    if((task.USList.indexOf(usId) !== -1)){
                         return reject(new BadRequestError(`It seems that at least one task is linked to ${usId}. No update possible.`));
                     }
                 }
@@ -307,7 +307,7 @@ function getAllUsInProject(projectId){
             .then((project) => {
                 if (!project)
                     return reject(new NotFoundError(`No project ${projectId} found.`));
-                
+
                 let usList = [];
 
                 for(const userStory of project.management.backlog.backlog.USList){

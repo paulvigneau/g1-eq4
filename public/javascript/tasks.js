@@ -130,6 +130,7 @@ function displayLinkedUserStories() {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function showDependencies() {
     selectedDependencies = dependencies;
     displayTasks();
@@ -140,6 +141,7 @@ function showDependencies() {
     popup.style.display = 'block';
 }
 
+// eslint-disable-next-line no-unused-vars
 function showLinkedUserStories() {
     selectedLinkedUserStories = linkedUserStories;
     displayUserStories();
@@ -150,6 +152,7 @@ function showLinkedUserStories() {
     popup.style.display = 'block';
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeDependencies(save = false) {
     const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-dependencies');
@@ -162,6 +165,7 @@ function closeDependencies(save = false) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function closeLinkedUserStories(save = false) {
     const wrapper = document.querySelector('.pop-up-wrapper2');
     const popup = document.querySelector('#pop-up-linked-user-stories');
@@ -174,6 +178,7 @@ function closeLinkedUserStories(save = false) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleSelectDependency(id) {
     if (document.querySelector(`#task-${id}`).classList.contains('selected')) {
         document.querySelector(`#task-${id}`).classList.remove('selected');
@@ -186,6 +191,7 @@ function toggleSelectDependency(id) {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleSelectLinkedUserStories(id) {
     if (document.querySelector(`#linked-user-story-${id}`).classList.contains('selected')) {
         document.querySelector(`#linked-user-story-${id}`).classList.remove('selected');
@@ -214,6 +220,7 @@ function createMemberOption(member){
     select.appendChild(option);
 }
 
+// eslint-disable-next-line no-unused-vars
 function renderMembers(projectMembers){
     cleanMembersOptions();
     const type = getCurrentType();
@@ -295,6 +302,7 @@ function cleanDod(){
     document.querySelector('.definition-of-done').innerHTML = '';
 }
 
+// eslint-disable-next-line no-unused-vars
 function renderDod(projectDod){
     const id = document.querySelector('#edit-taskId').value;
     const task = id ? tasks.find(t => t._id === id) : null;
@@ -310,6 +318,7 @@ function renderDod(projectDod){
 
 }
 
+// eslint-disable-next-line no-unused-vars
 function showTaskPopup() {
     document.querySelector('#edit-taskId').value = '';
     document.querySelector('#edit-type').onchange();
@@ -325,6 +334,7 @@ function showTaskPopup() {
     showPopup('#add-task');
 }
 
+// eslint-disable-next-line no-unused-vars
 function showEditTaskPopup(task) {
     document.querySelector('#edit-taskId').value = task._id;
     document.querySelector('#edit-description').value = task.description;

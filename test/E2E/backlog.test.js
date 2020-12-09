@@ -2,7 +2,6 @@ process.env.NODE_ENV = 'test';
 
 require('../../app');
 const projectService = require('../../services/projectService');
-const sprintService = require('../../services/sprintService');
 const userStoryService = require('../../services/userStoryService');
 const chai = require('chai');
 const mongoose = require('mongoose');
@@ -62,7 +61,7 @@ describe('Backlog End to End', () => {
             await modifyButton.click();
 
             await driver.wait(until.stalenessOf(modifyButton));
-            
+
             const usDescription = await driver.findElement(By.css('#userStoryDescription'))
                 .getAttribute('title');
             const usDifficulty = await driver.findElement(By.css('#userStoryDifficulty'))
@@ -70,7 +69,7 @@ describe('Backlog End to End', () => {
 
             expect(usDescription).to.be.equal('Modified');
             expect(usDifficulty).to.be.equal('1');
-            
+
         }).timeout(20000);
     });
 });

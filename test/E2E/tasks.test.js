@@ -15,8 +15,8 @@ const { Builder, By, until } = require('selenium-webdriver');
 // chai.use(chaiHttp);
 // chai.use(dirtyChai);
 
-// let driver;
-// let project;
+let driver;
+let project;
 
 // describe('Task End to End', () => {
 //     before(async function () {
@@ -42,7 +42,7 @@ const { Builder, By, until } = require('selenium-webdriver');
             await driver.get('http://localhost:3000/projects/' + project._id + '/tasks');
 
             await userStoryService.addUS(project._id, null, 'En tant que... Je souhaite... Afin de...', 1, 1);
-            await memberService.addMember(project._id, 'Billy', 'Billy@bestdev.com', "Développeur");
+            await memberService.addMember(project._id, 'Billy', 'Billy@bestdev.com', 'Développeur');
 
             await driver.findElement(By.css('.btn.btn-primary.btn-block.mb-3')).click();
 
@@ -73,6 +73,6 @@ const { Builder, By, until } = require('selenium-webdriver');
 //             );
 //         }).timeout(20000);
 
-//     });
+     });
 
-// });
+});

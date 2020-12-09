@@ -15,6 +15,7 @@ memberForm.addEventListener('submit', (event) => {
         });
 });
 
+// eslint-disable-next-line no-unused-vars
 async function deleteMember(projectId, memberId) {
     await fetch(`/projects/${projectId}/members/${memberId}`, {
         method: 'DELETE'
