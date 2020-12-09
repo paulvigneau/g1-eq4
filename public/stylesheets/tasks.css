@@ -45,6 +45,15 @@ body {
     text-overflow: ellipsis;
 }
 
+.user-story-linked {
+    margin-bottom: 3px;
+    border-radius: 3px;
+    background-color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 #pop-up-dependencies .dependency-task {
     cursor: pointer;
     white-space: normal;

@@ -114,8 +114,7 @@ function displayLinkedUserStories() {
         let userStory = userStories.find( us => linkedUs === us._id);
         const us =
             `<div class="user-story-linked border">
-                <span>${userStory.id}</span>
-                <span>${userStory.description}</span>
+                #${userStory.id} ${userStory.description}
             </div>`;
         div.insertAdjacentHTML('beforeend', us);
     }
@@ -308,6 +307,9 @@ function showTaskPopup() {
 
     dependencies = [];
     displayDependencies();
+
+    linkedUserStories = [];
+    displayLinkedUserStories();
 
     // eslint-disable-next-line no-undef
     showPopup('#add-task');
