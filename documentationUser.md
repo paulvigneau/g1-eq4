@@ -46,8 +46,8 @@ Le membre ajouté sera notifié dans sa boîte mail qu'il a été ajouté au pro
 
 Vous pouvez également supprimer un membre, tant qu'il n'est pas assigné actuellement à une tâche dans WIP (Work In Progress).
 
-Ensuite, vous pouvez accéder à la page "Backlog". Depuis cette page, vous pouvez créer des User Stories, qui seront automatiquement ajoutés à la section Backlog par défaut.
-Vous pouvez également créer des sprints, qui doivent par contre respecter les conditions suivantes :
+Ensuite, vous pouvez accéder à la page "Backlog". Depuis cette page, vous pouvez créer des User Stories (description, difficulté), qui seront automatiquement ajoutés à la section Backlog par défaut.
+Vous pouvez également créer des sprints (début/fin), qui doivent par contre respecter les conditions suivantes :
 - Leur période (début/fin) doit être inclue dans la période de son projet.
 - Un sprint ne peut pas chevaucher la période d'un autre sprint.
 
