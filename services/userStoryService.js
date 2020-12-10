@@ -240,7 +240,7 @@ function closeUS(projectId, sprintId, usId){
                     return reject(new NotFoundError(`No user story ${usId} found.`));
 
                 if(userStory.status === 'Closed')
-                    return reject(new BadRequestError(`User story ${usId} is already Closed.`));
+                    return reject(new BadRequestError(`L'user story ${usId} est déjà fermée.`));
 
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
@@ -281,7 +281,7 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
                     return reject(new NotFoundError(`No user story ${usId} found.`));
 
                 if(userStory.status === 'Closed')
-                    return reject(new BadRequestError(`User story ${usId} is already Closed.`));
+                    return reject(new BadRequestError(`L'user story ${usId} est déjà fermée.`));
 
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){

@@ -89,3 +89,5 @@ Une tâche dans la phase d'avancement WIP n'est plus modifiable, sauf :
 - Possibilité de cocher les éléments de la checklist.
 
 Si tous les éléments de la checklist d'une tâche sont cochées, et si les tâches dont dépend la tâche sont à DONE, alors cette tâche est à DONE.
+
+Un membre ne peut être assigné qu'à une seule tâche à la fois.
