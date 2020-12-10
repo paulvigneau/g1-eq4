@@ -88,8 +88,10 @@ function deleteMember(projectId, memberId) {
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
-                    if(task.member.equals(memberId) && task.status === 'WIP'){
-                        return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
+                    if(typeof task.member !== 'undefined') {
+                        if (task.member.equals(memberId) && task.status === 'WIP') {
+                            return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
+                        }
                     }
                 }
 
