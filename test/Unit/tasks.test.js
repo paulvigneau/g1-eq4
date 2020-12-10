@@ -87,12 +87,96 @@ describe('Tasks unit tests', () => {
     });
 
     describe('Add task', () => {
-        it('should return code 200');
-        it('should return code 400 because some params are missing');
-        it('should return code 404 because project does not exist');
-        it('should return code 404 because US sent does not exist');
-        it('should return code 404 because tasks sent does not exist');
-        it('should return code 404 because member assigned does not exist');
+        after(function (done) {
+            Task.deleteMany({}, done);
+        });
+
+        it('should return code 200', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN',
+                    cost: '30'
+                });
+
+            expect(res.status).to.equal(200);
+        });
+
+        it('should return code 400 because some params are missing', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN'
+                });
+
+            expect(res.status).to.equal(400);
+        });
+
+        it('should return code 404 because project does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/nonExistantId/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN',
+                    cost: '30'
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because US sent does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN',
+                    cost: '30',
+                    USList: 'wrongId, wrongId'
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because tasks sent does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN',
+                    cost: '30',
+                    dependencies: 'wrongId, wrongId'
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
+        it('should return code 404 because member assigned does not exist', async () => {
+            let res = await chai
+                .request(app)
+                .post('/projects/' + project._id + '/tasks')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    description: 'Description de la tâche',
+                    type: 'GEN',
+                    cost: '30',
+                    member: 'wrongId'
+                });
+
+            expect(res.status).to.equal(404);
+        });
+
         it('should add a task');
         it('should add a task with member and should move to WIP status');
     });
