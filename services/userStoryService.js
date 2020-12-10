@@ -246,7 +246,7 @@ function closeUS(projectId, sprintId, usId){
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
                     if((task.USList.indexOf(usId) !== -1) && (task.status !== 'DONE')){
-                        return reject(new BadRequestError(`It seems that ${task._id} is not in DONE yet. You can't close this user story.`));
+                        return reject(new BadRequestError(`La tâche ${task._id} n'est pas finie, impossible de fermer cette user story.`));
                     }
                 }
 
@@ -287,7 +287,7 @@ function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficult
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
                     if((task.USList.indexOf(usId) !== -1)){
-                        return reject(new BadRequestError(`It seems that at least one task is linked to ${usId}. No update possible.`));
+                        return reject(new BadRequestError(`Au moins une tâche est liée à cette user story ${usId}. Modification impossible.`));
                     }
                 }
 
