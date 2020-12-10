@@ -3,6 +3,7 @@ const Member = require('../model/memberModel');
 const nodeMailer = require('nodemailer');
 const { NotFoundError, BadRequestError } = require('../errors/Error');
 
+
 function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
     const transporter = nodeMailer.createTransport({
         service: 'gmail',
@@ -98,7 +99,7 @@ function deleteMember(projectId, memberId) {
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
-                    if(task.member.id(memberId) && task.status === 'WIP'){
+                    if(task.member.equals(memberId) && task.status === 'WIP'){
                         return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
                     }
                 }
