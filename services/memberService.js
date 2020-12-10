@@ -86,23 +86,6 @@ function getMemberById(projectId, memberId) {
     });
 }
 
-function getMemberByName(projectId, name){
-    return new Promise((resolve, reject) => {
-        projectService.getProjectByID(projectId)
-            .then((project) => {
-                project.members.findOne({ 'name': name }, (err, member) => {
-                    if (err)
-                        reject(new NotFoundError(`member ${name} not found.`));
-                    else
-                        resolve(member);
-                });
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
-}
-
 function deleteMember(projectId, memberId) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
@@ -134,4 +117,4 @@ function deleteMember(projectId, memberId) {
     });
 }
 
-module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember, getMemberByName };
+module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember };
