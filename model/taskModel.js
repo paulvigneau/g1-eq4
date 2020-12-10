@@ -10,7 +10,7 @@ let TaskSchema = new Schema({
         checklist: { type: [ Boolean ], required: true, default: [] },
         member: { type: ObjectId },
         USList: { type: [ ObjectId ] },
-        dependencies: { type: [ ObjectId ]  },
+        dependencies: { type: [ ObjectId ] },
     }
 );
 
