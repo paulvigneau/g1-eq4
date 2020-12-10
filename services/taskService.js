@@ -38,6 +38,10 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                 if (memberId) {
                     if (!project.members.id(memberId))
                         return reject(new NotFoundError('Le membre assigné à la tâche ajoutée n\'existe pas'));
+
+                    if (checkIfMemberHasTask(project, memberId))
+                        return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
+
                     status = 'WIP';
                 }
 
@@ -104,6 +108,9 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                     if (memberId) {
                         if (!project.members.id(memberId))
                             return reject(new NotFoundError(`Le membre assigné à la tâche ${taskId} n'existe pas`));
+
+                        if (checkIfMemberHasTask(project, memberId))
+                            return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
                         task.member = memberId;
 
@@ -175,6 +182,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                 return reject(err);
             });
     });
+}
+
+function checkIfMemberHasTask(project, memberId) {
+    return !!project.management.tasks.find(
+        t => t.status === 'WIP' && t.member.toString() === memberId.toString()
+    );
 }
 
 async function checkIfUsExist(project, usListIds) {
