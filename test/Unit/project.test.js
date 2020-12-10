@@ -143,7 +143,7 @@ describe('Project unit tests', () => {
                 'Bob',
                 'bob@mail.com',
                 'Développeur');
-        }).timeout(10000);
+        }).timeout(15000);
     });
 
     describe('Delete member', () => {
