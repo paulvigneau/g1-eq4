@@ -18,7 +18,7 @@ function getLengthDodByType(project, type){
 function addTask(projectId, description, type, cost, memberId, USList, dependencies) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
-            .then((project) => {
+            .then(async (project) => {
                 if (!project)
                     return reject(new NotFoundError(`No project ${projectId} found.`));
 
@@ -40,6 +40,9 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                         return reject(new NotFoundError('Le membre assigné à la tâche ajoutée n\'existe pas'));
                     status = 'WIP';
                 }
+
+                if (!(await checkIfUsExist(project, USList) && await checkIfTasksExist(project, dependencies)))
+                    return reject(new NotFoundError('Les tâches ou US assignées à la tâche n\'existent pas'));
 
                 const task = new Task({
                     description: description,
