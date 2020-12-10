@@ -86,6 +86,23 @@ function getMemberById(projectId, memberId) {
     });
 }
 
+function getMemberByName(projectId, name){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                project.members.findOne({ 'name': name }, (err, member) => {
+                    if (err)
+                        reject(new NotFoundError(`member ${name} not found.`));
+                    else
+                        resolve(member);
+                });
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
 function deleteMember(projectId, memberId) {
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
@@ -99,8 +116,10 @@ function deleteMember(projectId, memberId) {
                 const taskList = project.management.tasks;
                 for(let i = 0; i < taskList.length; i++){
                     const task = taskList[i];
-                    if(task.member.equals(memberId) && task.status === 'WIP'){
-                        return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
+                    if(typeof task.member !== 'undefined') {
+                        if (task.member.equals(memberId) && task.status === 'WIP') {
+                            return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
+                        }
                     }
                 }
 
@@ -115,4 +134,4 @@ function deleteMember(projectId, memberId) {
     });
 }
 
-module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember };
+module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember, getMemberByName };
