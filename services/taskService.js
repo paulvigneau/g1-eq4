@@ -1,7 +1,30 @@
 const Task = require('../model/taskModel');
 const projectService = require('./projectService');
+const emailService = require('./emailService');
 const userStoryService = require('./userStoryService');
 const { NotFoundError, BadRequestError } = require('../errors/Error');
+
+function sendEmailToAssignedMember(projectId, member, description) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then(async (project) => {
+                if (!project)
+                    return reject(new NotFoundError(`Project ${projectId} not found.`));
+
+                emailService.sendEmail(
+                    projectId,
+                    member.email,
+                    `Hey ${member.name}, une tâche vous a été attribuée !`,
+                    `Nous avons le plaisir de vous annoncer, très cher ${member.name}, que la tâche "${description}" vous a été attribuée au sein du projet ${project.name}.`
+                )
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
 
 function getLengthDodByType(project, type){
     if (type === 'GEN') {
@@ -41,6 +64,7 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                     if (checkIfMemberHasTask(project, memberId, null))
                         return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
+                    sendEmailToAssignedMember(project._id, member, description);
                     status = 'WIP';
                 }
 
@@ -111,6 +135,9 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
                         if (checkIfMemberHasTask(project, memberId, task))
                             return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
+
+                        if (!task.member || task.member.toString() !== memberId)
+                            sendEmailToAssignedMember(project._id, member, description);
 
                         task.member = memberId;
 
