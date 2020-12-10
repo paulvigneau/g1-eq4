@@ -259,7 +259,10 @@ describe('Tasks unit tests', () => {
         });
 
         afterEach(async function() {
-            await removeTasks(project._id);
+            let p = await projectService.getProjectByID(project._id);
+            p.management.tasks = [];
+            p.members = [];
+            await p.save();
         });
 
         it('should return code 200', async () => {
@@ -370,6 +373,13 @@ describe('Tasks unit tests', () => {
         });
 
         it('should add a member to a task', async () => {
+            let member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
+            );
+
             const task = await taskService.updateTask(
                 project._id,
                 taskTODO._id,
@@ -431,6 +441,13 @@ describe('Tasks unit tests', () => {
                 '',
                 [],
                 [ taskTODO._id.toString() ]
+            );
+
+            let member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
             );
 
             task = await taskService.updateTask(

@@ -34,10 +34,11 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                 let status = 'TODO';
 
                 if (memberId) {
-                    if (!project.members.id(memberId))
+                    const member = project.members.id(memberId);
+                    if (!member)
                         return reject(new NotFoundError('Le membre assigné à la tâche ajoutée n\'existe pas'));
 
-                    if (checkIfMemberHasTask(project, memberId))
+                    if (checkIfMemberHasTask(project, memberId, null))
                         return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
                     status = 'WIP';
@@ -104,12 +105,11 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
                 if (oldStatus === 'TODO' || oldStatus === 'WIP') {
                     if (memberId) {
-                        if (!project.members.id(memberId))
+                        const member = project.members.id(memberId);
+                        if (!member)
                             return reject(new NotFoundError(`Le membre assigné à la tâche ${taskId} n'existe pas`));
 
-                        if (task.member
-                            && task.member.toString() !== memberId.toString()
-                            && checkIfMemberHasTask(project, memberId))
+                        if (checkIfMemberHasTask(project, memberId, task))
                             return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
                         task.member = memberId;
@@ -184,9 +184,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
     });
 }
 
-function checkIfMemberHasTask(project, memberId) {
+function checkIfMemberHasTask(project, memberId, task) {
     return !!project.management.tasks.find(
-        t => t.status === 'WIP' && t.member && t.member._id.toString() === memberId.toString()
+        t => t.status === 'WIP'
+            && t.member
+            && (!task || t._id.toString() !== task._id.toString())
+            && t.member._id.toString() === memberId.toString()
     );
 }
 
