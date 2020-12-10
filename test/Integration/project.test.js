@@ -45,7 +45,6 @@ describe('Project integration tests', () => {
         await projectService.getProjectByID(project._id)
             .then((project) => {
                 const member = project.members[0];
-                console.log(member);
 
                 assert(member.name === 'Bob'
                     && member.role === 'Développeur'

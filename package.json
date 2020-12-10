@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "mocha ./test/*/*.test.js --timeout 10000 --exit",
     "unit": "mocha ./test/Unit --timeout 10000 --exit",
-    "integration": "mocha ./test/Integration --timeout 10000 --exit"
+    "integration": "mocha ./test/Integration/*.test.js --timeout 10000 --exit"
   },
   "repository": {
     "type": "git",

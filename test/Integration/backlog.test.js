@@ -16,7 +16,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
 
-describe('Project integration tests', () => {
+describe('Backlog integration tests', () => {
     let project;
     let userStory;
     let lastSprint;
