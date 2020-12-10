@@ -31,13 +31,11 @@ function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
                             memberRole + ', et le ' + today + '.'
                     };
 
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
+                    transporter.sendMail(mailOptions, function (error) {
+                        if (error)
                             reject(error);
-                        } else {
-                            console.log('Email sent: ' + info.response);
+                        else
                             resolve();
-                        }
                     });
                 }
             })
