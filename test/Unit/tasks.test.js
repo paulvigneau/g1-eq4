@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
+const Project = require('../../model/projectModel');
 const Task = require('../../model/taskModel');
 const dbConfig = require('../../config/db');
 const projectService = require('../../services/projectService');
@@ -15,22 +16,27 @@ chai.use(chaiHttp);
 chai.use(dirtyChai);
 
 describe('Tasks unit tests', () => {
+    let project;
+
     before('connect', async () => {
         await dbConfig.connectToDB();
+
+        project = await projectService.addProject({
+            name: 'Super Projet',
+            description: 'Une description intéressante',
+            start: '2070-10-10',
+            end: '2070-10-20'
+        });
+    });
+
+    after(function(done) {
+        Project.deleteMany({}, done);
     });
 
     describe('Get tasks', () => {
-        let project;
         let task;
 
         before(async function() {
-            project = await projectService.addProject({
-                name: 'Super Projet',
-                description: 'Une description intéressante',
-                start: '2070-10-10',
-                end: '2070-10-20'
-            });
-
             task = new Task({
                 description: 'Description de la tâche',
                 type: 'GEN',
@@ -44,6 +50,10 @@ describe('Tasks unit tests', () => {
             project.management.tasks.push(task);
 
             await project.save();
+        });
+
+        after(function(done) {
+            Task.deleteMany({}, done);
         });
 
         it('should return code 200', async () => {
