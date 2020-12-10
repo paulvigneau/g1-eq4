@@ -32,8 +32,6 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                     dependencies = [];
 
                 let status = 'TODO';
-                if(project.members.id(memberId))
-                    status = 'WIP';
 
                 if (memberId) {
                     if (!project.members.id(memberId))
@@ -109,7 +107,9 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                         if (!project.members.id(memberId))
                             return reject(new NotFoundError(`Le membre assigné à la tâche ${taskId} n'existe pas`));
 
-                        if (checkIfMemberHasTask(project, memberId))
+                        if (task.member
+                            && task.member.toString() !== memberId.toString()
+                            && checkIfMemberHasTask(project, memberId))
                             return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
                         task.member = memberId;
@@ -186,7 +186,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
 function checkIfMemberHasTask(project, memberId) {
     return !!project.management.tasks.find(
-        t => t.status === 'WIP' && t.member.toString() === memberId.toString()
+        t => t.status === 'WIP' && t.member && t.member._id.toString() === memberId.toString()
     );
 }
 
