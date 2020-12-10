@@ -85,13 +85,9 @@ function deleteMember(projectId, memberId) {
                 if (!project.members.id(memberId))
                     return reject(new NotFoundError(`Member ${memberId} not found.`));
 
-                const taskList = project.management.tasks;
-                for(let i = 0; i < taskList.length; i++){
-                    const task = taskList[i];
-                    if(typeof task.member !== 'undefined') {
-                        if (task.member.equals(memberId) && task.status === 'WIP') {
-                            return reject(new BadRequestError(`Une tâche dans WIP contient déjà ce membre ${memberId}. Suppression du membre impossible.`));
-                        }
+                for (let task of project.management.tasks){
+                    if (task.member && task.member.equals(memberId)) {
+                        return reject(new BadRequestError('Ce membre est assigné à au moins une tâche. Suppression impossible.'));
                     }
                 }
 
