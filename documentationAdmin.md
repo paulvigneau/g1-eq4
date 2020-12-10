@@ -9,6 +9,7 @@
 - Installer docker par rapport à votre système d'exploitation :
     - Windows : https://docs.docker.com/docker-for-windows/install/
     - Linux : https://docs.docker.com/engine/install/ubuntu/
+    - Mac : https://docs.docker.com/docker-for-mac/install/
 - Installer Nodejs par rapport à votre système d'exploitation : https://nodejs.org/fr/download/
 - Dans le root du projet (g1-eq4-dev), installez les dépendances avec la commande : npm install
 
