@@ -6,7 +6,7 @@ L'architecture de notre projet se base sur les packages suivants :
 
 - .github/workflows, permettant l'automatisation des tests unitaires et des tests d'intégration (non-régression) à chaque commit sur le github, afin de 
 vérifier que tout fonctionne correctement à chaque push.
-- config, contenant les fichiers .json contenant chacun une URL de DB différente pour des différents cas d'utilisation de la DB. Il contient également 
+- config, contenant les fichiers .json ayant chacun une URL de DB différente pour plusieurs cas d'utilisation de la DB. Il contient également 
 le fichier db.js, contenant la méthode de connection de la base de données.
 - errors, ayant des fichiers .js permettant de définir les types d'erreurs qu'il est possible de rencontrer dans une mauvaise utilisation de l'application.
 - model, contenant tous les fichiers .js représentant chacun un élément dans la base de données (en guise d'exemple, 
