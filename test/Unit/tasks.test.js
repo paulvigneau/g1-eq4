@@ -221,7 +221,7 @@ describe('Tasks unit tests', () => {
         let taskTODO;
         let taskWIP;
 
-        before(async function() {
+        beforeEach(async function() {
             taskTODO = await taskService.addTask(
                 project._id,
                 'Description de la tâche',
@@ -243,7 +243,7 @@ describe('Tasks unit tests', () => {
             );
         });
 
-        after(function (done) {
+        afterEach(function (done) {
             Task.deleteMany({}, done);
         });
 
@@ -354,9 +354,84 @@ describe('Tasks unit tests', () => {
             expect(res.status).to.equal(404);
         });
 
-        it('should add a member to a task');
-        it('should remove the member of a task');
-        it('should validate the DOD of a task and should move to DONE');
-        it('should validate the DOD of a task and do not move because dependencies are not DONE');
+        it('should add a member to a task', async () => {
+            const task = await taskService.updateTask(
+                project._id,
+                taskTODO._id,
+                'Nouvelle description de la tâche',
+                'GEN',
+                '30',
+                member._id.toString(),
+                [],
+                []
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.member.toString()).to.equal(member._id.toString());
+            expect(t.status.toString()).to.equal('WIP');
+        });
+
+        it('should remove the member of a task', async () => {
+            const task = await taskService.updateTask(
+                project._id,
+                taskTODO._id,
+                'Nouvelle description de la tâche',
+                'GEN',
+                '30',
+                '',
+                [],
+                []
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.member).to.be.null();
+        });
+
+        it('should validate the DOD of a task and should move to DONE', async () => {
+            let checklist = Array(taskWIP.checklist.length);
+            for (let i = 0; i < checklist.length; i++) checklist[i] = true;
+
+            const task = await taskService.updateTask(
+                project._id,
+                taskWIP._id,
+                'Description de la tâche',
+                'GEN',
+                '30',
+                member._id.toString(),
+                [],
+                [],
+                checklist
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.status).to.equal('DONE');
+        });
+
+        it('should validate the DOD of a task and do not move because dependencies are not DONE', async () => {
+            let task = await taskService.addTask(
+                project._id,
+                'Description de la tâche',
+                'GEN',
+                '30',
+                member._id.toString(),
+                [],
+                [ taskTODO._id.toString() ]
+            );
+
+            task = await taskService.updateTask(
+                project._id,
+                task._id,
+                'Description de la tâche',
+                'GEN',
+                '30',
+                member._id.toString(),
+                [],
+                [ taskTODO._id.toString() ],
+                [ true, true, true ]
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.status).to.equal('WIP');
+        });
     });
 });
