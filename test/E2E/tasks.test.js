@@ -2,7 +2,8 @@ process.env.NODE_ENV = 'test';
 
 require('../../app');
 const projectService = require('../../services/projectService');
-const userStoryService = require('../../services/userStoryService');
+const memberService = require('../../services/memberService');
+const taskService = require('../../services/taskService');
 const chai = require('chai');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
@@ -58,4 +59,55 @@ describe('Tasks End to End', () => {
         await todoTasks[0].getText().then((text) => expect(text).to.be.equal('A simple task'));
 
     }).timeout(20000);
+
+    let member;
+
+    describe('Assigning no member to a task', () => {
+        before(async function () {
+            project.management.tasks = [];
+            member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
+            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [], []);
+            return project.save();
+        });
+    
+        after(async function() {
+            const p = await projectService.getProjectByID(project._id);
+            p.members = [];
+            p.management.tasks = [];
+            return p.save();
+        });
+
+        it('should not be possible to tick boxes of the DOD', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/tasks');
+
+            await driver.findElement(By.css(`body > 
+                div.container.vh-100.d-flex.flex-column > div > 
+                div:nth-child(2) > div > div.card-body.p-2.overflow-auto`))
+                    .findElement(By.css('.card.mb-3.bg-light > .card-body.p-2')).click();
+
+            await driver.findElement(By.xpath('//*[@id="edit-members"]/option[1]')).click();
+
+            const validateButton = await driver.findElement(By.css('#edit-task-form > button'));
+            validateButton.click();
+
+            await driver.wait(until.stalenessOf(validateButton));
+
+            await driver.findElement(By.css(`body > 
+                div.container.vh-100.d-flex.flex-column > div > 
+                div:nth-child(2) > div > div.card-body.p-2.overflow-auto`))
+                    .findElement(By.css('.card.mb-3.bg-light > .card-body.p-2')).click();
+
+            const checkbox = await driver.findElements(By.css('.custom-control-input'));
+
+            let bool = true;
+            for(let box of checkbox){
+                if(await box.isEnabled())
+                    bool = false;
+            }
+
+            expect(bool).to.be.equal(true);
+    
+        }).timeout(20000);
+
+    });
 });
