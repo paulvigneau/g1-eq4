@@ -94,12 +94,9 @@ describe('Backlog integration tests', () => {
 
                 expect(resSprint.status).to.equal(200);
 
-                await sprintService.deleteSprint(project._id, sprint._id)
+                await sprintService.getSprintByID(project._id, sprint._id)
                     .then((sprint) => {
-                        assert.fail('sprint was found');
-                    })
-                    .catch((err) => {
-                        assert.deepStrictEqual(err, new NotFoundError(`No sprint ${sprint._id} found.`));
+                        assert(!sprint);
                     });
             });
     });
