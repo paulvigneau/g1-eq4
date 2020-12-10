@@ -16,6 +16,12 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 chai.use(dirtyChai);
 
+async function removeTasks(projectId) {
+    let project = await projectService.getProjectByID(projectId);
+    project.management.tasks = [];
+    return project.save();
+}
+
 describe('Tasks unit tests', () => {
     let project;
     let member;
@@ -29,13 +35,6 @@ describe('Tasks unit tests', () => {
             start: '2070-10-10',
             end: '2070-10-20'
         });
-
-        member = await memberService.addMember(
-            project._id,
-            'Bob',
-            'bob@mail.com',
-            'Développeur'
-        );
     });
 
     after(function(done) {
@@ -61,8 +60,8 @@ describe('Tasks unit tests', () => {
             await project.save();
         });
 
-        after(function(done) {
-            Task.deleteMany({}, done);
+        after(function() {
+            return removeTasks(project._id);
         });
 
         it('should return code 200', async () => {
@@ -96,8 +95,17 @@ describe('Tasks unit tests', () => {
     });
 
     describe('Add task', () => {
-        after(function (done) {
-            Task.deleteMany({}, done);
+        before(async function() {
+            member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
+            );
+        });
+
+        afterEach(function() {
+            return removeTasks(project._id);
         });
 
         it('should return code 200', async () => {
@@ -222,6 +230,13 @@ describe('Tasks unit tests', () => {
         let taskWIP;
 
         beforeEach(async function() {
+            member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
+            );
+
             taskTODO = await taskService.addTask(
                 project._id,
                 'Description de la tâche',
@@ -243,8 +258,11 @@ describe('Tasks unit tests', () => {
             );
         });
 
-        afterEach(function (done) {
-            Task.deleteMany({}, done);
+        afterEach(async function() {
+            let p = await projectService.getProjectByID(project._id);
+            p.management.tasks = [];
+            p.members = [];
+            await p.save();
         });
 
         it('should return code 200', async () => {
@@ -355,6 +373,13 @@ describe('Tasks unit tests', () => {
         });
 
         it('should add a member to a task', async () => {
+            let member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
+            );
+
             const task = await taskService.updateTask(
                 project._id,
                 taskTODO._id,
@@ -413,9 +438,16 @@ describe('Tasks unit tests', () => {
                 'Description de la tâche',
                 'GEN',
                 '30',
-                member._id.toString(),
+                '',
                 [],
                 [ taskTODO._id.toString() ]
+            );
+
+            let member = await memberService.addMember(
+                project._id,
+                'Bob',
+                'bob@mail.com',
+                'Développeur'
             );
 
             task = await taskService.updateTask(

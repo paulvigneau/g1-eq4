@@ -29,7 +29,7 @@ router.post('/member', function (req, res, next) {
     if (req.params.id && req.body.name && req.body.email && req.body.role) {
         memberService.addMember(req.params.id, req.body.name, req.body.email, req.body.role)
             .then(() => {
-                memberService.sendEmailToMember(req.params.id, req.body.name, req.body.email, req.body.role);
+                memberService.sendEmailToNewMember(req.params.id, req.body.name, req.body.email, req.body.role);
                 res.status(200).send();
             })
             .catch((err) => {

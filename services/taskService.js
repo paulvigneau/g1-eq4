@@ -1,7 +1,30 @@
 const Task = require('../model/taskModel');
 const projectService = require('./projectService');
+const emailService = require('./emailService');
 const userStoryService = require('./userStoryService');
 const { NotFoundError, BadRequestError } = require('../errors/Error');
+
+function sendEmailToAssignedMember(projectId, member, description) {
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then(async (project) => {
+                if (!project)
+                    return reject(new NotFoundError(`Project ${projectId} not found.`));
+
+                emailService.sendEmail(
+                    projectId,
+                    member.email,
+                    `Hey ${member.name}, une tâche vous a été attribuée !`,
+                    `Nous avons le plaisir de vous annoncer, très cher ${member.name}, que la tâche "${description}" vous a été attribuée au sein du projet ${project.name}.`
+                )
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
 
 function getLengthDodByType(project, type){
     if (type === 'GEN') {
@@ -32,16 +55,16 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                     dependencies = [];
 
                 let status = 'TODO';
-                if(project.members.id(memberId))
-                    status = 'WIP';
 
                 if (memberId) {
-                    if (!project.members.id(memberId))
+                    const member = project.members.id(memberId);
+                    if (!member)
                         return reject(new NotFoundError('Le membre assigné à la tâche ajoutée n\'existe pas'));
 
-                    if (checkIfMemberHasTask(project, memberId))
+                    if (checkIfMemberHasTask(project, memberId, null))
                         return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
+                    sendEmailToAssignedMember(project._id, member, description);
                     status = 'WIP';
                 }
 
@@ -106,11 +129,15 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
 
                 if (oldStatus === 'TODO' || oldStatus === 'WIP') {
                     if (memberId) {
-                        if (!project.members.id(memberId))
+                        const member = project.members.id(memberId);
+                        if (!member)
                             return reject(new NotFoundError(`Le membre assigné à la tâche ${taskId} n'existe pas`));
 
-                        if (checkIfMemberHasTask(project, memberId))
+                        if (checkIfMemberHasTask(project, memberId, task))
                             return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
+
+                        if (!task.member || task.member.toString() !== memberId)
+                            sendEmailToAssignedMember(project._id, member, description);
 
                         task.member = memberId;
 
@@ -184,9 +211,12 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
     });
 }
 
-function checkIfMemberHasTask(project, memberId) {
+function checkIfMemberHasTask(project, memberId, task) {
     return !!project.management.tasks.find(
-        t => t.status === 'WIP' && t.member.toString() === memberId.toString()
+        t => t.status === 'WIP'
+            && t.member
+            && (!task || t._id.toString() !== task._id.toString())
+            && t.member._id.toString() === memberId.toString()
     );
 }
 

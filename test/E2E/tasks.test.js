@@ -49,23 +49,21 @@ describe('Tasks End to End', () => {
 
         await driver.wait(until.stalenessOf(validateButton));
 
-        const todoTasks = await driver.findElement(By.css(`body > 
+        const todo = await driver.findElement(By.css(`body > 
             div.container.vh-100.d-flex.flex-column > div > 
             div:nth-child(1) > div > div.card-body.p-2.overflow-auto`))
                 .findElements(By.css('.card.mb-3.bg-light > .card-body.p-2 > p'));
         
-        expect(todoTasks.length).to.be.equal(1);
+        expect(todo.length).to.be.equal(1);
 
-        await todoTasks[0].getText().then((text) => expect(text).to.be.equal('A simple task'));
+        await todo[0].getText().then((text) => expect(text).to.be.equal('A simple task'));
 
     }).timeout(20000);
-
-    let member;
 
     describe('Assigning no member to a task', () => {
         before(async function () {
             project.management.tasks = [];
-            member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
+            let member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
             taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [], []);
             return project.save();
         });
@@ -106,6 +104,56 @@ describe('Tasks End to End', () => {
             }
 
             expect(bool).to.be.equal(true);
+    
+        }).timeout(20000);
+
+    });
+
+    describe('ticking all the boxes of the DOD', () => {
+        before(async function () {
+            project.management.tasks = [];
+            let member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
+            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [], []);
+            return project.save();
+        });
+    
+        after(async function() {
+            const p = await projectService.getProjectByID(project._id);
+            p.members = [];
+            p.management.tasks = [];
+            return p.save();
+        });
+
+        it('should move the task to the section DONE', async () => {
+            await driver.get('http://localhost:3000/projects/' + project._id + '/tasks');
+
+            await driver.findElement(By.css(`body > 
+                div.container.vh-100.d-flex.flex-column > div > 
+                div:nth-child(2) > div > div.card-body.p-2.overflow-auto`))
+                    .findElement(By.css('.card.mb-3.bg-light > .card-body.p-2')).click();
+
+            const checkbox = await driver.findElements(By.className('custom-control custom-checkbox'));
+
+            for(let box of checkbox)
+                await box.click();
+
+            const validateButton = await driver.findElement(By.css('#edit-task-form > button'));
+            validateButton.click();
+
+            await driver.wait(until.stalenessOf(validateButton));
+
+            const wip = await driver.findElement(By.css(`body > 
+                div.container.vh-100.d-flex.flex-column > div > 
+                div:nth-child(2) > div > div.card-body.p-2.overflow-auto`))
+                    .findElements(By.css('.card.mb-3.bg-light > .card-body.p-2 > p'));
+
+            const done = await driver.findElement(By.css(`body > 
+                div.container.vh-100.d-flex.flex-column > div > 
+                div:nth-child(3) > div > div.card-body.p-2.overflow-auto`))
+                    .findElements(By.css('.card.mb-3.bg-light > .card-body.p-2 > p'));
+
+            expect(wip.length).to.be.equal(0);
+            expect(done.length).to.be.equal(1);
     
         }).timeout(20000);
 

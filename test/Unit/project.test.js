@@ -138,7 +138,7 @@ describe('Project unit tests', () => {
         });
 
         it('should send an email', () => {
-            return memberService.sendEmailToMember(
+            return memberService.sendEmailToNewMember(
                 project._id,
                 'Bob',
                 'bob@mail.com',
