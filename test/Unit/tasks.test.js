@@ -5,6 +5,7 @@ const Project = require('../../model/projectModel');
 const Task = require('../../model/taskModel');
 const dbConfig = require('../../config/db');
 const projectService = require('../../services/projectService');
+const memberService = require('../../services/memberService');
 const taskService = require('../../services/taskService');
 const chai = require('chai');
 const { describe, it } = require('mocha');
@@ -17,6 +18,7 @@ chai.use(dirtyChai);
 
 describe('Tasks unit tests', () => {
     let project;
+    let member;
 
     before('connect', async () => {
         await dbConfig.connectToDB();
@@ -27,6 +29,13 @@ describe('Tasks unit tests', () => {
             start: '2070-10-10',
             end: '2070-10-20'
         });
+
+        member = await memberService.addMember(
+            project._id,
+            'Bob',
+            'bob@mail.com',
+            'Développeur'
+        );
     });
 
     after(function(done) {
@@ -177,8 +186,35 @@ describe('Tasks unit tests', () => {
             expect(res.status).to.equal(404);
         });
 
-        it('should add a task');
-        it('should add a task with member and should move to WIP status');
+        it('should add a task', async () => {
+            const task = await taskService.addTask(
+                project._id,
+                'Description de la tâche',
+                'GEN',
+                '30',
+                '',
+                [],
+                []
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.toString()).to.equal(task.toString());
+        });
+
+        it('should add a task with member and should move to WIP status', async () => {
+            const task = await taskService.addTask(
+                project._id,
+                'Description de la tâche',
+                'GEN',
+                '30',
+                member._id.toString(),
+                [],
+                []
+            );
+
+            const t = await taskService.getTaskById(project._id, task._id);
+            expect(t.status).to.equal('WIP');
+        });
     });
 
     describe('Update task', () => {
