@@ -4,6 +4,10 @@
 
 L'architecture de notre projet se base sur les packages suivants :
 
+- .github/workflows, permettant l'automatisation des tests unitaires et des tests d'intégration (non-régression) à chaque commit sur le github, afin de 
+vérifier que tout fonctionne correctement à chaque push.
+- config, contenant les fichiers .json contenant chacun une URL de DB différente pour des différents cas d'utilisation de la DB. Il contient également 
+le fichier db.js, contenant la méthode de connection de la base de données.
 - errors, ayant des fichiers .js permettant de définir les types d'erreurs qu'il est possible de rencontrer dans une mauvaise utilisation de l'application.
 - model, contenant tous les fichiers .js représentant chacun un élément dans la base de données (en guise d'exemple, 
 taskModel représentant une tâche, et ses attributs dans la base de données).
@@ -18,6 +22,7 @@ taskModel représentant une tâche, et ses attributs dans la base de données).
 - test :
     - E2E, l'ensemble des tests "End-To-End" servant à tester notre projet depuis la partie Front.
     - Gherkins, l'ensemble des scénarios d'utilisation reflétant nos tests E2E.
+    - Integration, l'ensemble des tests d'intégration du projet. Donc les tests de non-régression.
     - Unit, l'ensemble des test "Unitaire", testant si chaque fonction du package service remplit bien son rôle.
 - views : Tous les fichiers .ejs qui représentent le contenu html que l'on verra en lançant l'application.
 
