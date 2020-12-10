@@ -330,6 +330,12 @@ function showTaskPopup() {
     linkedUserStories = [];
     displayLinkedUserStories();
 
+    displayProgressBar(
+        document.querySelector('#edit-task-form .progress-bar'),
+        0,
+        true
+    );
+
     // eslint-disable-next-line no-undef
     showPopup('#add-task');
 }
