@@ -65,7 +65,7 @@ function addTask(projectId, description, type, cost, memberId, USList, dependenc
                         return reject(new BadRequestError('Le membre est déjà assigné à une tâche en cours.'));
 
                     sendEmailToAssignedMember(project._id, member, description);
-                    status = 'WIP';
+                    status = USList.length > 0 ? 'WIP' : 'TODO';
                 }
 
                 if (!(await checkIfUsExist(project, USList) && await checkIfTasksExist(project, dependencies)))
@@ -140,9 +140,6 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                             sendEmailToAssignedMember(project._id, member, description);
 
                         task.member = memberId;
-
-                        if (oldStatus === 'TODO')
-                            task.status = 'WIP';
                     }
                     else {
                         task.member = null;
@@ -165,6 +162,7 @@ function updateTask(projectId, taskId, description, type, cost, memberId, USList
                     if (await checkIfUsExist(project, USList) && await checkIfTasksExist(project, dependencies)) {
                         task.USList = USList;
                         task.dependencies = dependencies;
+                        task.status = task.USList && task.USList.length > 0 && task.member ? 'WIP' : 'TODO';
                     }
                     else
                         return reject(new NotFoundError('Les tâches ou US assignées à la tâche n\'existent pas'));
