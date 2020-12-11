@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Member = require('./member');
-const Backlog = require('./backlog');
-const Dod = require('./dod');
+const Member = require('./memberModel');
+const Backlog = require('./backlogModel');
+const Dod = require('./dodModel');
+const Task = require('./taskModel');
 const Schema = mongoose.Schema;
 
 let ProjectSchema = new Schema({
@@ -13,9 +14,9 @@ let ProjectSchema = new Schema({
         members: { type: [ Member.schema ] },
         dod: { type: Dod.schema, default: new Dod() },
         management: {
-            backlog: { type: Backlog.schema, default: new Backlog() }
+            backlog: { type: Backlog.schema, default: new Backlog() },
+            tasks: { type: [ Task.schema ] }
         }
-
     }
 );
 

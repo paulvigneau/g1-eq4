@@ -1,6 +1,6 @@
-const projectService = require('./project');
-const Sprint = require('../model/sprint');
-const userStoryService = require('./user-story');
+const projectService = require('./projectService');
+const Sprint = require('../model/sprintModel');
+const userStoryService = require('./userStoryService');
 const { BadRequestError, NotFoundError } = require('../errors/Error');
 
 function checkDatePeriod(start, end, date){

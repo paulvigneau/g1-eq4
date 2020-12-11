@@ -11,13 +11,16 @@
                 <span class="us-more col" onclick="showDropdown('<%= US._id %>');"><i class="fas fa-ellipsis-v"></i></span>
                 <div id="dropdown-<%= US._id %>" class="dropdown-content">
                     <% if (sprintId) { %>
-                    <a class="close-us-button" onclick="closeUS('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>')">Fermer l'US</a>
+                    <a class="close-us-button"
+                       onclick="closeUS('<%= projectId %>', '<%= sprintId %>', '<%= US._id %>')">
+                        Fermer l'US
+                    </a>
                     <% } %>
-                    <a class="edit-us-button" onclick="showPopup('#edit-user-story<%=US.id%>')">Modifier</a>
+                    <a class="edit-us-button"
+                       onclick="showEditUSPopup('<%= sprintId %>', '<%= US._id %>', '<%= US.description %>', '<%= US.difficulty %>')">
+                        Modifier
+                    </a>
                 </div>
-            </div>
-            <div class="pop-up" id="edit-user-story<%= US.id %>">
-                <%- include('edit-user-story.ejs', { projectId: projectId, US: US }); %>
             </div>
         <% } else { %>
             <div><div class="col"><i class="fas fa-ellipsis-v" style="opacity: 0"></i></div></div>

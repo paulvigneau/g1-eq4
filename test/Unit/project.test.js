@@ -4,8 +4,8 @@ const app = require('../../app');
 const mongoose = require('mongoose');
 const dbConfig = require('../../config/db');
 const assert = require('assert');
-const projectService = require('../../services/project');
-const memberService = require('../../services/member');
+const projectService = require('../../services/projectService');
+const memberService = require('../../services/memberService');
 const chai = require('chai');
 const { describe, it } = require('mocha');
 const chaiHttp = require('chai-http');
@@ -138,12 +138,12 @@ describe('Project unit tests', () => {
         });
 
         it('should send an email', () => {
-            return memberService.sendEmailToMember(
+            return memberService.sendEmailToNewMember(
                 project._id,
                 'Bob',
                 'bob@mail.com',
                 'Développeur');
-        }).timeout(10000);
+        }).timeout(15000);
     });
 
     describe('Delete member', () => {

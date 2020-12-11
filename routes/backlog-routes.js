@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const backlogService = require('../services/backlog.js');
-const sprintService = require('../services/sprint.js');
-const userStoryService = require('../services/user-story.js');
+const backlogService = require('../services/backlogService.js');
+const sprintService = require('../services/sprintService.js');
+const userStoryService = require('../services/userStoryService.js');
 const moment = require('moment');
 const { BadRequestError } = require('../errors/Error');
 
@@ -69,7 +69,7 @@ router.delete('/sprints/:sprintId', function (req, res, next) {
     }
 });
 
-router.post('/new-user-story', function (req, res, next) {
+router.post('/user-story', function (req, res, next) {
     if (req.params.id && req.body.description && req.body.difficulty) {
         userStoryService.addUS(req.params.id, null, req.body.description, req.body.difficulty)
             .then(() => {
@@ -84,7 +84,21 @@ router.post('/new-user-story', function (req, res, next) {
     }
 });
 
-router.put('/user-story', function(req, res, next){
+router.put('/user-story', function(req, res, next) {
+    if (req.params.id && req.body.usId && req.body.description && req.body.difficulty) {
+        userStoryService.modifyUserStory(req.params.id, req.body.sprintId, req.body.usId, req.body.description, req.body.difficulty)
+            .then(() => {
+                res.status(200).send();
+            })
+            .catch((err) =>
+                next(err)
+            );
+    }else{
+        next(new BadRequestError('Un ou plusieurs champs sont manquants.'));
+    }
+});
+
+router.put('/user-story/move', function(req, res, next){
     if (req.params.id && req.body.usId && req.body.index) {
         userStoryService.transferUS(req.params.id, req.body.from, req.body.to, req.body.usId, req.body.index)
             .then(() => {
@@ -112,6 +126,16 @@ router.put('/:sprintId/:usId/close', function(req, res, next) {
     else {
         next(new BadRequestError('Un ou plusieurs champs sont manquants.'));
     }
+});
+
+router.get('/user-stories/json', function (req, res, next) {
+    userStoryService.getAllUsInProject(req.params.id)
+        .then((usList) => {
+            res.status(200).json({ usList: usList });
+        })
+        .catch((err) => {
+            next(err);
+        });
 });
 
 module.exports = router;

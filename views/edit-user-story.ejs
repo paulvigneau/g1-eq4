@@ -1,13 +1,16 @@
-<!-- <form action="/projects/<%= projectId %>/backlog/edit-user-story" method="post"> -->
+<form id="edit-us-form" method="post">
+    <input type="hidden" name="sprintId" id="edit-sprintId">
+    <input type="hidden" name="usId" id="edit-usId">
+
     <div class="form-group">
-        <label for="description">Description de l'US</label>
-        <input type="text" name="description" class="form-control" id="description"
-               placeholder="La description de l'US" required value="<%= US.description %>">
+        <label for="edit-description">Description de l'US</label>
+        <input type="text" name="description" class="form-control" id="edit-description"
+               placeholder="La description de l'US" required>
     </div>
 
     <div class="form-group">
-        <label for="inputState">Difficulté</label>
-        <select id="difficulty" name="difficulty" class="form-control" value="<%= US.difficulty %>">
+        <label for="edit-difficulty">Difficulté</label>
+        <select id="edit-difficulty" name="difficulty" class="form-control">
             <option>1</option>
             <option>2</option>
             <option>3</option>
@@ -15,6 +18,6 @@
         </select>
     </div>
 
-    <button type="submit" class="btn btn-success">Appliquer les modifications</button>
-    <button  class="btn btn-danger" onclick="closePopup()">Retour</button>
-<!--</form>-->
+    <button type="submit" class="btn btn-success">Ajouter</button>
+    <button type="button" class="btn btn-danger" onclick="closePopup()">Retour</button>
+</form>

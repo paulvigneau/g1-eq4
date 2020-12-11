@@ -1,8 +1,8 @@
 process.env.NODE_ENV = 'test';
 
 require('../../app');
-const projectService = require('../../services/project');
-const sprintService = require('../../services/sprint');
+const projectService = require('../../services/projectService');
+const sprintService = require('../../services/sprintService');
 const chai = require('chai');
 const mongoose = require('mongoose');
 const { describe, it } = require('mocha');
@@ -46,15 +46,23 @@ describe('Add a new User Story, drag it in a sprint and close it', () => {
         let display = await driver.findElement(By.css('.pop-up-wrapper')).getCssValue('display');
         expect(display).to.be.equal('block');
 
-        await driver.findElement(By.css('#add-user-story #description')).sendKeys('Description de l\'us');
-        await driver.findElement(By.xpath('.//*[@id="difficulty"]/option[1]')).click();
+        await driver.findElement(By.css('#edit-description')).sendKeys('Description de l\'us');
+        await driver.findElement(By.xpath('//*[@id="edit-difficulty"]/option[1]')).click();
 
-        await driver.findElement(By.css('#add-user-story button.btn[type=\'submit\']')).click();
+        const addButton = await driver.findElement(By.css('#edit-us-form > button.btn.btn-success'));
+        addButton.click();
 
-        await driver.wait(
-            async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
-            10000
-        );
+        await driver.wait(until.stalenessOf(addButton));
+
+        const backlogUS = await driver.findElements(By.xpath('//*[@id="userStoryDescription"]'));
+
+        expect(backlogUS.length).to.be.equal(1);
+
+
+        // await driver.wait(
+        //     async () => await until.elementIsVisible(await driver.findElement(By.css('.pop-up-wrapper'))),
+        //     10000
+        // );
     }).timeout(10000);
 
     it('should display the user story in backlog', async () => {

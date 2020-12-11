@@ -1,4 +1,4 @@
-const Project = require('../model/project');
+const Project = require('../model/projectModel');
 const { NotFoundError, BadRequestError } = require('../errors/Error');
 
 function addProject(p) {

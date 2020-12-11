@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let DodSchema = new Schema({
         gen: {
-            checklist : {type: [String], required: true,
+            checklist : { type: [ String ], required: true,
                 default: [
                     'La tâche a été implémentée.',
                     'La tâche a été revue par les pairs.',
@@ -12,7 +12,7 @@ let DodSchema = new Schema({
             }
         },
         dev: {
-            checklist : {type: [String], required: true,
+            checklist : { type: [ String ], required: true,
                 default: [
                     'L’ensemble des fonctionnalités a été implémenté.',
                     'L’ensemble des fonctionnalités a été revu par les pairs.',
@@ -22,7 +22,7 @@ let DodSchema = new Schema({
             }
         },
         test: {
-            checklist : {type: [String], required: true,
+            checklist : { type: [ String ], required: true,
                 default: [
                     'Le scénario de test a été rédigé.',
                     'Le scénario de test a été revu par les pairs.',

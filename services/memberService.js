@@ -1,47 +1,35 @@
-const projectService = require('./project');
-const Member = require('../model/member');
-const nodeMailer = require('nodemailer');
-const { NotFoundError } = require('../errors/Error');
+const projectService = require('./projectService');
+const emailService = require('./emailService');
+const Member = require('../model/memberModel');
+const { NotFoundError, BadRequestError } = require('../errors/Error');
 
-function sendEmailToMember(projectId, memberName, memberEmail, memberRole){
-    const transporter = nodeMailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'cdpproject33@gmail.com',
-            pass: 'cdpscrum'
-        }
-    });
+
+function sendEmailToNewMember(projectId, name, email, role) {
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+
+    today = dd + '/' + mm + '/' + yyyy;
 
     return new Promise((resolve, reject) => {
         projectService.getProjectByID(projectId)
-            .then((project) => {
-                if (project) {
-                    let today = new Date();
-                    const dd = String(today.getDate()).padStart(2, '0');
-                    const mm = String(today.getMonth() + 1).padStart(2, '0');
-                    const yyyy = today.getFullYear();
+            .then(async (project) => {
+                if (!project)
+                    return reject(new NotFoundError(`Project ${projectId} not found.`));
 
-                    today = dd + '/' + mm + '/' + yyyy;
-
-                    const mailOptions = {
-                        from: 'cdpproject33@gmail.com',
-                        to: memberEmail,
-                        subject: 'Hey ' + memberName + ', vous avez été ajouté à un projet !',
-                        text: 'Nous avons le plaisir de vous annoncer, très cher ' + memberName + ', que vous avez été ajouté au projet : ' + project.name + ', sous le rôle ' +
-                            memberRole + ', et le ' + today + '.'
-                    };
-
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            console.log('Email sent: ' + info.response);
-                            resolve();
-                        }
-                    });
-                }
+                emailService.sendEmail(
+                    projectId,
+                    email,
+                    `Hey ${name}, vous avez été ajouté à un projet !`,
+                    `Nous avons le plaisir de vous annoncer, très cher ${name}, que vous avez été ajouté au projet : ${project.name}, sous le rôle ${role}, et le ${today}.`
+                )
+                    .then(() => resolve())
+                    .catch((err) => reject(err));
             })
-            .catch((err) => reject(err));
+            .catch((err) => {
+                reject(err);
+            });
     });
 }
 
@@ -97,6 +85,12 @@ function deleteMember(projectId, memberId) {
                 if (!project.members.id(memberId))
                     return reject(new NotFoundError(`Member ${memberId} not found.`));
 
+                for (let task of project.management.tasks){
+                    if (task.member && task.member.equals(memberId)) {
+                        return reject(new BadRequestError('Ce membre est assigné à au moins une tâche. Suppression impossible.'));
+                    }
+                }
+
                 project.members.id(memberId).remove();
                 project.save()
                     .then((project) => resolve(project))
@@ -108,4 +102,4 @@ function deleteMember(projectId, memberId) {
     });
 }
 
-module.exports = { addMember, getMemberById, deleteMember, sendEmailToMember };
+module.exports = { addMember, getMemberById, deleteMember, sendEmailToNewMember };

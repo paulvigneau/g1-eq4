@@ -18,14 +18,14 @@
 
     <div class="mt-3">
         <button id="new-sprint-button" class="btn btn-primary" onclick="showPopup('#add-sprint')">Nouveau sprint</button>
-        <button id="new-us-button" class="btn btn-success" onclick="showPopup('#add-user-story')">Nouvelle US</button>
+        <button id="new-us-button" class="btn btn-success" onclick="showPopup('#edit-user-story')">Nouvelle US</button>
 
         <div class="pop-up-wrapper">
             <div class="pop-up" id="add-sprint">
-                <%- include('new-sprint.ejs', { projectId: projectId }); %>
+                <%- include('new-sprint.ejs'); %>
             </div>
-            <div class="pop-up" id="add-user-story">
-                <%- include('new-user-story.ejs', { projectId: projectId }); %>
+            <div class="pop-up" id="edit-user-story">
+                <%- include('edit-user-story.ejs'); %>
             </div>
         </div>
 

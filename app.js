@@ -13,6 +13,9 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 app.use(express.static(path.join(__dirname, '/public')));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 const projectsRoutes = require('./routes/projects-routes');
 app.use('/', projectsRoutes);
 
@@ -21,6 +24,7 @@ app.get('/404', (req, res) => {
     res.render('not-found');
 });
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
     if (err instanceof NotFoundError)
         res.status(404).send({ message: err.message });

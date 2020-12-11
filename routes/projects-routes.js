@@ -1,7 +1,7 @@
 const express = require('express');
 const moment = require('moment');
 const router = express.Router();
-const projectService = require('../services/project');
+const projectService = require('../services/projectService');
 const { BadRequestError } = require('../errors/Error');
 
 router.get('/', function (req, res, next) {

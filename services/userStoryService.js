@@ -1,5 +1,5 @@
-const projectService = require('./project');
-const UserStory = require('../model/user-story');
+const projectService = require('./projectService');
+const UserStory = require('../model/userStoryModel');
 const { BadRequestError, NotFoundError } = require('../errors/Error');
 
 function addUS(projectId, sprintId, description, difficulty, priority = -1) {
@@ -229,7 +229,7 @@ function closeUS(projectId, sprintId, usId){
         projectService.getProjectByID(projectId)
             .then((project) => {
                 if(!project)
-                return reject(new NotFoundError(`No project ${projectId} found.`));
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
 
                 let sprint = project.management.backlog.sprints.id(sprintId);
                 if (!sprint)
@@ -240,7 +240,15 @@ function closeUS(projectId, sprintId, usId){
                     return reject(new NotFoundError(`No user story ${usId} found.`));
 
                 if(userStory.status === 'Closed')
-                    return reject(new BadRequestError(`User story ${usId} is already Closed.`));
+                    return reject(new BadRequestError(`L'user story ${usId} est déjà fermée.`));
+
+                const taskList = project.management.tasks;
+                for(let i = 0; i < taskList.length; i++){
+                    const task = taskList[i];
+                    if((task.USList.indexOf(usId) !== -1) && (task.status !== 'DONE')){
+                        return reject(new BadRequestError(`La tâche ${task._id} n'est pas finie, impossible de fermer cette user story.`));
+                    }
+                }
 
                 userStory.status = 'Closed';
                 project.save()
@@ -253,4 +261,74 @@ function closeUS(projectId, sprintId, usId){
     });
 }
 
-module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS };
+function modifyUserStory(projectId, sprintId, usId, newDescription, newDifficulty){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if(!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+
+                let sprint = project.management.backlog.sprints.id(sprintId);
+                let userStory = null;
+                if(!sprint){
+                    let backlog = project.management.backlog.backlog;
+                    userStory = backlog.USList.id(usId);
+                }else {
+                    userStory = sprint.USList.id(usId);
+                }
+
+                if(!userStory)
+                    return reject(new NotFoundError(`No user story ${usId} found.`));
+
+                if(userStory.status === 'Closed')
+                    return reject(new BadRequestError(`L'user story ${usId} est déjà fermée.`));
+
+                const taskList = project.management.tasks;
+                for(let i = 0; i < taskList.length; i++){
+                    const task = taskList[i];
+                    if((task.USList.indexOf(usId) !== -1)){
+                        return reject(new BadRequestError(`Au moins une tâche est liée à cette user story ${usId}. Modification impossible.`));
+                    }
+                }
+
+                userStory.description = newDescription;
+                userStory.difficulty = newDifficulty;
+
+                project.save()
+                    .then(() => resolve(userStory))
+                    .catch((err) => reject(err));
+            });
+    });
+}
+
+function getAllUsInProject(projectId){
+    return new Promise((resolve, reject) => {
+        projectService.getProjectByID(projectId)
+            .then((project) => {
+                if (!project)
+                    return reject(new NotFoundError(`No project ${projectId} found.`));
+
+                let usList = [];
+
+                for(const userStory of project.management.backlog.backlog.USList){
+                    usList.push(userStory);
+                }
+
+                for(const sprint of project.management.backlog.sprints){
+                    for(const userStory of sprint.USList){
+                        usList.push(userStory);
+                    }
+                }
+
+                // usList.sort((us1, us2) => us1.id - us2.id );
+
+                return resolve(usList);
+
+            })
+            .catch((err) => {
+                return reject(err);
+            });
+    });
+}
+
+module.exports = { addUS, getAllUS, deleteUS, getUSById, transferUS, addLabelToUS, closeUS, modifyUserStory, getAllUsInProject };
