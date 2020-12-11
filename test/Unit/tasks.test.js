@@ -5,6 +5,7 @@ const Project = require('../../model/projectModel');
 const Task = require('../../model/taskModel');
 const dbConfig = require('../../config/db');
 const projectService = require('../../services/projectService');
+const userStoryService = require('../../services/userStoryService');
 const memberService = require('../../services/memberService');
 const taskService = require('../../services/taskService');
 const chai = require('chai');
@@ -25,6 +26,7 @@ async function removeTasks(projectId) {
 describe('Tasks unit tests', () => {
     let project;
     let member;
+    let userStory;
 
     before('connect', async () => {
         await dbConfig.connectToDB();
@@ -101,6 +103,13 @@ describe('Tasks unit tests', () => {
                 'Bob',
                 'bob@mail.com',
                 'Développeur'
+            );
+            userStory = await userStoryService.addUS(
+                project._id,
+                null,
+                'A simple projet',
+                1,
+                1
             );
         });
 
@@ -216,7 +225,7 @@ describe('Tasks unit tests', () => {
                 'GEN',
                 '30',
                 member._id.toString(),
-                [],
+                [ userStory._id ],
                 []
             );
 
@@ -237,6 +246,14 @@ describe('Tasks unit tests', () => {
                 'Développeur'
             );
 
+            userStory = await userStoryService.addUS(
+                project._id,
+                null,
+                'A simple projet',
+                1,
+                1
+            );
+
             taskTODO = await taskService.addTask(
                 project._id,
                 'Description de la tâche',
@@ -253,7 +270,7 @@ describe('Tasks unit tests', () => {
                 'GEN',
                 '30',
                 member._id,
-                [],
+                [ userStory._id ],
                 []
             );
         });
@@ -380,6 +397,14 @@ describe('Tasks unit tests', () => {
                 'Développeur'
             );
 
+            let userStory = await userStoryService.addUS(
+                project._id,
+                null,
+                'A simple projet',
+                1,
+                1
+            );
+
             const task = await taskService.updateTask(
                 project._id,
                 taskTODO._id,
@@ -387,7 +412,7 @@ describe('Tasks unit tests', () => {
                 'GEN',
                 '30',
                 member._id.toString(),
-                [],
+                [ userStory._id ],
                 []
             );
 
@@ -423,7 +448,7 @@ describe('Tasks unit tests', () => {
                 'GEN',
                 '30',
                 member._id.toString(),
-                [],
+                [ userStory._id ],
                 [],
                 checklist
             );
@@ -433,6 +458,14 @@ describe('Tasks unit tests', () => {
         });
 
         it('should validate the DOD of a task and do not move because dependencies are not DONE', async () => {
+            let userStory = await userStoryService.addUS(
+                project._id,
+                null,
+                'A simple projet',
+                1,
+                1
+            );
+            
             let task = await taskService.addTask(
                 project._id,
                 'Description de la tâche',
@@ -457,7 +490,7 @@ describe('Tasks unit tests', () => {
                 'GEN',
                 '30',
                 member._id.toString(),
-                [],
+                [ userStory._id ],
                 [ taskTODO._id.toString() ],
                 [ true, true, true ]
             );
