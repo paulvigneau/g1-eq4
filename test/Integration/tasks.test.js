@@ -25,7 +25,6 @@ describe('Tasks integration tests', () => {
     let project;
     let firstTask;
     let firstUserStory;
-    let secondTask;
     let memberFirstTask;
 
     before('connect', async () => {

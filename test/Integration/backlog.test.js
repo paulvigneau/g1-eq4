@@ -10,7 +10,6 @@ const chaiHttp = require('chai-http');
 const dirtyChai = require('dirty-chai');
 let projectService = require('../../services/projectService');
 let sprintService = require('../../services/sprintService');
-const { BadRequestError, NotFoundError } = require('../../errors/Error');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
