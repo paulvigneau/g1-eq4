@@ -11,7 +11,9 @@ function getCurrentSprint(sprints) {
     let today = new Date();
     for (let sprint of sprints) {
         if (new Date(sprint.start) <= today && today <= new Date(sprint.end))
-            return sprint.start + " - " + sprint.end;
+            return moment(sprint.start).locale('fr').format('DD MMMM YYYY')
+                    + ' - '
+                    + moment(sprint.end).locale('fr').format('DD MMMM YYYY');
     }
     return "Aucun"
 }
