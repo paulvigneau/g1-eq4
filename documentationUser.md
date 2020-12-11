@@ -1,6 +1,6 @@
 # Documentation Utilisateur
 
-## Version
+## Version 0.3.0
 
 Pour commencer, dirigez-vous sur votre navigateur favori, et écrivez l'URL suivante : http://localhost:3000/
 

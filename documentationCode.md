@@ -1,6 +1,6 @@
 # Documentation Code
 
-## Version 
+## Version 0.3.0
 
 L'architecture de notre projet se base sur les packages suivants :
 

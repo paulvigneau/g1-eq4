@@ -197,8 +197,6 @@ describe('Tasks integration tests', () => {
 
             });
     });
-
-
 });
 
 after(function (done) {
