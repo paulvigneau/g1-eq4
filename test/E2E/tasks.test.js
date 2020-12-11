@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 require('../../app');
 const projectService = require('../../services/projectService');
 const memberService = require('../../services/memberService');
+const userStoryService = require('../../services/userStoryService');
 const taskService = require('../../services/taskService');
 const chai = require('chai');
 const mongoose = require('mongoose');
@@ -64,7 +65,8 @@ describe('Tasks End to End', () => {
         before(async function () {
             project.management.tasks = [];
             let member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
-            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [], []);
+            let userStory = await userStoryService.addUS(project._id, null, 'A simle US', 1, 1);
+            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [ userStory._id ], []);
             return project.save();
         });
     
@@ -113,7 +115,8 @@ describe('Tasks End to End', () => {
         before(async function () {
             project.management.tasks = [];
             let member = await memberService.addMember(project._id, 'Marion', 'marion@testcdp.com', 'Testeur');
-            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [], []);
+            let userStory = await userStoryService.addUS(project._id, null, 'A simle US', 1, 1);
+            taskService.addTask(project._id, 'A simple task', 'GEN', 30, member._id, [ userStory._id ], []);
             return project.save();
         });
     
